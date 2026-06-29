@@ -266,7 +266,7 @@ class LearnPage(QWidget):
         if not text:
             return
 
-        sub = self.subtitles[self.current_idx]
+        # 统一从 DB 读取，确保发给 AI 的官方字幕与复盘页显示一致
         subs_row = self._get_subtitle_row(self.current_idx + 1)
         if subs_row is None:
             return
@@ -280,7 +280,9 @@ class LearnPage(QWidget):
         if self.session_id:
             update_session_completed(self.session_id, self.completed_count)
 
-        self.translation_submitted.emit(eval_id, subs_row["id"], text, sub["english_official"])
+        self.translation_submitted.emit(
+            eval_id, subs_row["id"], text, subs_row["english_official"]
+        )
 
         self._show_current_sentence()
 

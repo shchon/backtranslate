@@ -79,7 +79,9 @@ class App:
 
     def _on_translation_submitted(self, eval_id, subtitle_id, user_input, official):
         if eval_id == -1:  # session ended
-            self._load_review()
+            session_id = self.learn_page.session_id
+            self._load_review(session_id)
+            self.learn_page.reset_to_start()
             self.window.navigate_to_review()
             return
 
@@ -150,9 +152,9 @@ class App:
             except Exception:
                 pass
 
-    def _load_review(self):
-        if self.learn_page.session_id:
-            self.review_page.load_session(self.learn_page.session_id)
+    def _load_review(self, session_id):
+        if session_id:
+            self.review_page.load_session(session_id)
 
     def run(self):
         self.window.show()
