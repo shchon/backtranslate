@@ -2,6 +2,7 @@ DEFAULT_BASE_URL = "https://api.deepseek.com"
 DEFAULT_MODEL = "deepseek-chat"
 DEFAULT_CONTEXT_N = 1
 DEFAULT_FONT_SIZE = 14
+DEFAULT_RECENT_PAIRS = []
 DEFAULT_PROMPT_TEMPLATE = """You are a professional subtitle translator and language coach.
 
 {context}

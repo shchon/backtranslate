@@ -6,6 +6,7 @@ from .defaults import (
     DEFAULT_CONTEXT_N,
     DEFAULT_FONT_SIZE,
     DEFAULT_PROMPT_TEMPLATE,
+    DEFAULT_RECENT_PAIRS,
 )
 
 CONFIG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config")
@@ -23,6 +24,7 @@ def _default_config():
         "model": DEFAULT_MODEL,
         "context_n": DEFAULT_CONTEXT_N,
         "font_size": DEFAULT_FONT_SIZE,
+        "recent_pairs": DEFAULT_RECENT_PAIRS,
         "prompt_template": DEFAULT_PROMPT_TEMPLATE,
     }
 

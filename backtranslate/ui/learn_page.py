@@ -1,11 +1,13 @@
+import os
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QProgressBar, QFileDialog, QMessageBox,
-    QDialog, QRadioButton, QGroupBox,
+    QDialog, QRadioButton, QGroupBox, QMenu,
 )
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QFont
 
+from backtranslate.config import load_config, save_config
 from backtranslate.srt.parser import parse_srt
 from backtranslate.srt.pairing import pair_by_index, pair_by_timecode
 from backtranslate.database.connection import init_db
@@ -127,6 +129,16 @@ class LearnPage(QWidget):
         self.import_btn.clicked.connect(self._show_import_dialog)
         top.addWidget(self.import_btn)
 
+        # History button
+        self.history_btn = QPushButton("历史 ▾")
+        self.history_btn.setStyleSheet(
+            "QPushButton { color: #666; border: 1px solid #ccc; "
+            "padding: 8px 14px; border-radius: 4px; font-size: 13px; }"
+            "QPushButton:hover { background: #eee; }"
+        )
+        self.history_btn.clicked.connect(self._show_history_menu)
+        top.addWidget(self.history_btn)
+
         self.end_btn = QPushButton("结束学习")
         self.end_btn.setStyleSheet(
             "QPushButton { background: #e74c3c; color: white; padding: 8px 16px; "
@@ -209,6 +221,55 @@ class LearnPage(QWidget):
         if dlg.exec() == QDialog.Accepted:
             self._import_srt(dlg.chinese_path, dlg.english_path, dlg.by_timecode_rb.isChecked())
 
+    def _show_history_menu(self):
+        menu = QMenu(self)
+        cfg = load_config()
+        recent = cfg.get("recent_pairs", []) or []
+
+        for pair in recent:
+            ch_path = pair.get("ch_path", "")
+            en_path = pair.get("en_path", "")
+            label = pair.get("name", os.path.basename(ch_path))
+            use_timecode = pair.get("use_timecode", True)
+
+            # Only show if both files still exist
+            if not os.path.exists(ch_path) or not os.path.exists(en_path):
+                continue
+
+            strategy = "时间轴" if use_timecode else "序号"
+            action_text = f"{label}  ({strategy})"
+            action = menu.addAction(action_text)
+            action.triggered.connect(
+                lambda checked, cp=ch_path, ep=en_path, ut=use_timecode:
+                    self._import_srt(cp, ep, ut)
+            )
+
+        if menu.actions():
+            menu.addSeparator()
+
+        menu.addAction("清除历史").triggered.connect(self._clear_history)
+        menu.exec(self.history_btn.mapToGlobal(self.history_btn.rect().bottomLeft()))
+
+    def _save_recent_pair(self, ch_path, en_path, use_timecode):
+        cfg = load_config()
+        recent = list(cfg.get("recent_pairs", []) or [])
+        # Remove duplicate
+        recent = [p for p in recent if not (p.get("ch_path") == ch_path and p.get("en_path") == en_path)]
+        recent.insert(0, {
+            "name": os.path.splitext(os.path.basename(ch_path))[0],
+            "ch_path": ch_path,
+            "en_path": en_path,
+            "use_timecode": use_timecode,
+        })
+        # Keep max 8
+        cfg["recent_pairs"] = recent[:8]
+        save_config(cfg)
+
+    def _clear_history(self):
+        cfg = load_config()
+        cfg["recent_pairs"] = []
+        save_config(cfg)
+
     def _import_srt(self, ch_path, en_path, use_timecode):
         try:
             with open(ch_path, "r", encoding="utf-8") as f:
@@ -256,8 +317,10 @@ class LearnPage(QWidget):
         if reply != QMessageBox.Ok:
             return
 
+        # Save to recent history
+        self._save_recent_pair(ch_path, en_path, use_timecode)
+
         init_db()
-        import os
         name = os.path.splitext(os.path.basename(ch_path))[0]
 
         clear_session_data()
