@@ -3,10 +3,50 @@ from PySide6.QtWidgets import (
     QLineEdit, QSpinBox, QPlainTextEdit, QPushButton,
     QLabel, QGroupBox, QMessageBox,
 )
+from PySide6.QtCore import QThread, Signal
+import requests
+import json
 from backtranslate.config import load_config, save_config
 from backtranslate.defaults import (
     DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROMPT_TEMPLATE,
 )
+
+
+class _TestWorker(QThread):
+    finished = Signal(bool, str)  # success, message
+
+    def __init__(self, base_url: str, api_key: str, model: str):
+        super().__init__()
+        self.base_url = base_url
+        self.api_key = api_key
+        self.model = model
+
+    def run(self) -> None:
+        url = self.base_url.rstrip("/") + "/chat/completions"
+        payload = {
+            "model": self.model,
+            "messages": [{"role": "user", "content": "Say 'OK' and nothing else."}],
+            "max_tokens": 10,
+        }
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+        try:
+            resp = requests.post(url, json=payload, headers=headers, timeout=15)
+            if resp.status_code == 200:
+                data = resp.json()
+                model_used = data.get("model", self.model)
+                self.finished.emit(True, f"连接成功\n模型: {model_used}")
+            else:
+                detail = ""
+                try:
+                    detail = resp.json()
+                except Exception:
+                    detail = resp.text[:200]
+                self.finished.emit(False, f"API 返回错误 ({resp.status_code})\n{detail}")
+        except requests.RequestException as e:
+            self.finished.emit(False, f"连接失败\n{str(e)[:200]}")
 
 
 class SettingsPage(QWidget):
@@ -45,6 +85,20 @@ class SettingsPage(QWidget):
         self.context_n_input.setValue(1)
         ai_form.addRow("上下文字数:", self.context_n_input)
 
+        # Test button
+        test_layout = QHBoxLayout()
+        test_layout.addStretch()
+        self.test_btn = QPushButton("测试连接")
+        self.test_btn.setStyleSheet(
+            "QPushButton { color: #4a90d9; border: 1px solid #4a90d9; "
+            "padding: 6px 16px; border-radius: 4px; }"
+            "QPushButton:hover { background: #e8f0fe; }"
+            "QPushButton:disabled { color: #999; border-color: #ccc; }"
+        )
+        self.test_btn.clicked.connect(self._test_connection)
+        test_layout.addWidget(self.test_btn)
+        ai_form.addRow("", test_layout)
+
         layout.addWidget(ai_group)
 
         # Prompt group
@@ -82,6 +136,30 @@ class SettingsPage(QWidget):
 
         layout.addLayout(btn_layout)
         layout.addStretch()
+
+    def _test_connection(self):
+        base_url = self.base_url_input.text().strip() or DEFAULT_BASE_URL
+        api_key = self.api_key_input.text().strip()
+        model = self.model_input.text().strip() or DEFAULT_MODEL
+
+        if not api_key:
+            QMessageBox.warning(self, "提示", "请先输入 API Key。")
+            return
+
+        self.test_btn.setEnabled(False)
+        self.test_btn.setText("测试中...")
+
+        self._tester = _TestWorker(base_url, api_key, model)
+        self._tester.finished.connect(self._on_test_finished)
+        self._tester.start()
+
+    def _on_test_finished(self, success: bool, message: str):
+        self.test_btn.setEnabled(True)
+        self.test_btn.setText("测试连接")
+        if success:
+            QMessageBox.information(self, "连接成功", message)
+        else:
+            QMessageBox.warning(self, "连接失败", message)
 
     def _load_config(self):
         cfg = load_config()
