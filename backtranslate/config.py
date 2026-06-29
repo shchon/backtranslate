@@ -4,6 +4,7 @@ from .defaults import (
     DEFAULT_BASE_URL,
     DEFAULT_MODEL,
     DEFAULT_CONTEXT_N,
+    DEFAULT_FONT_SIZE,
     DEFAULT_PROMPT_TEMPLATE,
 )
 
@@ -21,6 +22,7 @@ def _default_config():
         "api_key": "",
         "model": DEFAULT_MODEL,
         "context_n": DEFAULT_CONTEXT_N,
+        "font_size": DEFAULT_FONT_SIZE,
         "prompt_template": DEFAULT_PROMPT_TEMPLATE,
     }
 

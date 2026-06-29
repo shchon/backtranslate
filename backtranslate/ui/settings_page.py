@@ -105,6 +105,18 @@ class SettingsPage(QWidget):
 
         layout.addWidget(ai_group)
 
+        # Display group
+        display_group = QGroupBox("显示")
+        display_form = QFormLayout(display_group)
+
+        self.font_size_input = QSpinBox()
+        self.font_size_input.setRange(10, 24)
+        self.font_size_input.setValue(14)
+        self.font_size_input.setSuffix(" pt")
+        display_form.addRow("复盘字体大小:", self.font_size_input)
+
+        layout.addWidget(display_group)
+
         # Prompt group
         prompt_group = QGroupBox("Prompt 模板")
         prompt_layout = QVBoxLayout(prompt_group)
@@ -171,6 +183,7 @@ class SettingsPage(QWidget):
         self.api_key_input.setText(cfg.get("api_key", ""))
         self.model_input.setText(cfg.get("model", ""))
         self.context_n_input.setValue(cfg.get("context_n", 1))
+        self.font_size_input.setValue(cfg.get("font_size", 14))
         self.prompt_edit.setPlainText(cfg.get("prompt_template", ""))
 
     def _reset_prompt(self):
@@ -182,6 +195,7 @@ class SettingsPage(QWidget):
             "api_key": self.api_key_input.text().strip(),
             "model": self.model_input.text().strip() or DEFAULT_MODEL,
             "context_n": self.context_n_input.value(),
+            "font_size": self.font_size_input.value(),
             "prompt_template": self.prompt_edit.toPlainText() or DEFAULT_PROMPT_TEMPLATE,
         }
         save_config(cfg)

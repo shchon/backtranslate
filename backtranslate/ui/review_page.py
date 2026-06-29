@@ -2,9 +2,11 @@ import json
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QScrollArea,
     QLabel, QPushButton, QFrame, QLineEdit, QMessageBox,
+    QTextBrowser,
 )
 from PySide6.QtCore import Signal, Qt
 
+from backtranslate.config import load_config
 from backtranslate.database.operations import (
     get_subtitles_for_session, get_latest_translation,
     get_evaluation_for_translation, create_translation,
@@ -156,29 +158,69 @@ class ReviewPage(QWidget):
             lbl.setStyleSheet(f"color: {color}; font-weight: bold;")
             layout.addWidget(lbl)
 
+    def _font_size(self) -> int:
+        cfg = load_config()
+        return cfg.get("font_size", 14)
+
     def _build_detail_content(self, parent, sub, eval_data):
         parent_layout = QVBoxLayout(parent)
+        font_size = self._font_size()
 
-        if eval_data and eval_data["status"] == "done":
-            scores_text = (
-                f"意思: {eval_data['meaning_score']} | "
-                f"语法: {eval_data['grammar_score']} | "
-                f"自然度: {eval_data['naturalness_score']} | "
-                f"字幕风格: {eval_data['subtitle_style_score']}"
+        # User's translation
+        user_trans = get_latest_translation(sub["id"])
+        if user_trans:
+            user_label = QLabel(f"你的翻译: {user_trans}")
+            user_label.setStyleSheet(
+                f"font-size: {font_size}px; color: #4a90d9; font-style: italic; "
+                "margin-bottom: 12px; padding: 8px; background: #f0f5ff; border-radius: 4px;"
             )
-            scores_label = QLabel(scores_text)
-            scores_label.setStyleSheet("font-size: 13px; margin-bottom: 8px;")
-            parent_layout.addWidget(scores_label)
+            user_label.setWordWrap(True)
+            parent_layout.addWidget(user_label)
 
-            analysis_label = QLabel(eval_data["analysis_text"] or "")
-            analysis_label.setWordWrap(True)
-            analysis_label.setStyleSheet("color: #333; margin-bottom: 8px;")
-            parent_layout.addWidget(analysis_label)
+        # AI scores
+        if eval_data and eval_data["status"] == "done":
+            scores_layout = QHBoxLayout()
+            for name, key in [("意思", "meaning_score"), ("语法", "grammar_score"),
+                              ("自然度", "naturalness_score"), ("字幕风格", "subtitle_style_score")]:
+                score = eval_data[key]
+                color = "#27ae60" if score >= 80 else "#f39c12" if score >= 60 else "#e74c3c"
+                chip = QLabel(f"{name} {score}")
+                chip.setStyleSheet(
+                    f"font-size: {font_size - 2}px; color: {color}; "
+                    f"padding: 4px 10px; border: 1px solid {color}; "
+                    "border-radius: 10px;"
+                )
+                scores_layout.addWidget(chip)
+            scores_layout.addStretch()
+            parent_layout.addLayout(scores_layout)
+
+            # AI analysis with good formatting
+            analysis_browser = QTextBrowser()
+            analysis_browser.setOpenExternalLinks(True)
+            analysis_browser.setStyleSheet(
+                f"font-size: {font_size}px; color: #333; "
+                "border: none; background: transparent; "
+                "margin-top: 8px; line-height: 1.6;"
+            )
+            analysis_browser.setMinimumHeight(120)
+            # Convert plain text to HTML for line breaks and formatting
+            html = eval_data["analysis_text"] or ""
+            html = html.replace("\n", "<br>")
+            html = f"<div style='line-height:1.6;'>{html}</div>"
+            analysis_browser.setHtml(html)
+            parent_layout.addWidget(analysis_browser)
 
         # Official subtitle (hidden by default)
-        official_btn = QPushButton("查看官方字幕")
-        official_btn.setStyleSheet("color: #4a90d9; border: none;")
+        official_btn = QPushButton("查看官方字幕 ▸")
+        official_btn.setStyleSheet(
+            f"color: #4a90d9; border: none; font-size: {font_size - 1}px; "
+            "text-align: left; margin-top: 8px;"
+        )
         official_label = QLabel(sub["english_official"])
+        official_label.setStyleSheet(
+            f"font-size: {font_size}px; color: #666; "
+            "padding: 8px; background: #fafafa; border-radius: 4px;"
+        )
         official_label.setWordWrap(True)
         official_label.setVisible(False)
         parent_layout.addWidget(official_btn)

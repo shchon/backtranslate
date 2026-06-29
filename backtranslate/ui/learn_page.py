@@ -173,6 +173,27 @@ class LearnPage(QWidget):
         self.input_field.returnPressed.connect(self._submit_translation)
         ta_layout.addWidget(self.input_field)
 
+        # Buttons below input
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        skip_btn = QPushButton("跳过")
+        skip_btn.setStyleSheet(
+            "QPushButton { color: #888; border: 1px solid #ccc; "
+            "padding: 8px 20px; border-radius: 4px; font-size: 13px; }"
+            "QPushButton:hover { background: #eee; }"
+        )
+        skip_btn.clicked.connect(self._skip_sentence)
+        btn_row.addWidget(skip_btn)
+        next_btn = QPushButton("下一句")
+        next_btn.setStyleSheet(
+            "QPushButton { background: #4a90d9; color: white; "
+            "padding: 8px 24px; border-radius: 4px; font-size: 13px; }"
+            "QPushButton:hover { background: #357abd; }"
+        )
+        next_btn.clicked.connect(self._submit_translation)
+        btn_row.addWidget(next_btn)
+        ta_layout.addLayout(btn_row)
+
         layout.addWidget(self.translation_area)
 
         # Empty state
@@ -312,6 +333,14 @@ class LearnPage(QWidget):
             eval_id, subs_row["id"], text, subs_row["english_official"]
         )
 
+        self._show_current_sentence()
+
+    def _skip_sentence(self):
+        """Skip current sentence without translating."""
+        self.completed_count += 1
+        self.current_idx += 1
+        if self.session_id:
+            update_session_completed(self.session_id, self.completed_count)
         self._show_current_sentence()
 
     def _get_subtitle_row(self, idx):
