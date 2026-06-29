@@ -55,7 +55,7 @@ class ImportDialog(QDialog):
         pair_layout = QVBoxLayout(pair_group)
         self.by_timecode_rb = QRadioButton("按时间轴匹配")
         self.by_index_rb = QRadioButton("按序号匹配")
-        self.by_timecode_rb.setChecked(True)
+        self.by_index_rb.setChecked(True)
         pair_layout.addWidget(self.by_timecode_rb)
         pair_layout.addWidget(self.by_index_rb)
         layout.addWidget(pair_group)
@@ -230,7 +230,7 @@ class LearnPage(QWidget):
             ch_path = pair.get("ch_path", "")
             en_path = pair.get("en_path", "")
             label = pair.get("name", os.path.basename(ch_path))
-            use_timecode = pair.get("use_timecode", True)
+            use_timecode = pair.get("use_timecode", False)
 
             # Only show if both files still exist
             if not os.path.exists(ch_path) or not os.path.exists(en_path):
@@ -289,33 +289,12 @@ class LearnPage(QWidget):
             QMessageBox.warning(self, "配对失败", "没有找到可配对的中英字幕。")
             return
 
-        # Show preview for user to verify pairing before starting
-        preview_lines = []
-        preview_count = min(5, len(pairs))
-        for i in range(preview_count):
-            ch_text = pairs[i][0]["text"]
-            en_text = pairs[i][1]["text"]
-            preview_lines.append(f"#{i + 1}  {ch_text}")
-            preview_lines.append(f"    {en_text}")
-
-        preview_text = "\n".join(preview_lines)
-        summary = (
-            f"中文 {len(ch_subs)} 句，英文 {len(en_subs)} 句 → 配对 {len(pairs)} 句\n\n"
-            f"前 {preview_count} 句预览:\n{preview_text}"
-        )
         if len(ch_subs) != len(en_subs):
-            summary += (
-                f"\n\n⚠ 中英句数不一致！"
-                f"\n中文 {len(ch_subs)} 句，英文 {len(en_subs)} 句"
-                f"\n请检查是否选错了文件，或尝试「按时间轴匹配」。"
+            QMessageBox.warning(
+                self, "句数不一致",
+                f"中文 {len(ch_subs)} 句，英文 {len(en_subs)} 句\n"
+                f"已配对 {len(pairs)} 句，建议检查字幕文件或尝试「按时间轴匹配」。"
             )
-
-        reply = QMessageBox.question(
-            self, "确认配对结果", summary,
-            QMessageBox.Ok | QMessageBox.Cancel,
-        )
-        if reply != QMessageBox.Ok:
-            return
 
         # Save to recent history
         self._save_recent_pair(ch_path, en_path, use_timecode)
