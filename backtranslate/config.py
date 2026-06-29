@@ -25,18 +25,21 @@ def _default_config():
     }
 
 
-def load_config():
+def load_config() -> dict:
     _ensure_config_dir()
     if os.path.exists(CONFIG_FILE):
-        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-            saved = json.load(f)
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                saved = json.load(f)
+        except (json.JSONDecodeError, ValueError):
+            saved = {}
         cfg = _default_config()
         cfg.update(saved)
         return cfg
     return _default_config()
 
 
-def save_config(cfg):
+def save_config(cfg: dict) -> None:
     _ensure_config_dir()
     with open(CONFIG_FILE, "w", encoding="utf-8") as f:
         json.dump(cfg, f, indent=2, ensure_ascii=False)
