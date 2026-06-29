@@ -1,9 +1,8 @@
 import sqlite3
 import os
+from backtranslate._paths import get_data_dir
 
-DB_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "..", "data"
-)
+DB_DIR = get_data_dir()
 DB_PATH = os.path.join(DB_DIR, "backtranslate.db")
 
 

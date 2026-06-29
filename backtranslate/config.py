@@ -1,5 +1,6 @@
 import json
 import os
+from ._paths import get_config_dir
 from .defaults import (
     DEFAULT_BASE_URL,
     DEFAULT_MODEL,
@@ -10,7 +11,7 @@ from .defaults import (
     DEFAULT_FAVORITE_DIRS,
 )
 
-CONFIG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config")
+CONFIG_DIR = get_config_dir()
 CONFIG_FILE = os.path.join(CONFIG_DIR, "settings.json")
 
 
