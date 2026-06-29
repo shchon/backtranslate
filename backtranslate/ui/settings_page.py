@@ -22,7 +22,9 @@ class _TestWorker(QThread):
         self.model = model
 
     def run(self) -> None:
-        url = self.base_url.rstrip("/") + "/chat/completions"
+        url = self.base_url.rstrip("/")
+        if not url.endswith("/chat/completions"):
+            url += "/chat/completions"
         payload = {
             "model": self.model,
             "messages": [{"role": "user", "content": "Say 'OK' and nothing else."}],
@@ -68,7 +70,9 @@ class SettingsPage(QWidget):
         ai_form = QFormLayout(ai_group)
 
         self.base_url_input = QLineEdit()
-        self.base_url_input.setPlaceholderText(DEFAULT_BASE_URL)
+        self.base_url_input.setPlaceholderText(
+            f"如 {DEFAULT_BASE_URL} 或直接填入完整 /chat/completions 地址"
+        )
         ai_form.addRow("Base URL:", self.base_url_input)
 
         self.api_key_input = QLineEdit()

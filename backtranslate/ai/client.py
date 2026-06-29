@@ -37,7 +37,9 @@ def call_ai(
     official: str,
 ) -> dict | None:
     prompt = build_prompt(prompt_template, context, user_input, official)
-    url = base_url.rstrip("/") + "/chat/completions"
+    url = base_url.rstrip("/")
+    if not url.endswith("/chat/completions"):
+        url += "/chat/completions"
 
     payload = {
         "model": model,
