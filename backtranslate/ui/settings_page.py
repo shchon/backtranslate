@@ -1,0 +1,106 @@
+from PySide6.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
+    QLineEdit, QSpinBox, QPlainTextEdit, QPushButton,
+    QLabel, QGroupBox, QMessageBox,
+)
+from backtranslate.config import load_config, save_config
+from backtranslate.defaults import (
+    DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROMPT_TEMPLATE,
+)
+
+
+class SettingsPage(QWidget):
+    def __init__(self):
+        super().__init__()
+        self._build_ui()
+        self._load_config()
+
+    def _build_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(24, 24, 24, 24)
+
+        title = QLabel("设置")
+        title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        layout.addWidget(title)
+
+        # AI Config group
+        ai_group = QGroupBox("AI 配置")
+        ai_form = QFormLayout(ai_group)
+
+        self.base_url_input = QLineEdit()
+        self.base_url_input.setPlaceholderText(DEFAULT_BASE_URL)
+        ai_form.addRow("Base URL:", self.base_url_input)
+
+        self.api_key_input = QLineEdit()
+        self.api_key_input.setEchoMode(QLineEdit.Password)
+        self.api_key_input.setPlaceholderText("输入 API Key")
+        ai_form.addRow("API Key:", self.api_key_input)
+
+        self.model_input = QLineEdit()
+        self.model_input.setPlaceholderText(DEFAULT_MODEL)
+        ai_form.addRow("Model:", self.model_input)
+
+        self.context_n_input = QSpinBox()
+        self.context_n_input.setRange(0, 5)
+        self.context_n_input.setValue(1)
+        ai_form.addRow("上下文字数:", self.context_n_input)
+
+        layout.addWidget(ai_group)
+
+        # Prompt group
+        prompt_group = QGroupBox("Prompt 模板")
+        prompt_layout = QVBoxLayout(prompt_group)
+
+        prompt_help = QLabel(
+            "可用变量: {context}（上下文字幕）、{user_input}（你的翻译）、{official}（官方字幕）"
+        )
+        prompt_help.setStyleSheet("color: #666; font-size: 12px;")
+        prompt_layout.addWidget(prompt_help)
+
+        self.prompt_edit = QPlainTextEdit()
+        self.prompt_edit.setMinimumHeight(250)
+        prompt_layout.addWidget(self.prompt_edit)
+
+        layout.addWidget(prompt_group)
+
+        # Buttons
+        btn_layout = QHBoxLayout()
+        btn_layout.addStretch()
+
+        reset_btn = QPushButton("恢复默认 Prompt")
+        reset_btn.clicked.connect(self._reset_prompt)
+        btn_layout.addWidget(reset_btn)
+
+        save_btn = QPushButton("保存")
+        save_btn.setStyleSheet(
+            "QPushButton { background: #4a90d9; color: white; padding: 8px 24px; "
+            "border-radius: 4px; font-size: 14px; }"
+            "QPushButton:hover { background: #357abd; }"
+        )
+        save_btn.clicked.connect(self._save)
+        btn_layout.addWidget(save_btn)
+
+        layout.addLayout(btn_layout)
+        layout.addStretch()
+
+    def _load_config(self):
+        cfg = load_config()
+        self.base_url_input.setText(cfg.get("base_url", ""))
+        self.api_key_input.setText(cfg.get("api_key", ""))
+        self.model_input.setText(cfg.get("model", ""))
+        self.context_n_input.setValue(cfg.get("context_n", 1))
+        self.prompt_edit.setPlainText(cfg.get("prompt_template", ""))
+
+    def _reset_prompt(self):
+        self.prompt_edit.setPlainText(DEFAULT_PROMPT_TEMPLATE)
+
+    def _save(self):
+        cfg = {
+            "base_url": self.base_url_input.text().strip() or DEFAULT_BASE_URL,
+            "api_key": self.api_key_input.text().strip(),
+            "model": self.model_input.text().strip() or DEFAULT_MODEL,
+            "context_n": self.context_n_input.value(),
+            "prompt_template": self.prompt_edit.toPlainText() or DEFAULT_PROMPT_TEMPLATE,
+        }
+        save_config(cfg)
+        QMessageBox.information(self, "保存成功", "设置已保存。")
