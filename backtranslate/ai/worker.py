@@ -55,19 +55,17 @@ class EvaluationWorker(QObject):
 
 
 class EvaluationThread(QThread):
-    task_ready = Signal()
-
     def __init__(self, worker: EvaluationWorker):
         super().__init__()
         self.worker = worker
         self._running = False
 
     def run(self) -> None:
+        """Process queue items directly on this worker thread, blocking call_ai won't freeze UI."""
         self._running = True
         while self._running:
+            self.worker.process_next()
             self.msleep(100)
-            if not self.worker.queue.empty():
-                self.task_ready.emit()
 
     def stop(self) -> None:
         self._running = False

@@ -52,7 +52,6 @@ class App:
         self.worker.evaluation_failed.connect(self._on_eval_failed)
 
         self.eval_thread = EvaluationThread(self.worker)
-        self.eval_thread.task_ready.connect(self.worker.process_next)
         self.eval_thread.start()
 
     def _find_subtitle(self, subtitle_id):
@@ -104,38 +103,52 @@ class App:
         self.worker.add_task(eval_id, 0, user_input, official, context)
 
     def _on_eval_done(self, eval_id, result):
-        update_evaluation_status(
-            eval_id, "done",
-            result["meaning_score"],
-            result["grammar_score"],
-            result["naturalness_score"],
-            result["subtitle_style_score"],
-            result["analysis"],
-            json.dumps(result.get("suggested_expressions", [])),
-        )
+        try:
+            update_evaluation_status(
+                eval_id, "done",
+                result["meaning_score"],
+                result["grammar_score"],
+                result["naturalness_score"],
+                result["subtitle_style_score"],
+                result["analysis"],
+                json.dumps(result.get("suggested_expressions", [])),
+            )
+        except Exception:
+            return
+
         if hasattr(self, 'review_page') and self.review_page.session_id:
-            conn = get_connection()
-            row = conn.execute(
-                "SELECT t.subtitle_id FROM translations t "
-                "JOIN evaluations e ON e.translation_id = t.id "
-                "WHERE e.id = ?", (eval_id,)
-            ).fetchone()
-            conn.close()
-            if row:
-                self.review_page.update_evaluation(row[0])
+            try:
+                conn = get_connection()
+                row = conn.execute(
+                    "SELECT t.subtitle_id FROM translations t "
+                    "JOIN evaluations e ON e.translation_id = t.id "
+                    "WHERE e.id = ?", (eval_id,)
+                ).fetchone()
+                conn.close()
+                if row:
+                    self.review_page.update_evaluation(row[0])
+            except Exception:
+                pass
 
     def _on_eval_failed(self, eval_id):
-        update_evaluation_status(eval_id, "failed", error="批改失败")
+        try:
+            update_evaluation_status(eval_id, "failed", error="批改失败")
+        except Exception:
+            return
+
         if hasattr(self, 'review_page') and self.review_page.session_id:
-            conn = get_connection()
-            row = conn.execute(
-                "SELECT t.subtitle_id FROM translations t "
-                "JOIN evaluations e ON e.translation_id = t.id "
-                "WHERE e.id = ?", (eval_id,)
-            ).fetchone()
-            conn.close()
-            if row:
-                self.review_page.update_evaluation(row[0])
+            try:
+                conn = get_connection()
+                row = conn.execute(
+                    "SELECT t.subtitle_id FROM translations t "
+                    "JOIN evaluations e ON e.translation_id = t.id "
+                    "WHERE e.id = ?", (eval_id,)
+                ).fetchone()
+                conn.close()
+                if row:
+                    self.review_page.update_evaluation(row[0])
+            except Exception:
+                pass
 
     def _load_review(self):
         if self.learn_page.session_id:
