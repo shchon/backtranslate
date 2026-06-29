@@ -189,10 +189,14 @@ class LearnPage(QWidget):
             self._import_srt(dlg.chinese_path, dlg.english_path, dlg.by_timecode_rb.isChecked())
 
     def _import_srt(self, ch_path, en_path, use_timecode):
-        with open(ch_path, "r", encoding="utf-8") as f:
-            ch_subs = parse_srt(f.read())
-        with open(en_path, "r", encoding="utf-8") as f:
-            en_subs = parse_srt(f.read())
+        try:
+            with open(ch_path, "r", encoding="utf-8") as f:
+                ch_subs = parse_srt(f.read())
+            with open(en_path, "r", encoding="utf-8") as f:
+                en_subs = parse_srt(f.read())
+        except (OSError, UnicodeDecodeError) as e:
+            QMessageBox.critical(self, "文件错误", f"无法读取字幕文件:\n{e}")
+            return
 
         if use_timecode:
             pairs = pair_by_timecode(ch_subs, en_subs)
