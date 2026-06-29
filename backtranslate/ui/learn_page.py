@@ -207,6 +207,34 @@ class LearnPage(QWidget):
             QMessageBox.warning(self, "配对失败", "没有找到可配对的中英字幕。")
             return
 
+        # Show preview for user to verify pairing before starting
+        preview_lines = []
+        preview_count = min(5, len(pairs))
+        for i in range(preview_count):
+            ch_text = pairs[i][0]["text"]
+            en_text = pairs[i][1]["text"]
+            preview_lines.append(f"#{i + 1}  {ch_text}")
+            preview_lines.append(f"    {en_text}")
+
+        preview_text = "\n".join(preview_lines)
+        summary = (
+            f"中文 {len(ch_subs)} 句，英文 {len(en_subs)} 句 → 配对 {len(pairs)} 句\n\n"
+            f"前 {preview_count} 句预览:\n{preview_text}"
+        )
+        if len(ch_subs) != len(en_subs):
+            summary += (
+                f"\n\n⚠ 中英句数不一致！"
+                f"\n中文 {len(ch_subs)} 句，英文 {len(en_subs)} 句"
+                f"\n请检查是否选错了文件，或尝试「按时间轴匹配」。"
+            )
+
+        reply = QMessageBox.question(
+            self, "确认配对结果", summary,
+            QMessageBox.Ok | QMessageBox.Cancel,
+        )
+        if reply != QMessageBox.Ok:
+            return
+
         init_db()
         import os
         name = os.path.splitext(os.path.basename(ch_path))[0]

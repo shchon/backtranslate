@@ -49,3 +49,12 @@ def test_parse_srt_with_windows_line_endings():
     result = parse_srt(content)
     assert len(result) == 1
     assert result[0]["text"] == "你好"
+
+
+def test_parse_srt_with_bom():
+    content = "﻿1\n00:00:01,000 --> 00:00:03,000\n你好\n\n2\n00:00:04,000 --> 00:00:06,000\n再见\n"
+    result = parse_srt(content)
+    assert len(result) == 2
+    assert result[0]["index"] == 1
+    assert result[0]["text"] == "你好"
+    assert result[1]["text"] == "再见"

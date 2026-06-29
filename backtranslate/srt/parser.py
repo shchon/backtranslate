@@ -17,6 +17,9 @@ def _strip_tags(text):
 
 def parse_srt(content):
     """Parse SRT content into list of dicts with keys: index, start, end, text."""
+    # Handle BOM (byte order mark) that some text editors add
+    if content.startswith("﻿"):
+        content = content[1:]
     content = content.replace("\r\n", "\n")
 
     if not content.strip():
