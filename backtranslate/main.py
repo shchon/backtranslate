@@ -39,6 +39,7 @@ class App:
         self.learn_page.translation_submitted.connect(self._on_translation_submitted)
         self.review_page.redo_submitted.connect(self._on_redo_submitted)
         self.review_page.retry_requested.connect(self._on_retry_requested)
+        self.window.import_at_path.connect(self.learn_page.open_import_at)
 
     def _setup_worker(self):
         cfg = load_config()

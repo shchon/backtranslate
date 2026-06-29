@@ -221,6 +221,30 @@ class LearnPage(QWidget):
         if dlg.exec() == QDialog.Accepted:
             self._import_srt(dlg.chinese_path, dlg.english_path, dlg.by_timecode_rb.isChecked())
 
+    def open_import_at(self, start_path: str) -> None:
+        """Open file dialogs starting at the given directory."""
+        # Pre-fill paths from the given directory
+        ch_path, _ = QFileDialog.getOpenFileName(
+            self, "选择中文 SRT", start_path, "SRT Files (*.srt)"
+        )
+        if not ch_path:
+            return
+        en_path, _ = QFileDialog.getOpenFileName(
+            self, "选择英文 SRT", start_path, "SRT Files (*.srt)"
+        )
+        if not en_path:
+            return
+
+        dlg = ImportDialog(self)
+        dlg.chinese_path = ch_path
+        dlg.english_path = en_path
+        dlg.ch_path_label.setText(ch_path)
+        dlg.ch_path_label.setStyleSheet("color: #333;")
+        dlg.en_path_label.setText(en_path)
+        dlg.en_path_label.setStyleSheet("color: #333;")
+        if dlg.exec() == QDialog.Accepted:
+            self._import_srt(dlg.chinese_path, dlg.english_path, dlg.by_timecode_rb.isChecked())
+
     def _show_history_menu(self):
         menu = QMenu(self)
         cfg = load_config()

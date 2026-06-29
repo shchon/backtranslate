@@ -3,6 +3,7 @@ DEFAULT_MODEL = "deepseek-chat"
 DEFAULT_CONTEXT_N = 1
 DEFAULT_FONT_SIZE = 14
 DEFAULT_RECENT_PAIRS = []
+DEFAULT_FAVORITE_DIRS = []
 DEFAULT_PROMPT_TEMPLATE = """You are a professional subtitle translator. Evaluate the user's translation directly and concisely — no compliments, no encouragement, just the facts.
 
 {context}

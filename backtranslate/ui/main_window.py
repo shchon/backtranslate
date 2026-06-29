@@ -1,8 +1,12 @@
+import os
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
-    QPushButton, QStackedWidget, QFrame,
+    QPushButton, QStackedWidget, QFrame, QLabel,
+    QScrollArea, QFileDialog, QInputDialog, QMessageBox,
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
+
+from backtranslate.config import load_config, save_config
 
 
 NAV_STYLE = """
@@ -25,6 +29,8 @@ QPushButton[active="true"] {
 
 
 class MainWindow(QMainWindow):
+    import_at_path = Signal(str)  # emitted when a favorite dir is clicked
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("BackTranslate - 回译训练")
@@ -55,8 +61,39 @@ class MainWindow(QMainWindow):
             sidebar_layout.addWidget(btn)
             self.nav_buttons.append((name, btn))
 
+        # Favorite directories section
+        dir_header = QHBoxLayout()
+        dir_label = QLabel("常用目录")
+        dir_label.setStyleSheet("font-size: 12px; color: #888; font-weight: bold; padding: 8px 4px 4px 4px;")
+        dir_header.addWidget(dir_label)
+        dir_header.addStretch()
+        add_btn = QPushButton("+")
+        add_btn.setFixedSize(22, 22)
+        add_btn.setStyleSheet(
+            "QPushButton { color: #888; border: 1px solid #ccc; border-radius: 3px; font-size: 14px; }"
+            "QPushButton:hover { background: #e0e0e0; }"
+        )
+        add_btn.clicked.connect(self._add_favorite_dir)
+        dir_header.addWidget(add_btn)
+        sidebar_layout.addLayout(dir_header)
+
+        # Scrollable dir list
+        self.dir_scroll = QScrollArea()
+        self.dir_scroll.setWidgetResizable(True)
+        self.dir_scroll.setFixedHeight(120)
+        self.dir_scroll.setStyleSheet("QScrollArea { border: none; background: transparent; }")
+        self.dir_container = QWidget()
+        self.dir_layout = QVBoxLayout(self.dir_container)
+        self.dir_layout.setContentsMargins(0, 0, 0, 0)
+        self.dir_layout.setSpacing(1)
+        self.dir_layout.setAlignment(Qt.AlignTop)
+        self.dir_scroll.setWidget(self.dir_container)
+        sidebar_layout.addWidget(self.dir_scroll)
+
         sidebar_layout.addStretch()
         layout.addWidget(sidebar)
+
+        self._refresh_dir_list()
 
         # Content area
         self.stack = QStackedWidget()
@@ -68,6 +105,66 @@ class MainWindow(QMainWindow):
         self.settings_page = None
 
         self._update_nav("学习")
+
+    def _refresh_dir_list(self) -> None:
+        while self.dir_layout.count():
+            item = self.dir_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+
+        cfg = load_config()
+        dirs = cfg.get("favorite_dirs", []) or []
+
+        for d in dirs:
+            if not os.path.isdir(d):
+                continue
+            row = QHBoxLayout()
+            row.setContentsMargins(4, 0, 4, 0)
+
+            name = os.path.basename(d) or d
+            btn = QPushButton(name)
+            btn.setStyleSheet(
+                "QPushButton { text-align: left; padding: 4px 6px; border: none; "
+                "border-radius: 3px; font-size: 12px; color: #555; }"
+                "QPushButton:hover { background: #e0e0e0; color: #4a90d9; }"
+            )
+            btn.setCursor(Qt.PointingHandCursor)
+            btn.setToolTip(d)
+            btn.clicked.connect(lambda checked, path=d: self.import_at_path.emit(path))
+            row.addWidget(btn, 1)
+
+            x_btn = QPushButton("×")
+            x_btn.setFixedSize(18, 18)
+            x_btn.setStyleSheet(
+                "QPushButton { color: #aaa; border: none; font-size: 14px; }"
+                "QPushButton:hover { color: #e74c3c; }"
+            )
+            x_btn.clicked.connect(lambda checked, path=d: self._remove_favorite_dir(path))
+            row.addWidget(x_btn)
+
+            self.dir_layout.addLayout(row)
+
+    def _add_favorite_dir(self) -> None:
+        path = QFileDialog.getExistingDirectory(self, "添加常用目录")
+        if not path:
+            return
+        cfg = load_config()
+        dirs = list(cfg.get("favorite_dirs", []) or [])
+        if path in dirs:
+            return
+        dirs.insert(0, path)
+        cfg["favorite_dirs"] = dirs[:10]
+        save_config(cfg)
+        self._refresh_dir_list()
+
+    def _remove_favorite_dir(self, path: str) -> None:
+        cfg = load_config()
+        dirs = list(cfg.get("favorite_dirs", []) or [])
+        if path in dirs:
+            dirs.remove(path)
+        cfg["favorite_dirs"] = dirs
+        save_config(cfg)
+        self._refresh_dir_list()
 
     def _on_nav(self, name: str) -> None:
         self._update_nav(name)
