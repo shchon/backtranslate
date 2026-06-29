@@ -10,8 +10,8 @@ from backtranslate.config import load_config
 from backtranslate.database.operations import (
     get_subtitles_for_session, get_latest_translation,
     get_evaluation_for_translation, create_translation,
-    create_evaluation, upsert_self_rating, get_self_rating,
-    get_all_translations_for_subtitle, add_expression,
+    create_evaluation, add_expression,
+    get_all_translations_for_subtitle,
 )
 from backtranslate.database.connection import get_connection
 
@@ -228,18 +228,6 @@ class ReviewPage(QWidget):
         official_btn.clicked.connect(
             lambda: official_label.setVisible(not official_label.isVisible())
         )
-
-        # Self rating
-        rating_layout = QHBoxLayout()
-        for emoji, val in [("\U0001f60a", 3), ("\U0001f610", 2), ("\U0001f613", 1)]:
-            btn = QPushButton(emoji)
-            btn.setFixedSize(36, 36)
-            btn.clicked.connect(
-                lambda checked, s=sub["id"], v=val: upsert_self_rating(s, v)
-            )
-            rating_layout.addWidget(btn)
-        parent_layout.addWidget(QLabel("自我评分:"))
-        parent_layout.addLayout(rating_layout)
 
         # Redo
         redo_layout = QHBoxLayout()

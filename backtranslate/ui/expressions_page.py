@@ -84,6 +84,10 @@ class ExpressionsPage(QWidget):
             empty.setStyleSheet("color: #999; font-size: 16px; margin-top: 60px;")
             self.list_layout.addWidget(empty)
 
+    def showEvent(self, event):
+        super().showEvent(event)
+        self._refresh()
+
     def _filter(self):
         self._refresh()
 
