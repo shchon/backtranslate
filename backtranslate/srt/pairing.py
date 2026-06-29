@@ -1,13 +1,14 @@
-def pair_by_index(chinese_list, english_list):
+def pair_by_index(chinese_list: list[dict], english_list: list[dict]) -> list[tuple[dict, dict]]:
     """Pair by sequential index. Stops at the shorter list length."""
-    pairs = []
-    for i in range(min(len(chinese_list), len(english_list))):
-        pairs.append((chinese_list[i], english_list[i]))
-    return pairs
+    return [(chinese_list[i], english_list[i]) for i in range(min(len(chinese_list), len(english_list)))]
 
 
-def pair_by_timecode(chinese_list, english_list):
-    """Pair subtitles with overlapping time ranges."""
+def pair_by_timecode(chinese_list: list[dict], english_list: list[dict]) -> list[tuple[dict, dict]]:
+    """Pair subtitles with overlapping time ranges.
+
+    Both lists must be sorted by start time. Assumes 1:1 pairing;
+    one-to-many or many-to-one overlaps may result in dropped entries.
+    """
     pairs = []
 
     ci = 0

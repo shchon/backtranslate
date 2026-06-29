@@ -43,3 +43,11 @@ def test_pair_by_timecode_no_overlap():
     en_list = [make_entry(1, 3000, 4000, "Hello")]
     result = pair_by_timecode(ch_list, en_list)
     assert len(result) == 0
+
+
+def test_pair_by_index_empty_lists():
+    assert pair_by_index([], []) == []
+
+
+def test_pair_by_timecode_empty_lists():
+    assert pair_by_timecode([], []) == []
