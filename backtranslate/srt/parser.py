@@ -1,4 +1,8 @@
+import logging
 import re
+
+
+logger = logging.getLogger(__name__)
 
 
 def _timestamp_to_ms(ts):
@@ -13,6 +17,8 @@ def _strip_tags(text):
 
 def parse_srt(content):
     """Parse SRT content into list of dicts with keys: index, start, end, text."""
+    content = content.replace("\r\n", "\n")
+
     if not content.strip():
         return []
 
@@ -29,6 +35,7 @@ def parse_srt(content):
     for block in blocks:
         m = pattern.match(block)
         if not m:
+            logger.warning("Skipping malformed SRT block: %s", block[:80])
             continue
         idx_str, start_ts, end_ts, text = m.groups()
         result.append({

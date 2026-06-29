@@ -42,3 +42,10 @@ def test_parse_srt_strips_html_tags_in_text():
 """
     result = parse_srt(content)
     assert "<i>" not in result[0]["text"]
+
+
+def test_parse_srt_with_windows_line_endings():
+    content = "1\r\n00:00:01,000 --> 00:00:03,000\r\n你好\r\n"
+    result = parse_srt(content)
+    assert len(result) == 1
+    assert result[0]["text"] == "你好"
