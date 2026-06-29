@@ -62,7 +62,7 @@ class App:
         return None
 
     def _build_context(self, sub_row, session_id):
-        """Build context string with N previous and N next subtitles."""
+        """Build context with surrounding Chinese subtitles (NO English to avoid confusing AI)."""
         cfg = load_config()
         n = cfg.get("context_n", 1)
         if n == 0:
@@ -72,10 +72,12 @@ class App:
         parts = []
         for s in all_subs:
             if s["idx"] < current_idx and s["idx"] >= current_idx - n:
-                parts.append(f"Previous: {s['chinese']} -> {s['english_official']}")
+                parts.append(f"前一句: {s['chinese']}")
             elif s["idx"] > current_idx and s["idx"] <= current_idx + n:
-                parts.append(f"Next: {s['chinese']} -> {s['english_official']}")
-        return "\n".join(parts)
+                parts.append(f"后一句: {s['chinese']}")
+        if parts:
+            return "上下文（仅供参考，不参与评分）:\n" + "\n".join(parts)
+        return ""
 
     def _on_translation_submitted(self, eval_id, subtitle_id, user_input, official):
         if eval_id == -1:  # session ended
