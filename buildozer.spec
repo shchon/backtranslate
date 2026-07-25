@@ -58,7 +58,7 @@ android.minapi = 21
 android.private_storage = True
 
 # (str) Android entry point
-android.entrypoint = kivy_app/main.py
+android.entrypoint = main.py
 
 # (list) Python for Android bootstrap
 # bootstrap = sdl2
