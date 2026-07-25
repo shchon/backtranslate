@@ -2,7 +2,7 @@ import os
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QProgressBar, QFileDialog, QMessageBox,
-    QDialog, QRadioButton, QGroupBox, QMenu,
+    QDialog, QRadioButton, QGroupBox, QMenu, QSpinBox,
 )
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QFont
@@ -14,7 +14,7 @@ from backtranslate.database.connection import init_db
 from backtranslate.database.operations import (
     create_session, create_subtitles_batch, create_translation,
     create_evaluation, update_session_completed, clear_session_data,
-    get_subtitles_for_session,
+    get_subtitles_for_session, record_sentence_completed, get_all_stats,
 )
 
 
@@ -167,11 +167,35 @@ class LearnPage(QWidget):
         ta_layout = QVBoxLayout(self.translation_area)
         ta_layout.setContentsMargins(0, 12, 0, 0)
 
+        # Jump navigation
+        jump_row = QHBoxLayout()
+        jump_row.addWidget(QLabel("跳转到第"))
+        self.jump_spin = QSpinBox()
+        self.jump_spin.setMinimum(1)
+        self.jump_spin.setMaximum(1)
+        self.jump_spin.setFixedWidth(70)
+        self.jump_spin.setStyleSheet("font-size: 13px; padding: 4px;")
+        jump_row.addWidget(self.jump_spin)
+        self.jump_total_label = QLabel("/ 1 句")
+        self.jump_total_label.setStyleSheet("color: #666; font-size: 13px;")
+        jump_row.addWidget(self.jump_total_label)
+        jump_btn = QPushButton("跳转")
+        jump_btn.setFixedSize(56, 30)
+        jump_btn.setStyleSheet(
+            "QPushButton { color: #4a90d9; border: 1px solid #4a90d9; "
+            "border-radius: 3px; font-size: 12px; }"
+            "QPushButton:hover { background: #e8f0fe; }"
+        )
+        jump_btn.clicked.connect(self._jump_to_sentence)
+        jump_row.addWidget(jump_btn)
+        jump_row.addStretch()
+        ta_layout.addLayout(jump_row)
+
         self.chinese_label = QLabel("")
         font = QFont()
         font.setPointSize(18)
         self.chinese_label.setFont(font)
-        self.chinese_label.setAlignment(Qt.AlignCenter)
+        self.chinese_label.setAlignment(Qt.AlignLeft)
         self.chinese_label.setMinimumHeight(80)
         self.chinese_label.setWordWrap(True)
         ta_layout.addWidget(self.chinese_label)
@@ -187,24 +211,57 @@ class LearnPage(QWidget):
 
         # Buttons below input
         btn_row = QHBoxLayout()
-        btn_row.addStretch()
         skip_btn = QPushButton("跳过")
+        skip_btn.setFixedSize(80, 36)
         skip_btn.setStyleSheet(
             "QPushButton { color: #888; border: 1px solid #ccc; "
-            "padding: 8px 20px; border-radius: 4px; font-size: 13px; }"
+            "border-radius: 4px; font-size: 13px; }"
             "QPushButton:hover { background: #eee; }"
         )
         skip_btn.clicked.connect(self._skip_sentence)
         btn_row.addWidget(skip_btn)
         next_btn = QPushButton("下一句")
+        next_btn.setFixedSize(80, 36)
         next_btn.setStyleSheet(
             "QPushButton { background: #4a90d9; color: white; "
-            "padding: 8px 24px; border-radius: 4px; font-size: 13px; }"
+            "border-radius: 4px; font-size: 13px; }"
             "QPushButton:hover { background: #357abd; }"
         )
         next_btn.clicked.connect(self._submit_translation)
         btn_row.addWidget(next_btn)
+        btn_row.addStretch()
         ta_layout.addLayout(btn_row)
+
+        # Stats bar (below buttons)
+        stats_bar = QHBoxLayout()
+        self.stats_widget = QWidget()
+        self.stats_widget.setStyleSheet(
+            "background: #f0f7ff; border: 1px solid #d0e4f7; border-radius: 8px; padding: 8px;"
+        )
+        stats_layout = QHBoxLayout(self.stats_widget)
+        stats_layout.setContentsMargins(16, 10, 16, 10)
+        stats_layout.setSpacing(24)
+
+        self.streak_label = QLabel("🔥 连续 0 天")
+        self.streak_label.setStyleSheet("font-size: 16px; color: #e67e22; font-weight: bold;")
+        stats_layout.addWidget(self.streak_label)
+
+        self.today_label = QLabel("今日 0 句")
+        self.today_label.setStyleSheet("font-size: 16px; color: #4a90d9; font-weight: bold;")
+        stats_layout.addWidget(self.today_label)
+
+        self.total_label = QLabel("总计 0 句")
+        self.total_label.setStyleSheet("font-size: 16px; color: #27ae60; font-weight: bold;")
+        stats_layout.addWidget(self.total_label)
+
+        stats_layout.addStretch()
+
+        self.encourage_label = QLabel("")
+        self.encourage_label.setStyleSheet("font-size: 15px; color: #8e44ad; font-style: italic;")
+        stats_layout.addWidget(self.encourage_label, 1)
+
+        stats_bar.addWidget(self.stats_widget)
+        ta_layout.addLayout(stats_bar)
 
         layout.addWidget(self.translation_area)
 
@@ -215,6 +272,9 @@ class LearnPage(QWidget):
         layout.addWidget(self.empty_label)
 
         layout.addStretch()
+
+        # Initialize stats
+        self._update_stats()
 
     def _show_import_dialog(self):
         dlg = ImportDialog(self)
@@ -363,6 +423,10 @@ class LearnPage(QWidget):
         self.progress_bar.setVisible(True)
         self.progress_bar.setMaximum(self.total_count)
         self.progress_label.setVisible(True)
+        self.jump_spin.setMaximum(self.total_count)
+        self.jump_spin.setValue(1)
+        self.jump_total_label.setText(f"/ {self.total_count} 句")
+        self._update_stats()
         self._show_current_sentence()
 
     def _show_current_sentence(self):
@@ -373,6 +437,7 @@ class LearnPage(QWidget):
         self.chinese_label.setText(sub["chinese"])
         self.progress_bar.setValue(self.completed_count)
         self.progress_label.setText(f"第 {self.current_idx + 1}/{self.total_count} 句")
+        self.jump_spin.setValue(self.current_idx + 1)
         self.input_field.clear()
         self.input_field.setFocus()
 
@@ -392,6 +457,13 @@ class LearnPage(QWidget):
         self.completed_count += 1
         self.current_idx += 1
 
+        # Record stats
+        record_sentence_completed()
+        self._update_stats()
+
+        # Show encouragement
+        self._show_encouragement()
+
         if self.session_id:
             update_session_completed(self.session_id, self.completed_count)
 
@@ -405,8 +477,18 @@ class LearnPage(QWidget):
         """Skip current sentence without translating."""
         self.completed_count += 1
         self.current_idx += 1
+        record_sentence_completed()
+        self._update_stats()
         if self.session_id:
             update_session_completed(self.session_id, self.completed_count)
+        self._show_current_sentence()
+
+    def _jump_to_sentence(self):
+        """Jump to the sentence number selected in the spin box."""
+        target = self.jump_spin.value() - 1  # convert to 0-based index
+        if target < 0 or target >= self.total_count:
+            return
+        self.current_idx = target
         self._show_current_sentence()
 
     def _get_subtitle_row(self, idx):
@@ -416,9 +498,61 @@ class LearnPage(QWidget):
                 return s
         return None
 
+    def _update_stats(self):
+        stats = get_all_stats()
+        self.streak_label.setText(f"🔥 连续 {stats['streak']} 天")
+        self.today_label.setText(f"今日 {stats['today']} 句")
+        self.total_label.setText(f"总计 {stats['total']} 句")
+
+    def _show_encouragement(self):
+        import random
+        from PySide6.QtCore import QTimer
+        messages = [
+            "💪 坚持就是胜利！",
+            "🌟 每一句都在进步！",
+            "🎯 离目标又近了一步！",
+            "✨ 今天的努力是明天的底气！",
+            "📈 积少成多，你正在变强！",
+            "🔥 保持这个节奏！",
+            "👏 很棒，继续加油！",
+            "🚀 每一天都在超越昨天的自己！",
+            "💎 坚持练习，英语会越来越好！",
+            "🌈 你在做一件很酷的事！",
+            "⭐ 不积跬步，无以至千里！",
+            "🎉 又完成一句，离大师更近了！",
+            "📚 每一句翻译都是经验的积累！",
+            "🏆 坚持下去，你就是冠军！",
+            "🌱 今天的努力是明天的收获！",
+        ]
+        msg = random.choice(messages)
+        self.encourage_label.setText(msg)
+        # Auto-clear after 5 seconds
+        QTimer.singleShot(5000, lambda: self.encourage_label.clear()
+                          if self.encourage_label.text() == msg else None)
+
     def _end_session(self):
         self.input_field.setEnabled(False)
+        self._on_session_finished()
         self.translation_submitted.emit(-1, -1, "", "")  # sentinel for "session ended"
+
+    def _on_session_finished(self):
+        """Show session summary dialog."""
+        stats = get_all_stats()
+        msg = (
+            f"📊 学习小结\n\n"
+            f"本次完成：{self.completed_count} 句\n"
+            f"今日累计：{stats['today']} 句\n"
+            f"连续打卡：{stats['streak']} 天\n"
+            f"历史总计：{stats['total']} 句\n"
+        )
+        if stats['streak'] >= 3:
+            msg += f"\n🔥 连续 {stats['streak']} 天打卡，太棒了！"
+        elif stats['streak'] >= 1:
+            msg += "\n👏 今天也打卡成功，明天继续！"
+        else:
+            msg += "\n💪 明天继续加油！"
+
+        QMessageBox.information(self, "学习小结", msg)
 
     def reset_to_start(self):
         self.session_id = None
@@ -434,3 +568,12 @@ class LearnPage(QWidget):
         self.progress_label.setVisible(False)
         self.input_field.setEnabled(True)
         self.input_field.clear()
+        self.encourage_label.clear()
+
+    def load_favorites_review(self, session_id, subtitles):
+        self.session_id = session_id
+        self.subtitles = subtitles
+        self.total_count = len(subtitles)
+        self.completed_count = 0
+        self.current_idx = 0
+        self._start_translation_ui()

@@ -9,3 +9,7 @@ data/
 dist/
 build/
 *.spec
+bin/
+.buildozer/
+.DS_Store
+nul

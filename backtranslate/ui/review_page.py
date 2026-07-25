@@ -12,6 +12,7 @@ from backtranslate.database.operations import (
     get_evaluation_for_translation, create_translation,
     create_evaluation, add_expression,
     get_all_translations_for_subtitle,
+    is_favorite, add_favorite, remove_favorite,
 )
 from backtranslate.database.connection import get_connection
 
@@ -23,6 +24,7 @@ class ReviewPage(QWidget):
     def __init__(self):
         super().__init__()
         self.session_id = None
+        self.only_translated = False
         self.subtitle_rows = []
         self.detail_widgets = {}
         self._build_ui()
@@ -47,8 +49,9 @@ class ReviewPage(QWidget):
         scroll.setWidget(self.list_container)
         layout.addWidget(scroll)
 
-    def load_session(self, session_id):
+    def load_session(self, session_id, only_translated=False):
         self.session_id = session_id
+        self.only_translated = only_translated
         self.subtitle_rows = get_subtitles_for_session(session_id)
         self._refresh_list()
 
@@ -59,12 +62,20 @@ class ReviewPage(QWidget):
             return
         if str(subtitle_id) in self.detail_widgets:
             old_widget = self.detail_widgets[str(subtitle_id)]
-            idx = self.list_layout.indexOf(old_widget)
-            if idx >= 0:
-                self.list_layout.takeAt(idx)
+            pos = self.list_layout.indexOf(old_widget)
+            if pos >= 0:
+                self.list_layout.takeAt(pos)
             old_widget.deleteLater()
         new_widget = self._build_row_widget(sub)
-        self.list_layout.insertWidget(0, new_widget)
+        # Insert at correct position to maintain idx order
+        insert_pos = self.list_layout.count()
+        for i in range(self.list_layout.count()):
+            item = self.list_layout.itemAt(i)
+            w = item.widget() if item else None
+            if w and hasattr(w, "subtitle_idx") and w.subtitle_idx > sub["idx"]:
+                insert_pos = i
+                break
+        self.list_layout.insertWidget(insert_pos, new_widget)
         self.detail_widgets[str(subtitle_id)] = new_widget
 
     def _refresh_list(self):
@@ -75,7 +86,11 @@ class ReviewPage(QWidget):
         self.detail_widgets.clear()
 
         completed = 0
+        visible_count = 0
         for sub in self.subtitle_rows:
+            if self.only_translated and self._get_latest_translation_id(sub["id"]) is None:
+                continue
+            visible_count += 1
             eval_data = self._get_latest_eval(sub["id"])
             if eval_data and eval_data["status"] == "done":
                 completed += 1
@@ -83,7 +98,11 @@ class ReviewPage(QWidget):
             self.list_layout.addWidget(row_widget)
             self.detail_widgets[str(sub["id"])] = row_widget
 
-        self.count_label.setText(f"共 {len(self.subtitle_rows)} 句，已批改 {completed} 句")
+        total = len(self.subtitle_rows)
+        if self.only_translated:
+            self.count_label.setText(f"已翻译 {visible_count} 句，已批改 {completed} 句（共 {total} 句）")
+        else:
+            self.count_label.setText(f"共 {total} 句，已批改 {completed} 句")
 
     def _get_latest_eval(self, subtitle_id):
         tid = self._get_latest_translation_id(subtitle_id)
@@ -108,6 +127,7 @@ class ReviewPage(QWidget):
 
     def _build_row_widget(self, sub):
         frame = QFrame()
+        frame.subtitle_idx = sub["idx"]
         frame.setStyleSheet("QFrame { border: 1px solid #ddd; border-radius: 6px; margin: 4px 0; }")
         main_layout = QVBoxLayout(frame)
 
@@ -130,6 +150,17 @@ class ReviewPage(QWidget):
         return frame
 
     def _add_score_summary(self, layout, eval_data, sub):
+        # Favorite star button
+        fav_btn = QPushButton()
+        fav_btn.setFixedSize(28, 28)
+        fav_btn.setCursor(Qt.PointingHandCursor)
+        subtitle_id = sub["id"]
+        self._set_fav_star(fav_btn, is_favorite(subtitle_id))
+        fav_btn.clicked.connect(
+            lambda checked, sid=subtitle_id, btn=fav_btn: self._on_fav_toggle(sid, btn)
+        )
+        layout.addWidget(fav_btn)
+
         if eval_data is None or eval_data["status"] == "pending":
             lbl = QLabel("⏳ 等待批改")
             lbl.setStyleSheet("color: #888;")
@@ -157,6 +188,22 @@ class ReviewPage(QWidget):
             lbl = QLabel(f"综合 {avg:.0f}")
             lbl.setStyleSheet(f"color: {color}; font-weight: bold;")
             layout.addWidget(lbl)
+
+    def _set_fav_star(self, btn, is_fav):
+        if is_fav:
+            btn.setText("★")
+            btn.setStyleSheet("color: #f1c40f; border: none; font-size: 16px;")
+        else:
+            btn.setText("☆")
+            btn.setStyleSheet("color: #bbb; border: none; font-size: 16px;")
+
+    def _on_fav_toggle(self, subtitle_id, btn):
+        if is_favorite(subtitle_id):
+            remove_favorite(subtitle_id)
+            self._set_fav_star(btn, False)
+        else:
+            add_favorite(subtitle_id)
+            self._set_fav_star(btn, True)
 
     def _font_size(self) -> int:
         cfg = load_config()

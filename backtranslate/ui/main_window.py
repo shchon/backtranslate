@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         sidebar_layout.setSpacing(4)
 
         self.nav_buttons = []
-        nav_items = ["学习", "复盘", "表达库", "设置"]
+        nav_items = ["学习", "复盘", "收藏夹", "表达库", "设置"]
 
         for name in nav_items:
             btn = QPushButton(name)
@@ -101,6 +101,7 @@ class MainWindow(QMainWindow):
 
         self.learn_page = None
         self.review_page = None
+        self.favorites_page = None
         self.expressions_page = None
         self.settings_page = None
 
@@ -172,6 +173,8 @@ class MainWindow(QMainWindow):
             self.stack.setCurrentWidget(self.learn_page)
         elif name == "复盘" and self.review_page:
             self.stack.setCurrentWidget(self.review_page)
+        elif name == "收藏夹" and self.favorites_page:
+            self.stack.setCurrentWidget(self.favorites_page)
         elif name == "表达库" and self.expressions_page:
             self.stack.setCurrentWidget(self.expressions_page)
         elif name == "设置" and self.settings_page:
@@ -199,5 +202,12 @@ class MainWindow(QMainWindow):
         self.settings_page = widget
         self.stack.addWidget(widget)
 
+    def set_favorites_page(self, widget: QWidget) -> None:
+        self.favorites_page = widget
+        self.stack.addWidget(widget)
+
     def navigate_to_review(self) -> None:
         self._on_nav("复盘")
+
+    def navigate_to_learn(self) -> None:
+        self._on_nav("学习")

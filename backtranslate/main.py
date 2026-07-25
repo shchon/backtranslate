@@ -6,6 +6,7 @@ from backtranslate.config import load_config
 from backtranslate.database.connection import init_db, get_connection
 from backtranslate.database.operations import (
     update_evaluation_status, get_subtitles_for_session,
+    create_session, create_subtitles_batch,
 )
 
 from backtranslate.ui.main_window import MainWindow
@@ -13,6 +14,7 @@ from backtranslate.ui.learn_page import LearnPage
 from backtranslate.ui.review_page import ReviewPage
 from backtranslate.ui.expressions_page import ExpressionsPage
 from backtranslate.ui.settings_page import SettingsPage
+from backtranslate.ui.favorites_page import FavoritesPage
 
 from backtranslate.ai.worker import EvaluationWorker, EvaluationThread
 
@@ -28,17 +30,20 @@ class App:
     def _setup_pages(self):
         self.learn_page = LearnPage()
         self.review_page = ReviewPage()
+        self.favorites_page = FavoritesPage()
         self.expressions_page = ExpressionsPage()
         self.settings_page = SettingsPage()
 
         self.window.set_learn_page(self.learn_page)
         self.window.set_review_page(self.review_page)
+        self.window.set_favorites_page(self.favorites_page)
         self.window.set_expressions_page(self.expressions_page)
         self.window.set_settings_page(self.settings_page)
 
         self.learn_page.translation_submitted.connect(self._on_translation_submitted)
         self.review_page.redo_submitted.connect(self._on_redo_submitted)
         self.review_page.retry_requested.connect(self._on_retry_requested)
+        self.favorites_page.start_favorites_review.connect(self._on_start_favorites_review)
         self.window.import_at_path.connect(self.learn_page.open_import_at)
 
     def _setup_worker(self):
@@ -83,7 +88,7 @@ class App:
     def _on_translation_submitted(self, eval_id, subtitle_id, user_input, official):
         if eval_id == -1:  # session ended
             session_id = self.learn_page.session_id
-            self._load_review(session_id)
+            self._load_review(session_id, only_translated=True)
             self.learn_page.reset_to_start()
             self.window.navigate_to_review()
             return
@@ -155,9 +160,29 @@ class App:
             except Exception:
                 pass
 
-    def _load_review(self, session_id):
+    def _load_review(self, session_id, only_translated=False):
         if session_id:
-            self.review_page.load_session(session_id)
+            self.review_page.load_session(session_id, only_translated)
+
+    def _on_start_favorites_review(self, subtitles):
+        if not subtitles:
+            return
+        session_id = create_session("收藏复习", len(subtitles))
+        new_subs = []
+        for i, sub in enumerate(subtitles):
+            new_subs.append({
+                "idx": i + 1,
+                "chinese": sub["chinese"],
+                "english_official": sub["english_official"],
+                "prev_chinese": sub.get("prev_chinese", ""),
+                "prev_english": sub.get("prev_english", ""),
+                "next_chinese": sub.get("next_chinese", ""),
+                "next_english": sub.get("next_english", ""),
+            })
+        create_subtitles_batch(session_id, new_subs)
+        db_subs = get_subtitles_for_session(session_id)
+        self.learn_page.load_favorites_review(session_id, db_subs)
+        self.window.navigate_to_learn()
 
     def run(self):
         self.window.show()
