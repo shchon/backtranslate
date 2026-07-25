@@ -70,7 +70,7 @@ log_level = 2
 android.accept_sdk_license = True
 
 # (int) Target architecture (armeabi-v7a, arm64-v8a, x86, x86_64)
-android.arch = arm64-v8a
+android.archs = arm64-v8a
 
 # (str) AAB vs APK (aab or apk)
 android.release_artifact = apk

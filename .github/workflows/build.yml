@@ -41,7 +41,7 @@ jobs:
 
       - name: Install buildozer
         run: |
-          pip install --user 'buildozer<2.0' cython==0.29.37
+          pip install --user buildozer cython==0.29.37
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Setup Chinese font
