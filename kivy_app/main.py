@@ -21,11 +21,16 @@ if not os.path.exists(_font_path):
 if not os.path.exists(_font_path):
     _font_path = os.path.join(_font_dir, 'wqy-microhei.ttc')
 if os.path.exists(_font_path):
-    from kivy.config import Config
-    Config.set('kivy', 'default_font', [
-        'ChineseFont',
-        _font_path,
-    ])
+    try:
+        from kivy.config import Config
+        Config.set('kivy', 'default_font', [
+            'ChineseFont',
+            _font_path,
+        ])
+    except Exception as e:
+        print(f'Font config warning: {e}')
+    else:
+        print(f'Using font: {_font_path}')
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
