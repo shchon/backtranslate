@@ -25,7 +25,7 @@ jobs:
           sudo apt update
           sudo apt install -y \
             git zip unzip openjdk-17-jdk \
-            python3-pip autoconf libtool libtool-bin \
+            python3-pip autoconf libtool libtool-bin m4 \
             pkg-config zlib1g-dev libncurses5-dev \
             libncursesw5-dev libtinfo6 cmake \
             libffi-dev libssl-dev \
