@@ -5,57 +5,29 @@ on:
     branches: [ main, master, develop ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:  # 手动触发
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: kivy/buildozer:latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y \
-            git zip unzip openjdk-17-jdk \
-            python3-pip autoconf automake libtool libtool-bin m4 \
-            pkg-config zlib1g-dev libncurses5-dev \
-            libncursesw5-dev libtinfo6 cmake \
-            libffi-dev libssl-dev \
-            fonts-wqy-microhei
-
-      - name: Cache buildozer (Android SDK/NDK)
-        uses: actions/cache@v4
-        with:
-          path: ~/.buildozer
-          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
-          restore-keys: |
-            buildozer-${{ runner.os }}-
-
-      - name: Install buildozer
-        run: |
-          pip install --user buildozer cython==0.29.37
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
       - name: Setup Chinese font
         run: |
-          python kivy_app/download_font.py
-          # Make sure fonts directory exists
+          apt-get update -qq
+          apt-get install -y -qq fonts-wqy-microhei 2>/dev/null || true
+          python3 kivy_app/download_font.py || true
           mkdir -p kivy_app/fonts
-          ls -la kivy_app/fonts/
+          ls -la kivy_app/fonts/ 2>/dev/null || echo "No fonts directory"
 
       - name: Build APK with buildozer
         run: |
-          # Run buildozer with verbose output
           buildozer --verbose android debug 2>&1
-          echo "BUILD_EXIT_CODE=$?"
 
       - name: Check build result
         if: always()
@@ -71,8 +43,6 @@ jobs:
               echo "--- $log ---"
               tail -50 "$log"
             done
-            echo "=== Checking buildozer state ==="
-            cat .buildozer/state 2>/dev/null || echo "No state file"
             exit 1
           fi
 
