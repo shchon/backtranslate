@@ -27,7 +27,7 @@ jobs:
 
       - name: Build APK with buildozer
         run: |
-          buildozer --verbose --user android debug 2>&1
+          echo "y" | buildozer --verbose --user android debug 2>&1
 
       - name: Check build result
         if: always()
