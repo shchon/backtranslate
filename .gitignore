@@ -13,3 +13,4 @@ bin/
 .buildozer/
 .DS_Store
 nul
+kivy_app/fonts/
