@@ -33,16 +33,40 @@ jobs:
 
       - name: Install buildozer
         run: |
-          pip install --user buildozer cython
+          pip install --user 'buildozer<2.0' cython==0.29.37
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Setup Chinese font
         run: |
           python kivy_app/download_font.py
+          # Make sure fonts directory exists
+          mkdir -p kivy_app/fonts
+          ls -la kivy_app/fonts/
 
       - name: Build APK with buildozer
         run: |
-          buildozer android debug 2>&1
+          # Run buildozer with verbose output
+          buildozer --verbose android debug 2>&1
+          echo "BUILD_EXIT_CODE=$?"
+
+      - name: Check build result
+        if: always()
+        run: |
+          if ls bin/*.apk 1> /dev/null 2>&1; then
+            echo "BUILD SUCCESS: APK found in bin/"
+            ls -la bin/*.apk
+          else
+            echo "BUILD FAILED: No APK generated"
+            echo "=== Checking buildozer logs ==="
+            find .buildozer -name "*.log" 2>/dev/null | head -10
+            for log in $(find .buildozer -name "*.log" 2>/dev/null); do
+              echo "--- $log ---"
+              tail -50 "$log"
+            done
+            echo "=== Checking buildozer state ==="
+            cat .buildozer/state 2>/dev/null || echo "No state file"
+            exit 1
+          fi
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
