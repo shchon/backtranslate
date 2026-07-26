@@ -19,8 +19,8 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 56
-            padding: [8, 0]
+            height: 60
+            padding: [12, 0]
             canvas.before:
                 Color:
                     rgba: 0.29, 0.56, 0.85, 1
@@ -30,29 +30,29 @@ Builder.load_string("""
             Button:
                 text: '‹ 返回'
                 size_hint_x: None
-                width: 60
+                width: 72
                 background_normal: ''
                 background_color: 0, 0, 0, 0
                 color: 1, 1, 1, 1
-                font_size: '16sp'
+                font_size: '19sp'
                 on_press: root.go_home()
             Label:
                 text: '表达库'
-                font_size: '18sp'
+                font_size: '22sp'
                 bold: True
                 color: 1, 1, 1, 1
             Widget:
                 size_hint_x: None
-                width: 60
+                width: 72
 
         # Search bar
         TextInput:
             id: search_input
             hint_text: '🔍 搜索表达...'
-            font_size: '15sp'
+            font_size: '18sp'
             size_hint_y: None
-            height: 44
-            padding: [12, 10]
+            height: 56
+            padding: [16, 14]
             multiline: False
             on_text: root._refresh()
 
@@ -63,8 +63,8 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                padding: [12, 8]
-                spacing: 8
+                padding: [16, 12]
+                spacing: 12
 """)
 
 

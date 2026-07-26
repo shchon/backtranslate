@@ -27,8 +27,8 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 56
-            padding: [8, 0]
+            height: 60
+            padding: [12, 0]
             canvas.before:
                 Color:
                     rgba: 0.29, 0.56, 0.85, 1
@@ -38,20 +38,20 @@ Builder.load_string("""
             Button:
                 text: '‹ 返回'
                 size_hint_x: None
-                width: 60
+                width: 72
                 background_normal: ''
                 background_color: 0, 0, 0, 0
                 color: 1, 1, 1, 1
-                font_size: '16sp'
+                font_size: '19sp'
                 on_press: root.go_home()
             Label:
                 text: '设置'
-                font_size: '18sp'
+                font_size: '22sp'
                 bold: True
                 color: 1, 1, 1, 1
             Widget:
                 size_hint_x: None
-                width: 60
+                width: 72
 
         # Scrollable settings form
         ScrollView:
@@ -59,117 +59,117 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                padding: [16, 16]
-                spacing: 16
+                padding: [20, 20]
+                spacing: 20
 
                 # API Base URL
                 Label:
                     text: 'API 地址'
-                    font_size: '14sp'
+                    font_size: '17sp'
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 24
+                    height: 30
                     halign: 'left'
                 TextInput:
                     id: base_url_input
                     hint_text: '例如: https://api.deepseek.com'
-                    font_size: '15sp'
+                    font_size: '18sp'
                     size_hint_y: None
-                    height: 44
-                    padding: [12, 10]
+                    height: 52
+                    padding: [16, 14]
                     multiline: False
 
                 # API Key
                 Label:
                     text: 'API Key'
-                    font_size: '14sp'
+                    font_size: '17sp'
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 24
+                    height: 30
                     halign: 'left'
                 TextInput:
                     id: api_key_input
                     hint_text: '输入你的 API Key'
-                    font_size: '15sp'
+                    font_size: '18sp'
                     size_hint_y: None
-                    height: 44
-                    padding: [12, 10]
+                    height: 52
+                    padding: [16, 14]
                     multiline: False
                     password: True
 
                 # Model
                 Label:
                     text: '模型'
-                    font_size: '14sp'
+                    font_size: '17sp'
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 24
+                    height: 30
                     halign: 'left'
                 TextInput:
                     id: model_input
                     hint_text: '例如: deepseek-chat'
-                    font_size: '15sp'
+                    font_size: '18sp'
                     size_hint_y: None
-                    height: 44
-                    padding: [12, 10]
+                    height: 52
+                    padding: [16, 14]
                     multiline: False
 
                 # Context sentences
                 Label:
                     text: '上下文句数'
-                    font_size: '14sp'
+                    font_size: '17sp'
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 24
+                    height: 30
                     halign: 'left'
                 BoxLayout:
                     size_hint_y: None
-                    height: 44
-                    spacing: 12
+                    height: 52
+                    spacing: 16
                     TextInput:
                         id: context_input
                         text: '1'
-                        font_size: '15sp'
+                        font_size: '18sp'
                         size_hint_x: None
-                        width: 80
-                        padding: [12, 10]
+                        width: 100
+                        padding: [16, 14]
                         multiline: False
                         input_filter: 'int'
                     Label:
                         text: '句（前后各取N句作为上下文）'
-                        font_size: '13sp'
+                        font_size: '16sp'
                         color: 0.5, 0.5, 0.5, 1
 
                 # Prompt template
                 Label:
                     text: '提示词模板'
-                    font_size: '14sp'
+                    font_size: '17sp'
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 24
+                    height: 30
                     halign: 'left'
                 TextInput:
                     id: prompt_input
                     hint_text: 'AI 评分提示词模板...'
-                    font_size: '13sp'
+                    font_size: '16sp'
                     size_hint_y: None
-                    height: 260
-                    padding: [12, 10]
+                    height: 300
+                    padding: [16, 14]
 
                 # Save button
                 Button:
                     text: '💾 保存设置'
                     size_hint_y: None
-                    height: 48
+                    height: 56
                     background_normal: ''
                     background_color: 0.29, 0.56, 0.85, 1
                     color: 1, 1, 1, 1
-                    font_size: '16sp'
+                    font_size: '19sp'
                     bold: True
                     on_press: root.save_settings()
 
@@ -177,17 +177,17 @@ Builder.load_string("""
                 Button:
                     text: '↺ 恢复默认'
                     size_hint_y: None
-                    height: 44
+                    height: 52
                     background_normal: ''
                     background_color: 0.85, 0.85, 0.85, 1
                     color: 0.3, 0.3, 0.3, 1
-                    font_size: '15sp'
+                    font_size: '18sp'
                     on_press: root.reset_defaults()
 
                 # Bottom spacing
                 Widget:
                     size_hint_y: None
-                    height: 40
+                    height: 48
 """)
 
 

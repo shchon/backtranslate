@@ -23,8 +23,8 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 56
-            padding: [8, 0]
+            height: 60
+            padding: [12, 0]
             canvas.before:
                 Color:
                     rgba: 0.29, 0.56, 0.85, 1
@@ -34,30 +34,30 @@ Builder.load_string("""
             Button:
                 text: '‹ 返回'
                 size_hint_x: None
-                width: 60
+                width: 72
                 background_normal: ''
                 background_color: 0, 0, 0, 0
                 color: 1, 1, 1, 1
-                font_size: '16sp'
+                font_size: '19sp'
                 on_press: root.go_home()
             Label:
                 text: '复盘'
-                font_size: '18sp'
+                font_size: '22sp'
                 bold: True
                 color: 1, 1, 1, 1
             Widget:
                 size_hint_x: None
-                width: 60
+                width: 72
 
         # Summary
         Label:
             id: summary_label
             text: '暂无数据'
-            font_size: '14sp'
+            font_size: '17sp'
             color: 0.5, 0.5, 0.5, 1
             size_hint_y: None
-            height: 36
-            padding: [16, 8]
+            height: 44
+            padding: [20, 12]
 
         # Scrollable list of review items
         ScrollView:
@@ -67,8 +67,8 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                padding: [12, 8]
-                spacing: 8
+                padding: [16, 12]
+                spacing: 12
 """)
 
 

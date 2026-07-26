@@ -25,8 +25,8 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 56
-            padding: [8, 0]
+            height: 60
+            padding: [12, 0]
             canvas.before:
                 Color:
                     rgba: 0.29, 0.56, 0.85, 1
@@ -36,38 +36,38 @@ Builder.load_string("""
             Button:
                 text: '< 返回'
                 size_hint_x: None
-                width: 60
+                width: 72
                 background_normal: ''
                 background_color: 0, 0, 0, 0
                 color: 1, 1, 1, 1
                 font_name: 'ChineseFont'
-                font_size: '16sp'
+                font_size: '19sp'
                 on_press: root.go_home()
             Label:
                 text: '收藏夹'
                 font_name: 'ChineseFont'
-                font_size: '18sp'
+                font_size: '22sp'
                 bold: True
                 color: 1, 1, 1, 1
             Button:
                 text: '复习'
                 size_hint_x: None
-                width: 48
+                width: 60
                 background_normal: ''
                 background_color: 0, 0, 0, 0
                 color: 0.6, 1.0, 0.6, 1
                 font_name: 'ChineseFont'
-                font_size: '15sp'
+                font_size: '18sp'
                 on_press: root.start_review()
             Button:
                 text: '清空'
                 size_hint_x: None
-                width: 48
+                width: 60
                 background_normal: ''
                 background_color: 0, 0, 0, 0
                 color: 1, 0.6, 0.6, 1
                 font_name: 'ChineseFont'
-                font_size: '15sp'
+                font_size: '18sp'
                 on_press: root.clear_all()
 
         # Count label
@@ -75,9 +75,10 @@ Builder.load_string("""
             id: count_label
             text: ''
             font_name: 'ChineseFont'
-            font_size: '14sp'
+            font_size: '17sp'
             color: 0.7, 0.7, 0.7, 1
             size_hint_y: None
+            height: 40
             height: 32
             padding: [16, 6]
 

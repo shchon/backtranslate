@@ -28,8 +28,8 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 56
-            padding: [8, 0]
+            height: 60
+            padding: [12, 0]
             canvas.before:
                 Color:
                     rgba: 0.29, 0.56, 0.85, 1
@@ -39,53 +39,53 @@ Builder.load_string("""
             Button:
                 text: '< 返回'
                 size_hint_x: None
-                width: 60
+                width: 72
                 background_normal: ''
                 background_color: 0, 0, 0, 0
                 color: 1, 1, 1, 1
                 font_name: 'ChineseFont'
-                font_size: '16sp'
+                font_size: '19sp'
                 on_press: root.go_home()
             Label:
                 text: '回译训练'
                 font_name: 'ChineseFont'
-                font_size: '18sp'
+                font_size: '22sp'
                 bold: True
                 color: 1, 1, 1, 1
             Widget:
                 size_hint_x: None
-                width: 60
+                width: 72
 
         # Content area
         BoxLayout:
             orientation: 'vertical'
-            padding: [16, 12]
-            spacing: 12
+            padding: [20, 16]
+            spacing: 16
 
             # Import area (shown when no session)
             BoxLayout:
                 id: import_area
                 orientation: 'vertical'
-                spacing: 16
+                spacing: 20
                 size_hint_y: None
-                height: 200
+                height: 240
 
                 Label:
                     text: '点击下方按钮导入中英字幕文件'
                     font_name: 'ChineseFont'
-                    font_size: '16sp'
+                    font_size: '19sp'
                     color: 0.7, 0.7, 0.7, 1
                     halign: 'center'
 
                 Button:
                     text: '导入字幕文件'
                     size_hint_y: None
-                    height: 52
+                    height: 60
                     background_normal: ''
                     background_color: 0.29, 0.56, 0.85, 1
                     color: 1, 1, 1, 1
                     font_name: 'ChineseFont'
-                    font_size: '16sp'
+                    font_size: '19sp'
                     bold: True
                     on_press: root.import_srt()
 
@@ -94,30 +94,30 @@ Builder.load_string("""
                     id: recent_label
                     text: ''
                     font_name: 'ChineseFont'
-                    font_size: '13sp'
+                    font_size: '16sp'
                     color: 0.6, 0.6, 0.6, 1
                     halign: 'center'
                     size_hint_y: None
-                    height: 20
+                    height: 24
 
             # Translation area (shown during session)
             BoxLayout:
                 id: translation_area
                 orientation: 'vertical'
-                spacing: 10
+                spacing: 14
 
                 # Progress info
                 BoxLayout:
                     size_hint_y: None
-                    height: 24
-                    spacing: 8
+                    height: 30
+                    spacing: 10
                     Label:
                         text: '第 ' + str(root.current_idx) + '/' + str(root.total_count) + ' 句'
                         font_name: 'ChineseFont'
-                        font_size: '14sp'
+                        font_size: '17sp'
                         color: 0.8, 0.8, 0.8, 1
                         size_hint_x: None
-                        width: 140
+                        width: 160
                     ProgressBar:
                         id: progress_bar
                         max: root.total_count
@@ -129,10 +129,10 @@ Builder.load_string("""
                     id: chinese_label
                     text: ''
                     font_name: 'ChineseFont'
-                    font_size: '22sp'
+                    font_size: '26sp'
                     color: 0.9, 0.9, 0.9, 1
                     size_hint_y: None
-                    height: 160
+                    height: 200
                     text_size: self.width, None
                     halign: 'left'
                     valign: 'top'
@@ -142,24 +142,24 @@ Builder.load_string("""
                     id: input_field
                     hint_text: '输入英文翻译...'
                     font_name: 'ChineseFont'
-                    font_size: '18sp'
+                    font_size: '22sp'
                     size_hint_y: None
-                    height: 48
+                    height: 60
                     multiline: False
                     background_color: 0.2, 0.2, 0.2, 1
                     foreground_color: 0.9, 0.9, 0.9, 1
-                    padding: [12, 12]
+                    padding: [16, 16]
                     on_text_validate: root.submit_translation()
 
                 # Action buttons
                 BoxLayout:
                     size_hint_y: None
-                    height: 48
-                    spacing: 12
+                    height: 60
+                    spacing: 16
                     Button:
                         text: '跳过'
                         font_name: 'ChineseFont'
-                        font_size: '15sp'
+                        font_size: '18sp'
                         background_normal: ''
                         background_color: 0.85, 0.85, 0.85, 1
                         color: 0.3, 0.3, 0.3, 1
@@ -167,7 +167,7 @@ Builder.load_string("""
                     Button:
                         text: '提交'
                         font_name: 'ChineseFont'
-                        font_size: '15sp'
+                        font_size: '18sp'
                         bold: True
                         background_normal: ''
                         background_color: 0.29, 0.56, 0.85, 1
@@ -178,41 +178,41 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: None
-                    height: 80
-                    padding: [12, 8]
-                    spacing: 6
+                    height: 96
+                    padding: [16, 12]
+                    spacing: 8
                     canvas.before:
                         Color:
                             rgba: 0.15, 0.15, 0.2, 1
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
-                            radius: [10, 10, 10, 10]
+                            radius: [12, 12, 12, 12]
                         Color:
                             rgba: 0.3, 0.3, 0.4, 1
                         Line:
-                            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 10
+                            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 12
 
                     BoxLayout:
                         size_hint_y: None
-                        height: 28
-                        spacing: 8
+                        height: 34
+                        spacing: 10
                         Label:
                             text: '连续 ' + root.streak + ' 天'
                             font_name: 'ChineseFont'
-                            font_size: '15sp'
+                            font_size: '18sp'
                             bold: True
                             color: 0.9, 0.5, 0.13, 1
                         Label:
                             text: '今日 ' + root.today + ' 句'
                             font_name: 'ChineseFont'
-                            font_size: '15sp'
+                            font_size: '18sp'
                             bold: True
                             color: 0.5, 0.8, 1.0, 1
                         Label:
                             text: '总计 ' + root.total + ' 句'
                             font_name: 'ChineseFont'
-                            font_size: '15sp'
+                            font_size: '18sp'
                             bold: True
                             color: 0.3, 1.0, 0.5, 1
 
@@ -220,22 +220,22 @@ Builder.load_string("""
                         id: encourage_label
                         text: ''
                         font_name: 'ChineseFont'
-                        font_size: '14sp'
+                        font_size: '16sp'
                         color: 0.8, 0.5, 0.9, 1
                         italic: True
                         size_hint_y: None
-                        height: 22
+                        height: 26
 
                 # End session button
                 Button:
                     text: '结束学习'
                     size_hint_y: None
-                    height: 44
+                    height: 56
                     background_normal: ''
                     background_color: 0.91, 0.3, 0.24, 1
                     color: 1, 1, 1, 1
                     font_name: 'ChineseFont'
-                    font_size: '15sp'
+                    font_size: '18sp'
                     on_press: root.end_session()
 """)
 

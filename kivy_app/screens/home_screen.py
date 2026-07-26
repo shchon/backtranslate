@@ -50,7 +50,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 56
+            height: 72
             padding: [16, 0]
             canvas.before:
                 Color:
@@ -61,7 +61,7 @@ Builder.load_string("""
             Label:
                 text: 'BackTranslate'
                 font_name: 'ChineseFont'
-                font_size: '20sp'
+                font_size: '24sp'
                 bold: True
                 color: 1, 1, 1, 1
 
@@ -72,48 +72,48 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                padding: [16, 16]
-                spacing: 16
+                padding: [20, 20]
+                spacing: 20
 
                 # Stats card
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: None
-                    height: 100
-                    padding: [16, 12]
-                    spacing: 8
+                    height: 130
+                    padding: [20, 16]
+                    spacing: 10
                     canvas.before:
                         Color:
                             rgba: 0.94, 0.97, 1.0, 1
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
-                            radius: [12, 12, 12, 12]
+                            radius: [14, 14, 14, 14]
                         Color:
                             rgba: 0.82, 0.89, 0.97, 1
                         Line:
-                            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 12
+                            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 14
 
                     Label:
                         text: '🔥 连续 ' + root.streak + ' 天'
                         font_name: 'ChineseFont'
-                        font_size: '22sp'
+                        font_size: '28sp'
                         bold: True
                         color: 0.9, 0.5, 0.13, 1
                         size_hint_y: None
-                        height: 30
+                        height: 38
                     BoxLayout:
                         size_hint_y: None
-                        height: 30
+                        height: 36
                         Label:
                             text: '今日 ' + root.today + ' 句'
                             font_name: 'ChineseFont'
-                            font_size: '16sp'
+                            font_size: '20sp'
                             color: 0.29, 0.56, 0.85, 1
                         Label:
                             text: '总计 ' + root.total + ' 句'
                             font_name: 'ChineseFont'
-                            font_size: '16sp'
+                            font_size: '20sp'
                             color: 0.15, 0.68, 0.38, 1
 
                 # Navigation buttons
@@ -141,16 +141,16 @@ Builder.load_string("""
                 # Bottom spacing
                 Widget:
                     size_hint_y: None
-                    height: 20
+                    height: 30
 
 
 <NavButton>:
     size_hint_y: None
-    height: 72
+    height: 88
     background_normal: ''
     background_color: 0.98, 0.98, 0.98, 1
     font_name: 'ChineseFont'
-    font_size: '17sp'
+    font_size: '20sp'
     color: 0.2, 0.2, 0.2, 1
     halign: 'center'
     valign: 'middle'
@@ -161,11 +161,11 @@ Builder.load_string("""
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [10, 10, 10, 10]
+            radius: [12, 12, 12, 12]
         Color:
             rgba: 0.9, 0.9, 0.9, 1
         Line:
-            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 10
+            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 12
 """)
 
 
