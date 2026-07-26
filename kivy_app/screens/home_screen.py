@@ -50,7 +50,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 80
+            height: 320
             padding: [16, 0]
             canvas.before:
                 Color:
@@ -79,7 +79,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: None
-                    height: 160
+                    height: 320
                     padding: [20, 20]
                     spacing: 12
                     canvas.before:
@@ -101,10 +101,10 @@ Builder.load_string("""
                         bold: True
                         color: 0.9, 0.5, 0.13, 1
                         size_hint_y: None
-                        height: 48
+                        height: 96
                     BoxLayout:
                         size_hint_y: None
-                        height: 44
+                        height: 88
                         Label:
                             text: '今日 ' + root.today + ' 句'
                             font_name: 'ChineseFont'
@@ -141,12 +141,12 @@ Builder.load_string("""
                 # Bottom spacing
                 Widget:
                     size_hint_y: None
-                    height: 40
+                    height: 80
 
 
 <NavButton>:
     size_hint_y: None
-    height: 100
+    height: 200
     background_normal: ''
     background_color: 0.98, 0.98, 0.98, 1
     font_name: 'ChineseFont'

@@ -27,7 +27,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 60
+            height: 120
             padding: [12, 0]
             canvas.before:
                 Color:
@@ -69,14 +69,14 @@ Builder.load_string("""
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 30
+                    height: 60
                     halign: 'left'
                 TextInput:
                     id: base_url_input
                     hint_text: '例如: https://api.deepseek.com'
                     font_size: '18sp'
                     size_hint_y: None
-                    height: 52
+                    height: 104
                     padding: [16, 14]
                     multiline: False
 
@@ -87,14 +87,14 @@ Builder.load_string("""
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 30
+                    height: 60
                     halign: 'left'
                 TextInput:
                     id: api_key_input
                     hint_text: '输入你的 API Key'
                     font_size: '18sp'
                     size_hint_y: None
-                    height: 52
+                    height: 104
                     padding: [16, 14]
                     multiline: False
                     password: True
@@ -106,14 +106,14 @@ Builder.load_string("""
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 30
+                    height: 60
                     halign: 'left'
                 TextInput:
                     id: model_input
                     hint_text: '例如: deepseek-chat'
                     font_size: '18sp'
                     size_hint_y: None
-                    height: 52
+                    height: 104
                     padding: [16, 14]
                     multiline: False
 
@@ -124,11 +124,11 @@ Builder.load_string("""
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 30
+                    height: 60
                     halign: 'left'
                 BoxLayout:
                     size_hint_y: None
-                    height: 52
+                    height: 104
                     spacing: 16
                     TextInput:
                         id: context_input
@@ -151,21 +151,21 @@ Builder.load_string("""
                     bold: True
                     color: 0.3, 0.3, 0.3, 1
                     size_hint_y: None
-                    height: 30
+                    height: 60
                     halign: 'left'
                 TextInput:
                     id: prompt_input
                     hint_text: 'AI 评分提示词模板...'
                     font_size: '16sp'
                     size_hint_y: None
-                    height: 300
+                    height: 600
                     padding: [16, 14]
 
                 # Save button
                 Button:
                     text: '💾 保存设置'
                     size_hint_y: None
-                    height: 56
+                    height: 112
                     background_normal: ''
                     background_color: 0.29, 0.56, 0.85, 1
                     color: 1, 1, 1, 1
@@ -177,7 +177,7 @@ Builder.load_string("""
                 Button:
                     text: '↺ 恢复默认'
                     size_hint_y: None
-                    height: 52
+                    height: 104
                     background_normal: ''
                     background_color: 0.85, 0.85, 0.85, 1
                     color: 0.3, 0.3, 0.3, 1
@@ -187,7 +187,7 @@ Builder.load_string("""
                 # Bottom spacing
                 Widget:
                     size_hint_y: None
-                    height: 48
+                    height: 96
 """)
 
 

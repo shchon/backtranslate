@@ -19,7 +19,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 72
+            height: 144
             padding: [12, 0]
             canvas.before:
                 Color:
@@ -51,7 +51,7 @@ Builder.load_string("""
             hint_text: '🔍 搜索表达...'
             font_size: '18sp'
             size_hint_y: None
-            height: 64
+            height: 128
             padding: [16, 16]
             multiline: False
             on_text: root._refresh()

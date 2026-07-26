@@ -25,7 +25,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 72
+            height: 144
             padding: [12, 0]
             canvas.before:
                 Color:
@@ -78,9 +78,9 @@ Builder.load_string("""
             font_size: '17sp'
             color: 0.7, 0.7, 0.7, 1
             size_hint_y: None
-            height: 48
+            height: 96
             padding: [16, 8]
-            height: 32
+            height: 64
             padding: [16, 6]
 
         # Scrollable list

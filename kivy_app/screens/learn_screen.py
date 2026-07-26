@@ -28,7 +28,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 72
+            height: 144
             padding: [12, 0]
             canvas.before:
                 Color:
@@ -68,7 +68,7 @@ Builder.load_string("""
                 orientation: 'vertical'
                 spacing: 20
                 size_hint_y: None
-                height: 280
+                height: 560
 
                 Label:
                     text: '点击下方按钮导入中英字幕文件'
@@ -80,7 +80,7 @@ Builder.load_string("""
                 Button:
                     text: '导入字幕文件'
                     size_hint_y: None
-                    height: 72
+                    height: 144
                     background_normal: ''
                     background_color: 0.29, 0.56, 0.85, 1
                     color: 1, 1, 1, 1
@@ -98,7 +98,7 @@ Builder.load_string("""
                     color: 0.6, 0.6, 0.6, 1
                     halign: 'center'
                     size_hint_y: None
-                    height: 24
+                    height: 48
 
             # Translation area (shown during session)
             BoxLayout:
@@ -109,7 +109,7 @@ Builder.load_string("""
                 # Progress info
                 BoxLayout:
                     size_hint_y: None
-                    height: 30
+                    height: 60
                     spacing: 10
                     Label:
                         text: '第 ' + str(root.current_idx) + '/' + str(root.total_count) + ' 句'
@@ -132,7 +132,7 @@ Builder.load_string("""
                     font_size: '26sp'
                     color: 0.9, 0.9, 0.9, 1
                     size_hint_y: None
-                    height: 240
+                    height: 480
                     text_size: self.width, None
                     halign: 'left'
                     valign: 'top'
@@ -144,7 +144,7 @@ Builder.load_string("""
                     font_name: 'ChineseFont'
                     font_size: '22sp'
                     size_hint_y: None
-                    height: 72
+                    height: 144
                     multiline: False
                     background_color: 0.2, 0.2, 0.2, 1
                     foreground_color: 0.9, 0.9, 0.9, 1
@@ -154,7 +154,7 @@ Builder.load_string("""
                 # Action buttons
                 BoxLayout:
                     size_hint_y: None
-                    height: 68
+                    height: 136
                     spacing: 16
                     Button:
                         text: '跳过'
@@ -178,7 +178,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: None
-                    height: 120
+                    height: 240
                     padding: [16, 16]
                     spacing: 10
                     canvas.before:
@@ -195,7 +195,7 @@ Builder.load_string("""
 
                     BoxLayout:
                         size_hint_y: None
-                        height: 42
+                        height: 84
                         spacing: 10
                         Label:
                             text: '连续 ' + root.streak + ' 天'
@@ -224,13 +224,13 @@ Builder.load_string("""
                         color: 0.8, 0.5, 0.9, 1
                         italic: True
                         size_hint_y: None
-                        height: 30
+                        height: 60
 
                 # End session button
                 Button:
                     text: '结束学习'
                     size_hint_y: None
-                    height: 64
+                    height: 128
                     background_normal: ''
                     background_color: 0.91, 0.3, 0.24, 1
                     color: 1, 1, 1, 1
@@ -254,6 +254,14 @@ class LearnScreen(Screen):
         self.session_id = None
         self.subtitles = []
         self._in_session = False
+        self._selected_ch_path = None
+        self._selected_en_path = None
+        self._select_step = 1
+        self._srt_folder = '/'
+        self._srt_popup = None
+        self._en_srt_popup = None
+        self._select_ch_path = None
+        self._select_en_path = None
 
     def on_enter(self):
         """Called when screen becomes visible."""
@@ -309,14 +317,232 @@ class LearnScreen(Screen):
             self.ids.encourage_label.text = ""
 
     def import_srt(self):
-        """Import SRT files using the Kivy FileChooser."""
+        """Import SRT files using the Kivy FileChooser or Android native picker."""
+        from kivy.utils import platform
+
+        if platform == 'android':
+            self._import_srt_android()
+        else:
+            self._import_srt_desktop()
+
+    def _import_srt_android(self):
+        """Use Android's native SAF file picker via plyer."""
+        from plyer import filechooser
+        from kivy.clock import Clock
+
+        def on_selection(selection):
+            if not selection:
+                return
+            path = selection[0]
+            if not isinstance(path, str):
+                return
+            # We need two files: zh.srt and en.srt in the same directory
+            folder = os.path.dirname(path)
+            self._show_folder_import(folder, path)
+
+        try:
+            filechooser.open_file(
+                on_selection=on_selection,
+                filters=[('SRT files', '*.srt'), ('All files', '*')],
+                multiple=False,
+            )
+        except Exception as e:
+            # Fallback to desktop-style chooser if plyer fails
+            self._show_popup("选择文件", f"无法打开文件选择器: {e}\n请使用桌面模式导入。")
+            self._import_srt_desktop()
+
+    def _show_folder_import(self, folder, first_file):
+        """After user picks one SRT, show all SRTs in that folder."""
+        from kivy.uix.popup import Popup
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.uix.button import Button
+        from kivy.uix.label import Label
+        from kivy.uix.textinput import TextInput
+        from kivy.uix.scrollview import ScrollView
+        from kivy.utils import platform
+
+        content = BoxLayout(orientation='vertical', spacing=12, padding=16)
+
+        prompt_label = Label(
+            text=f'目录: {folder}\n请选择中文 SRT 文件（第1步）',
+            font_name='ChineseFont',
+            font_size='16sp',
+            size_hint_y=None,
+            height=60,
+            color=(0.8, 0.8, 0.8, 1),
+            halign='center',
+        )
+        content.add_widget(prompt_label)
+
+        # List SRT files in folder
+        srt_files = [f for f in os.listdir(folder) if f.lower().endswith('.srt')]
+        srt_files.sort()
+
+        if not srt_files:
+            content.add_widget(Label(
+                text='该文件夹中没有 SRT 文件',
+                font_name='ChineseFont',
+                font_size='16sp',
+                color=(0.7, 0.3, 0.3, 1),
+                size_hint_y=None,
+                height=40,
+            ))
+            close_btn = Button(
+                text='关闭',
+                font_name='ChineseFont',
+                font_size='16sp',
+                size_hint_y=None,
+                height=48,
+                background_normal='',
+                background_color=(0.85, 0.85, 0.85, 1),
+                color=(0.3, 0.3, 0.3, 1),
+            )
+            popup = Popup(title='导入字幕', content=content, size_hint=(0.9, 0.6), auto_dismiss=False)
+            close_btn.bind(on_press=lambda x: popup.dismiss())
+            content.add_widget(close_btn)
+            popup.open()
+            return
+
+        scroll = ScrollView(size_hint=(1, 1))
+        list_layout = BoxLayout(orientation='vertical', size_hint_y=None, spacing=8)
+        list_layout.bind(minimum_height=list_layout.setter('height'))
+
+        for srt_name in srt_files:
+            btn = Button(
+                text=srt_name,
+                font_name='ChineseFont',
+                font_size='16sp',
+                size_hint_y=None,
+                height=52,
+                background_normal='',
+                background_color=(0.15, 0.15, 0.2, 1),
+                color=(0.9, 0.9, 0.9, 1),
+                halign='left',
+                padding=(16, 0),
+            )
+            btn.srt_path = os.path.join(folder, srt_name)
+            btn.bind(on_press=self._on_srt_selected)
+            list_layout.add_widget(btn)
+
+        scroll.add_widget(list_layout)
+        content.add_widget(scroll)
+
+        popup = Popup(
+            title='选择中文 SRT 文件',
+            content=content,
+            size_hint=(0.9, 0.8),
+            auto_dismiss=False,
+        )
+        popup.open()
+        self._srt_popup = popup
+        self._srt_folder = folder
+
+    def _on_srt_selected(self, btn):
+        """Handle SRT file selection from the folder list."""
+        ch_path = btn.srt_path
+        if hasattr(self, '_srt_popup') and self._srt_popup:
+            self._srt_popup.dismiss()
+
+        # Now ask for the English SRT
+        self._select_ch_path = ch_path
+        self._select_en_path = None
+        self._select_step = 2
+
+        from kivy.clock import Clock
+        Clock.schedule_once(lambda dt: self._show_en_srt_selector(), 0.1)
+
+    def _show_en_srt_selector(self):
+        """Show a second popup to select the English SRT."""
+        from kivy.uix.popup import Popup
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.uix.button import Button
+        from kivy.uix.label import Label
+        from kivy.uix.scrollview import ScrollView
+
+        content = BoxLayout(orientation='vertical', spacing=12, padding=16)
+
+        prompt_label = Label(
+            text=f'请选择对应的英文 SRT 文件（第2步）',
+            font_name='ChineseFont',
+            font_size='16sp',
+            size_hint_y=None,
+            height=60,
+            color=(0.8, 0.8, 0.8, 1),
+            halign='center',
+        )
+        content.add_widget(prompt_label)
+
+        folder = self._srt_folder
+        srt_files = [f for f in os.listdir(folder) if f.lower().endswith('.srt')]
+        srt_files.sort()
+
+        scroll = ScrollView(size_hint=(1, 1))
+        list_layout = BoxLayout(orientation='vertical', size_hint_y=None, spacing=8)
+        list_layout.bind(minimum_height=list_layout.setter('height'))
+
+        for srt_name in srt_files:
+            btn = Button(
+                text=srt_name,
+                font_name='ChineseFont',
+                font_size='16sp',
+                size_hint_y=None,
+                height=52,
+                background_normal='',
+                background_color=(0.15, 0.15, 0.2, 1),
+                color=(0.9, 0.9, 0.9, 1),
+                halign='left',
+                padding=(16, 0),
+            )
+            btn.srt_path = os.path.join(folder, srt_name)
+            btn.bind(on_press=self._on_en_srt_selected)
+            list_layout.add_widget(btn)
+
+        scroll.add_widget(list_layout)
+        content.add_widget(scroll)
+
+        cancel_btn = Button(
+            text='取消',
+            font_name='ChineseFont',
+            font_size='16sp',
+            size_hint_y=None,
+            height=48,
+            background_normal='',
+            background_color=(0.85, 0.85, 0.85, 1),
+            color=(0.3, 0.3, 0.3, 1),
+        )
+        content.add_widget(cancel_btn)
+
+        popup = Popup(
+            title='选择英文 SRT 文件',
+            content=content,
+            size_hint=(0.9, 0.8),
+            auto_dismiss=False,
+        )
+        cancel_btn.bind(on_press=lambda x: popup.dismiss())
+        popup.open()
+        self._en_srt_popup = popup
+
+    def _on_en_srt_selected(self, btn):
+        """Handle English SRT selection and start import."""
+        en_path = btn.srt_path
+        if hasattr(self, '_en_srt_popup') and self._en_srt_popup:
+            self._en_srt_popup.dismiss()
+
+        self._select_en_path = en_path
+        self._selected_ch_path = self._select_ch_path
+        self._selected_en_path = self._select_en_path
+
+        from kivy.clock import Clock
+        Clock.schedule_once(lambda dt: self._do_import(), 0.1)
+
+    def _import_srt_desktop(self):
+        """Desktop-style SRT import using Kivy FileChooser."""
         from kivy.uix.filechooser import FileChooserListView
         from kivy.uix.popup import Popup
         from kivy.uix.boxlayout import BoxLayout
         from kivy.uix.button import Button
         from kivy.uix.label import Label
         from kivy.uix.textinput import TextInput
-        from kivy.utils import platform
 
         content = BoxLayout(orientation='vertical', spacing=10, padding=16)
 
@@ -330,17 +556,7 @@ class LearnScreen(Screen):
         )
         content.add_widget(prompt_label)
 
-        # On Android, start from external storage; on desktop, use home dir
-        if platform == 'android':
-            try:
-                from android.storage import primary_external_storage_path
-                start_path = primary_external_storage_path()
-            except Exception:
-                start_path = '/sdcard/'
-            if not start_path or not os.path.isdir(start_path):
-                start_path = '/sdcard/'
-        else:
-            start_path = os.path.expanduser('~')
+        start_path = os.path.expanduser('~')
 
         # Path input for quick navigation
         path_input = TextInput(

@@ -23,7 +23,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 72
+            height: 144
             padding: [12, 0]
             canvas.before:
                 Color:
@@ -56,7 +56,7 @@ Builder.load_string("""
             font_size: '17sp'
             color: 0.5, 0.5, 0.5, 1
             size_hint_y: None
-            height: 52
+            height: 104
             padding: [20, 16]
 
         # Scrollable list of review items
