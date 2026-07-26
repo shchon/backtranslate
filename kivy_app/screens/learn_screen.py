@@ -28,7 +28,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 60
+            height: 72
             padding: [12, 0]
             canvas.before:
                 Color:
@@ -68,7 +68,7 @@ Builder.load_string("""
                 orientation: 'vertical'
                 spacing: 20
                 size_hint_y: None
-                height: 240
+                height: 280
 
                 Label:
                     text: '点击下方按钮导入中英字幕文件'
@@ -80,7 +80,7 @@ Builder.load_string("""
                 Button:
                     text: '导入字幕文件'
                     size_hint_y: None
-                    height: 60
+                    height: 72
                     background_normal: ''
                     background_color: 0.29, 0.56, 0.85, 1
                     color: 1, 1, 1, 1
@@ -132,7 +132,7 @@ Builder.load_string("""
                     font_size: '26sp'
                     color: 0.9, 0.9, 0.9, 1
                     size_hint_y: None
-                    height: 200
+                    height: 240
                     text_size: self.width, None
                     halign: 'left'
                     valign: 'top'
@@ -144,7 +144,7 @@ Builder.load_string("""
                     font_name: 'ChineseFont'
                     font_size: '22sp'
                     size_hint_y: None
-                    height: 60
+                    height: 72
                     multiline: False
                     background_color: 0.2, 0.2, 0.2, 1
                     foreground_color: 0.9, 0.9, 0.9, 1
@@ -154,7 +154,7 @@ Builder.load_string("""
                 # Action buttons
                 BoxLayout:
                     size_hint_y: None
-                    height: 60
+                    height: 68
                     spacing: 16
                     Button:
                         text: '跳过'
@@ -178,9 +178,9 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: None
-                    height: 96
-                    padding: [16, 12]
-                    spacing: 8
+                    height: 120
+                    padding: [16, 16]
+                    spacing: 10
                     canvas.before:
                         Color:
                             rgba: 0.15, 0.15, 0.2, 1
@@ -195,7 +195,7 @@ Builder.load_string("""
 
                     BoxLayout:
                         size_hint_y: None
-                        height: 34
+                        height: 42
                         spacing: 10
                         Label:
                             text: '连续 ' + root.streak + ' 天'
@@ -224,13 +224,13 @@ Builder.load_string("""
                         color: 0.8, 0.5, 0.9, 1
                         italic: True
                         size_hint_y: None
-                        height: 26
+                        height: 30
 
                 # End session button
                 Button:
                     text: '结束学习'
                     size_hint_y: None
-                    height: 56
+                    height: 64
                     background_normal: ''
                     background_color: 0.91, 0.3, 0.24, 1
                     color: 1, 1, 1, 1
@@ -354,11 +354,40 @@ class LearnScreen(Screen):
         )
         content.add_widget(path_input)
 
+        # Custom filter: show SRT files (case-insensitive)
+        def srt_filter(folder, filename):
+            return filename.lower().endswith('.srt')
+
         filechooser = FileChooserListView(
-            filters=['*.srt'],
+            filters=[srt_filter],
             path=start_path,
         )
         content.add_widget(filechooser)
+
+        # Toggle filter button
+        filter_btn = Button(
+            text='仅显示 .srt 文件',
+            font_name='ChineseFont',
+            font_size='14sp',
+            size_hint_y=None,
+            height=40,
+            background_normal='',
+            background_color=(0.2, 0.2, 0.2, 1),
+            color=(0.8, 0.8, 0.8, 1),
+        )
+        _filter_active = True
+        def toggle_filter(btn):
+            nonlocal _filter_active
+            if _filter_active:
+                filechooser.filters = []
+                btn.text = '显示所有文件'
+            else:
+                filechooser.filters = [srt_filter]
+                btn.text = '仅显示 .srt 文件'
+            _filter_active = not _filter_active
+            filechooser._trigger_files_update()
+        filter_btn.bind(on_press=toggle_filter)
+        content.add_widget(filter_btn)
 
         # Navigate to path when user presses Enter
         def on_path_submit(instance):

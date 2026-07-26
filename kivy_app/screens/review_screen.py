@@ -23,7 +23,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 60
+            height: 72
             padding: [12, 0]
             canvas.before:
                 Color:
@@ -56,8 +56,8 @@ Builder.load_string("""
             font_size: '17sp'
             color: 0.5, 0.5, 0.5, 1
             size_hint_y: None
-            height: 44
-            padding: [20, 12]
+            height: 52
+            padding: [20, 16]
 
         # Scrollable list of review items
         ScrollView:
@@ -67,8 +67,8 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                padding: [16, 12]
-                spacing: 12
+                padding: [16, 16]
+                spacing: 16
 """)
 
 

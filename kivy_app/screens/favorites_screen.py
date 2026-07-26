@@ -25,7 +25,7 @@ Builder.load_string("""
         # Top bar
         BoxLayout:
             size_hint_y: None
-            height: 60
+            height: 72
             padding: [12, 0]
             canvas.before:
                 Color:
@@ -78,7 +78,8 @@ Builder.load_string("""
             font_size: '17sp'
             color: 0.7, 0.7, 0.7, 1
             size_hint_y: None
-            height: 40
+            height: 48
+            padding: [16, 8]
             height: 32
             padding: [16, 6]
 
