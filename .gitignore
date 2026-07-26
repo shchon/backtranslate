@@ -14,4 +14,4 @@ bin/
 .buildozer/
 .DS_Store
 nul
-kivy_app/fonts/
+kivy_app/fonts/.pi-subagents/
