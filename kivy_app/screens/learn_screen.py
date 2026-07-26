@@ -26,28 +26,6 @@ Builder.load_string("""
             pos: self.pos
             size: self.size
 
-<FileChooserListEntry>:
-    color: 0.067, 0.078, 0.086, 1
-    
-<FileChooserIconView>:
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-
-<FileChooserIconEntry>:
-    color: 0.067, 0.078, 0.086, 1
-
-<FileChooser>:
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-
 <LearnScreen>:
     BoxLayout:
         orientation: 'vertical'
@@ -488,7 +466,8 @@ class LearnScreen(Screen):
             hint_text_color=(0.420, 0.447, 0.475, 1))
         content.add_widget(pi)
 
-        fc = FileChooserListView(filters=[lambda f, n: n.lower().endswith('.srt')], path=os.path.expanduser('~'))
+        fc = FileChooserListView(filters=[lambda f, n: n.lower().endswith('.srt')], path=os.path.expanduser('~'),
+            color=(0.067, 0.078, 0.086, 1))
         content.add_widget(fc)
 
         btns = BoxLayout(size_hint_y=None, height=44, spacing=12)
