@@ -345,6 +345,7 @@ class LearnScreen(Screen):
             content.add_widget(Label(text='该目录无 SRT 文件', font_name='ChineseFont',
                 size_hint_y=None, height=40, color=(0.878, 0.345, 0.298, 1)))
             popup = Popup(title='导入字幕', content=content, size_hint=(0.85, 0.5), auto_dismiss=False)
+            popup.background_color = (0.969, 0.973, 0.969, 1)
             popup.title_color = (0.067, 0.078, 0.086, 1)
             btn = Button(text='关闭', font_name='ChineseFont', size_hint_y=None, height=44,
                 background_normal='', background_color=(0.95,0.95,0.95,1), color=(0.4,0.4,0.4,1))
@@ -641,6 +642,7 @@ class LearnScreen(Screen):
             background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1), font_size='15sp')
         content.add_widget(btn)
         popup = Popup(title=title, content=content, size_hint=(0.8, 0.5), auto_dismiss=False)
+        popup.background_color = (0.969, 0.973, 0.969, 1)
         popup.title_color = (0.067, 0.078, 0.086, 1)
 
         def _ref(inst, _):
