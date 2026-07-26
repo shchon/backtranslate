@@ -1,17 +1,14 @@
 """
-BackTranslate - 回译训练 (Kivy Android App)
-Entry point for the Kivy-based mobile version.
+BackTranslate    回译训练
+Kivy Android App — Clean Modern UI
 """
-import os
-import sys
-import json
+import os, sys, json
 
-# Ensure the project root is on sys.path so we can import backtranslate.*
 _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
-# ---- 字体配置 (必须在 Kivy 初始化之前) ----
+# ── 字体 ──
 _font_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fonts')
 _font_path = os.path.join(_font_dir, 'msyh.ttc')
 if not os.path.exists(_font_path):
@@ -20,45 +17,25 @@ if not os.path.exists(_font_path):
     _font_path = os.path.join(_font_dir, 'NotoSansSC.otf')
 if not os.path.exists(_font_path):
     _font_path = os.path.join(_font_dir, 'wqy-microhei.ttc')
+
 if os.path.exists(_font_path):
-    try:
-        from kivy.config import Config
-        Config.set('kivy', 'default_font', [
-            'ChineseFont',
-            _font_path,
-        ])
-    except Exception as e:
-        print(f'Font config warning: {e}')
-    else:
-        print(f'Using font: {_font_path}')
+    from kivy.config import Config
+    Config.set('kivy', 'default_font', ['ChineseFont', _font_path])
 
 from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
-from kivy.clock import Clock
-from kivy.utils import platform
 from kivy.core.text import LabelBase
-from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.uix.widget import Widget
-from kivy.graphics import Color, RoundedRectangle, Rectangle, Line
+from kivy.utils import platform
 
-# Register Chinese font - override Roboto (Kivy default) with our font
 if os.path.exists(_font_path):
-    try:
-        LabelBase.register(name='Roboto', fn_regular=_font_path)
-        LabelBase.register(name='ChineseFont', fn_regular=_font_path)
-    except Exception as e:
-        print(f'Font registration warning: {e}')
+    LabelBase.register(name='Roboto', fn_regular=_font_path)
+    LabelBase.register(name='ChineseFont', fn_regular=_font_path)
 
 from backtranslate.database.connection import init_db
-from backtranslate.config import load_config, save_config
-from backtranslate.database.operations import (
-    update_evaluation_status, get_subtitles_for_session,
-    create_session, create_subtitles_batch,
-)
+from backtranslate.config import load_config
+from backtranslate.database.operations import update_evaluation_status
 
 from kivy_app.screens.home_screen import HomeScreen
 from kivy_app.screens.learn_screen import LearnScreen
@@ -69,40 +46,75 @@ from kivy_app.screens.settings_screen import SettingsScreen
 from kivy_app.worker import EvaluationWorker
 
 
-# ============================================================
-#  KakaoBank iOS 风格设计 Token
-# ============================================================
-# 背景
-KBANK_BG = (0.965, 0.965, 0.965, 1)          # #F6F6F6  全局背景
+# ═══════════════════════════════════════════════════════════
+#  DESIGN SYSTEM  —  清爽现代 / Material Design 3 风格
+# ═══════════════════════════════════════════════════════════
 
-# 功能卡片颜色（4色系统）
-KBANK_CARD_MINT = (0.776, 0.894, 0.827, 1)    # #C6E4D3  薄荷绿 → 学习
-KBANK_CARD_ORANGE = (0.953, 0.490, 0.369, 1)  # #F37D5E  珊瑚橙 → 复习
-KBANK_CARD_BLUE = (0.318, 0.529, 0.651, 1)    # #5187A6  钢蓝 → 表达库
-KBANK_CARD_KHAKI = (0.788, 0.761, 0.682, 1)   # #C9C2AE  卡其 → 收藏
-KBANK_CARD_KHAKI_LIGHT = (0.871, 0.851, 0.780, 1)  # #DED9C7  卡其浅色按钮
+# ── 主色系 (Sage Green 鼠尾草绿) ──
+PRIMARY      = (0.420, 0.565, 0.502, 1)    # #6B9080  主色
+PRIMARY_LIGHT = (0.910, 0.941, 0.925, 1)   # #E8F0EC  主色浅底
+PRIMARY_DARK  = (0.306, 0.455, 0.392, 1)   # #4E7464  主色深
 
-# 文字颜色
-KBANK_TEXT_TITLE = (0.067, 0.067, 0.067, 1)      # #111111  主标题
-KBANK_TEXT_BODY = (0.165, 0.165, 0.165, 1)        # #2A2A2A  正文
-KBANK_TEXT_SECONDARY = (0.533, 0.533, 0.533, 1)   # #888888  辅助说明
+# ── 功能色 ──
+ACCENT_BLUE   = (0.376, 0.533, 0.820, 1)   # #6088D1  蓝色强调
+ACCENT_AMBER  = (0.925, 0.596, 0.235, 1)   # #EC983C  琥珀色
+ACCENT_CORAL  = (0.878, 0.345, 0.298, 1)   # #E0584C  警示红
+ACCENT_GREEN  = (0.357, 0.620, 0.490, 1)   # #5B9E7D  成功绿
 
-# 圆角 & 尺寸
-KBANK_CARD_RADIUS = 28       # 卡片圆角
-KBANK_NAV_BAR_HEIGHT = 56    # 顶部导航栏高度
-KBANK_GLOBAL_MARGIN = 16     # 全局左右边距
+# ── 背景 ──
+BG_PAGE   = (0.969, 0.973, 0.969, 1)       # #F7F8F7  页面底
+BG_CARD   = (1, 1, 1, 1)                   # #FFFFFF  卡片
+BG_SURFACE = (0.953, 0.957, 0.953, 1)      # #F3F4F3  次级表面
+
+# ── 文字 ──
+TEXT_PRIMARY   = (0.102, 0.110, 0.118, 1)   # #1A1C1E  主文字
+TEXT_SECONDARY = (0.408, 0.439, 0.471, 1)   # #687078  辅助文字
+TEXT_MUTED     = (0.616, 0.643, 0.667, 1)   # #9DA4AA  弱化文字
+TEXT_ON_DARK   = (1, 1, 1, 1)              # #FFFFFF  深底白字
+TEXT_ON_DARK_MUTED = (0.8, 0.84, 0.82, 1)  # 深底弱化
+
+# ── 边界 / 分割 ──
+BORDER_LIGHT = (0.902, 0.910, 0.902, 1)    # #E6E8E6  浅边框
+SEPARATOR    = (0.937, 0.941, 0.937, 1)    # #EFF0EF  分割线
+
+# ── 圆角 ──
+RADIUS_CARD   = 16   # 卡片
+RADIUS_BTN    = 12   # 按钮
+RADIUS_INPUT  = 12   # 输入框
+RADIUS_CHIP   = 20   # 标签/ chip
+
+# ── 尺寸 (dp) ──
+NAV_BAR_H    = 56   # 顶栏
+BTN_H        = 48   # 按钮高
+INPUT_H      = 52   # 输入框高
+CARD_PAD     = 16   # 卡片内边距
+PAGE_MARGIN  = 16   # 页面边距
+ITEM_GAP     = 12   # 列表项间距
+SECTION_GAP  = 16   # 区块间距
+
+# ── 字体层级 ──
+FONT_DISPLAY  = '28sp'  # 首页问候
+FONT_HEADLINE = '22sp'  # 页面标题
+FONT_TITLE    = '18sp'  # 卡片标题
+FONT_BODY     = '16sp'  # 正文
+FONT_LABEL    = '14sp'  # 标签
+FONT_CAPTION  = '12sp'  # 小字
+FONT_BTN      = '16sp'  # 按钮
+
+# ── 阴影 (Kivy 不支持原生阴影，用轻微偏移模拟) ──
+SHADOW_DOWN  = (0, 0.02, 0.04, 0.06)   # 向下阴影色
+SHADOW_UP    = (0, -0.01, 0.02, 0.04)  # 向上阴影
 
 
-# ============================================================
+# ═══════════════════════════════════════════════════════════
 #  MainLayout
-# ============================================================
+# ═══════════════════════════════════════════════════════════
 class MainLayout(BoxLayout):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, **kw):
+        super().__init__(**kw)
         self.orientation = 'vertical'
         self.spacing = 0
         self.padding = 0
-
         self.sm = ScreenManager()
         self.sm.add_widget(HomeScreen(name="home"))
         self.sm.add_widget(LearnScreen(name="learn"))
@@ -110,30 +122,25 @@ class MainLayout(BoxLayout):
         self.sm.add_widget(FavoritesScreen(name="favorites"))
         self.sm.add_widget(ExpressionsScreen(name="expressions"))
         self.sm.add_widget(SettingsScreen(name="settings"))
-
         self.add_widget(self.sm)
 
 
-# ============================================================
+# ═══════════════════════════════════════════════════════════
 #  App
-# ============================================================
+# ═══════════════════════════════════════════════════════════
 class BackTranslateApp(App):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, **kw):
+        super().__init__(**kw)
         self.title = "BackTranslate"
-        self.session_id = None
         self.worker = None
 
     def build(self):
         init_db()
-
-        from kivy.core.window import Window
-        Window.clearcolor = KBANK_BG  # #F6F6F6
-
-        main_layout = MainLayout()
+        Window.clearcolor = BG_PAGE
+        layout = MainLayout()
         self._start_worker()
         Window.bind(on_keyboard=self._on_key_back)
-        return main_layout
+        return layout
 
     def _start_worker(self):
         cfg = load_config()
@@ -149,32 +156,26 @@ class BackTranslateApp(App):
 
     def _on_eval_done(self, eval_id, result):
         try:
-            update_evaluation_status(
-                eval_id, "done",
-                result["meaning_score"],
-                result["grammar_score"],
-                result["naturalness_score"],
-                result["subtitle_style_score"],
+            update_evaluation_status(eval_id, "done",
+                result["meaning_score"], result["grammar_score"],
+                result["naturalness_score"], result["subtitle_style_score"],
                 result["analysis"],
-                json.dumps(result.get("suggested_expressions", [])),
-            )
+                json.dumps(result.get("suggested_expressions", [])))
         except Exception:
             return
-
         try:
             sm = self.root.sm
-            review_screen = sm.get_screen("review")
-            if review_screen and review_screen.session_id:
+            rs = sm.get_screen("review")
+            if rs and rs.session_id:
                 from backtranslate.database.connection import get_connection
-                conn = get_connection()
-                row = conn.execute(
+                c = get_connection()
+                row = c.execute(
                     "SELECT t.subtitle_id FROM translations t "
-                    "JOIN evaluations e ON e.translation_id = t.id "
-                    "WHERE e.id = ?", (eval_id,)
-                ).fetchone()
-                conn.close()
+                    "JOIN evaluations e ON e.translation_id=t.id "
+                    "WHERE e.id=?", (eval_id,)).fetchone()
+                c.close()
                 if row:
-                    review_screen.update_evaluation(row[0])
+                    rs.update_evaluation(row[0])
         except Exception:
             pass
 
@@ -183,25 +184,23 @@ class BackTranslateApp(App):
             update_evaluation_status(eval_id, "failed", error="批改失败")
         except Exception:
             return
-
         try:
             sm = self.root.sm
-            review_screen = sm.get_screen("review")
-            if review_screen and review_screen.session_id:
+            rs = sm.get_screen("review")
+            if rs and rs.session_id:
                 from backtranslate.database.connection import get_connection
-                conn = get_connection()
-                row = conn.execute(
+                c = get_connection()
+                row = c.execute(
                     "SELECT t.subtitle_id FROM translations t "
-                    "JOIN evaluations e ON e.translation_id = t.id "
-                    "WHERE e.id = ?", (eval_id,)
-                ).fetchone()
-                conn.close()
+                    "JOIN evaluations e ON e.translation_id=t.id "
+                    "WHERE e.id=?", (eval_id,)).fetchone()
+                c.close()
                 if row:
-                    review_screen.update_evaluation(row[0])
+                    rs.update_evaluation(row[0])
         except Exception:
             pass
 
-    def _on_key_back(self, window, key, scancode, codepoint, modifier):
+    def _on_key_back(self, window, key, *args):
         if key == 27:
             sm = self.root.sm
             if sm.current != "home":
@@ -216,9 +215,5 @@ class BackTranslateApp(App):
 
 if __name__ == "__main__":
     if platform == 'android' and os.path.exists(_font_path):
-        from kivy.core.text import LabelBase
-        try:
-            LabelBase.register(name='Roboto', fn_regular=_font_path)
-        except Exception:
-            pass
+        LabelBase.register(name='Roboto', fn_regular=_font_path)
     BackTranslateApp().run()

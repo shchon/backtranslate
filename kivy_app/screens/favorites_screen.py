@@ -1,18 +1,17 @@
-"""
-Favorites screen - manage saved sentences.
-"""
+"""Favorites screen — clean modern card list."""
+from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.uix.popup import Popup
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
+from kivy.uix.popup import Popup
+from kivy.graphics import Color, RoundedRectangle
 
 from backtranslate.database.operations import (
-    get_favorites, remove_favorite, clear_favorites,
-    create_session, create_subtitles_batch, get_subtitles_for_session,
+    get_favorites, remove_favorite, clear_favorites, is_favorite,
+    add_favorite, create_session, create_subtitles_batch,
+    get_subtitles_for_session,
 )
 from backtranslate.database.connection import init_db
 
@@ -21,75 +20,84 @@ Builder.load_string("""
     BoxLayout:
         orientation: 'vertical'
         spacing: 0
+        canvas.before:
+            Color:
 
-        # Top bar - Uxcel style
+                rgba: 0.969, 0.973, 0.969, 1
+            Rectangle:
+
+                pos: self.pos
+
+                size: self.size
+
+        # ── Top bar ──
         BoxLayout:
             size_hint_y: None
-            height: 60
+            height: 56
             padding: [12, 0]
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 1
+
+                    rgba: 0.969, 0.973, 0.969, 1
                 Rectangle:
+
                     pos: self.pos
+
                     size: self.size
             Button:
-                text: '< 返回'
+                text: '← 返回'
                 size_hint_x: None
-                width: 60
+                width: 64
                 background_normal: ''
-                background_color: 0, 0, 0, 0
-                color: 0.486, 0.361, 1.0, 1
+                background_color: 0,0,0,0
+                color: 0.420, 0.565, 0.502, 1
                 font_name: 'ChineseFont'
-                font_size: '17sp'
+                font_size: '16sp'
                 on_press: root.go_home()
             Label:
                 text: '收藏夹'
                 font_name: 'ChineseFont'
-                font_size: '18sp'
+                font_size: '20sp'
                 bold: True
-                color: 0.102, 0.102, 0.102, 1
+                color: 0.102, 0.110, 0.118, 1
             Button:
                 text: '复习'
                 size_hint_x: None
-                width: 50
+                width: 52
                 background_normal: ''
-                background_color: 0, 0, 0, 0
-                color: 0.486, 0.361, 1.0, 1
+                background_color: 0,0,0,0
+                color: 0.420, 0.565, 0.502, 1
                 font_name: 'ChineseFont'
                 font_size: '15sp'
                 on_press: root.start_review()
             Button:
                 text: '清空'
                 size_hint_x: None
-                width: 50
+                width: 52
                 background_normal: ''
-                background_color: 0, 0, 0, 0
-                color: 0.91, 0.3, 0.24, 1
+                background_color: 0,0,0,0
+                color: 0.878, 0.345, 0.298, 1
                 font_name: 'ChineseFont'
                 font_size: '15sp'
                 on_press: root.clear_all()
 
-        # Count label
         Label:
             id: count_label
             text: ''
             font_name: 'ChineseFont'
-            font_size: '14sp'
-            color: 0.557, 0.557, 0.576, 1
+            font_size: '13sp'
+            color: 0.408, 0.439, 0.471, 1
             size_hint_y: None
-            height: 36
+            height: 32
             padding: [20, 8]
-            padding: [16, 6]
 
-        # Scrollable list
         ScrollView:
             BoxLayout:
                 id: list_layout
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                padding: [12, 8]
+                padding: [16, 4]
                 spacing: 8
 """)
 
@@ -101,221 +109,102 @@ class FavoritesScreen(Screen):
     def _refresh(self):
         layout = self.ids.list_layout
         layout.clear_widgets()
+        favs = get_favorites()
+        self.ids.count_label.text = f"共 {len(favs)} 句"
 
-        favorites = get_favorites()
-        self.ids.count_label.text = f"共 {len(favorites)} 句"
-
-        if not favorites:
-            layout.add_widget(Label(
-                text='暂无收藏句子',
-                font_name='ChineseFont',
-                font_size='16sp',
-                color=(0.533, 0.533, 0.533, 1),
-                size_hint_y=None,
-                height=200,
-            ))
-            layout.height = 200
+        if not favs:
+            layout.add_widget(Label(text='暂无收藏句子', font_name='ChineseFont',
+                font_size='15sp', color=(0.408,0.439,0.471,1), size_hint_y=None, height=200))
             return
 
-        for i, fav in enumerate(favorites):
-            card = self._build_card(i + 1, fav)
+        for i, f in enumerate(favs):
+            card = BoxLayout(orientation='vertical', size_hint_y=None,
+                            height=100, padding=[16, 12], spacing=4)
+            with card.canvas.before:
+                Color(rgba=(1, 1, 1, 1))
+                RoundedRectangle(pos=card.pos, size=card.size, radius=[16]*4)
+
+            def update_bg(inst, val):
+                inst.canvas.before.clear()
+                with inst.canvas.before:
+                    Color(rgba=(1, 1, 1, 1))
+                    RoundedRectangle(pos=inst.pos, size=inst.size, radius=[16]*4)
+            card.bind(pos=update_bg, size=update_bg)
+
+            row = BoxLayout(size_hint_y=None, height=36, spacing=8)
+            row.add_widget(Label(text=f"#{i+1}", font_name='ChineseFont',
+                font_size='12sp', color=(0.616,0.643,0.667,1), size_hint_x=None, width=32))
+            row.add_widget(Label(text=f["chinese"], font_name='ChineseFont',
+                font_size='16sp', color=(0.102,0.110,0.118,1), halign='left'))
+            db = Button(text='×', font_size='20sp', color=(0.878,0.345,0.298,1),
+                size_hint_x=None, width=36, background_normal='', background_color=(0,0,0,0))
+            db.fav_id = f["id"]
+            db.bind(on_press=self._delete)
+            row.add_widget(db)
+            card.add_widget(row)
+
+            # English toggle
+            eb = Button(text='查看英文 ▸', font_name='ChineseFont', font_size='13sp',
+                color=(0.420,0.565,0.502,1), size_hint_y=None, height=24,
+                background_normal='', background_color=(0,0,0,0), halign='left')
+            el = Label(text=f["english_official"], font_name='ChineseFont',
+                font_size='14sp', color=(0.408,0.439,0.471,1),
+                size_hint_y=None, height=22, opacity=0, disabled=True,
+                text_size=(self.width-40,None))
+            def toggle_en(b, l=el):
+                l.opacity = 1 - l.opacity
+                l.disabled = not l.disabled
+                b.text = '隐藏 ▾' if l.opacity else '查看英文 ▸'
+            eb.bind(on_press=toggle_en)
+            card.add_widget(eb)
+            card.add_widget(el)
             layout.add_widget(card)
 
-        layout.height = len(favorites) * 110
-
-    def _build_card(self, idx, fav):
-        """Build a card widget for a favorite item - KakaoBank white card style."""
-        from kivy.graphics import Color, RoundedRectangle
-        card = BoxLayout(
-            orientation='vertical',
-            size_hint_y=None,
-            height=100,
-            padding=[20, 14],
-            spacing=4,
-        )
-        # White card background with 28dp radius
-        with card.canvas.before:
-            Color(rgba=(1, 1, 1, 1))
-            RoundedRectangle(pos=card.pos, size=card.size, radius=[28, 28, 28, 28])
-
-        def update_bg(instance, value):
-            instance.canvas.before.clear()
-            with instance.canvas.before:
-                Color(rgba=(1, 1, 1, 1))
-                RoundedRectangle(pos=instance.pos, size=instance.size, radius=[28, 28, 28, 28])
-        card.bind(pos=update_bg, size=update_bg)
-
-        # Row: index + chinese + delete button
-        row = BoxLayout(size_hint_y=None, height=36, spacing=8)
-        idx_label = Label(
-            text=f"#{idx}",
-            font_name='ChineseFont',
-            font_size='13sp',
-            color=(0.533, 0.533, 0.533, 1),
-            size_hint_x=None,
-            width=32,
-        )
-        row.add_widget(idx_label)
-
-        ch_label = Label(
-            text=fav["chinese"],
-            font_name='ChineseFont',
-            font_size='16sp',
-            color=(0.067, 0.067, 0.067, 1),
-            halign='left',
-            text_size=(self.width - 120, None),
-        )
-        ch_label.bind(size=lambda inst, val: setattr(inst, 'text_size', (self.width - 120, None)))
-        row.add_widget(ch_label)
-
-        del_btn = Button(
-            text='×',
-            font_size='20sp',
-            color=(0.91, 0.3, 0.24, 1),
-            size_hint_x=None,
-            width=36,
-            background_normal='',
-            background_color=(0, 0, 0, 0),
-        )
-        del_btn.fav_id = fav["id"]
-        del_btn.bind(on_press=self._delete_favorite)
-        row.add_widget(del_btn)
-
-        card.add_widget(row)
-
-        # English toggle
-        en_btn = Button(
-            text='查看英文 ▸',
-            font_name='ChineseFont',
-            font_size='13sp',
-            color=(0.318, 0.529, 0.651, 1),
-            size_hint_y=None,
-            height=26,
-            background_normal='',
-            background_color=(0, 0, 0, 0),
-            halign='left',
-        )
-        en_label = Label(
-            text=fav["english_official"],
-            font_name='ChineseFont',
-            font_size='14sp',
-            color=(0.533, 0.533, 0.533, 1),
-            size_hint_y=None,
-            height=26,
-            opacity=0,
-            disabled=True,
-            text_size=(self.width - 40, None),
-        )
-
-        def toggle_en(btn, lbl=en_label):
-            lbl.opacity = 1 - lbl.opacity
-            lbl.disabled = not lbl.disabled
-            btn.text = '隐藏英文 ▾' if lbl.opacity else '查看英文 ▸'
-
-        en_btn.bind(on_press=toggle_en)
-        card.add_widget(en_btn)
-        card.add_widget(en_label)
-
-        return card
-
-    def _delete_favorite(self, btn):
+    def _delete(self, btn):
         remove_favorite(btn.fav_id)
         self._refresh()
 
     def start_review(self):
-        """Start reviewing all favorites in the learn screen."""
-        favorites = get_favorites()
-        if not favorites:
-            self._show_toast('收藏夹为空，请先收藏句子')
+        favs = get_favorites()
+        if not favs:
+            self._toast('收藏夹为空')
             return
-
         init_db()
         from backtranslate.database.operations import clear_session_data
         clear_session_data()
-
-        session_id = create_session("收藏复习", len(favorites))
+        sid = create_session("收藏复习", len(favs))
         subs = []
-        for i, fav in enumerate(favorites):
-            subs.append({
-                "idx": i + 1,
-                "chinese": fav["chinese"],
-                "english_official": fav["english_official"],
-                "prev_chinese": fav.get("prev_chinese", ""),
-                "prev_english": fav.get("prev_english", ""),
-                "next_chinese": fav.get("next_chinese", ""),
-                "next_english": fav.get("next_english", ""),
-            })
-        create_subtitles_batch(session_id, subs)
-
-        # Load into learn screen
-        db_subs = get_subtitles_for_session(session_id)
-        learn_screen = self.manager.get_screen("learn")
-        learn_screen.load_favorites_review(session_id, db_subs)
+        for i, f in enumerate(favs):
+            subs.append({"idx": i+1, "chinese": f["chinese"], "english_official": f["english_official"]})
+        create_subtitles_batch(sid, subs)
+        db_subs = get_subtitles_for_session(sid)
+        self.manager.get_screen("learn").load_favorites_review(sid, db_subs)
         self.manager.current = "learn"
-
-    def _show_toast(self, message):
-        popup = Popup(
-            title='',
-            content=Label(
-                text=message,
-                font_name='ChineseFont',
-                font_size='15sp',
-                color=(0.165, 0.165, 0.165, 1),
-            ),
-            size_hint=(0.7, 0.25),
-            auto_dismiss=True,
-        )
-        popup.background_color = (0.965, 0.965, 0.965, 1)
-        popup.open()
-        Clock.schedule_once(lambda dt: popup.dismiss(), 2)
 
     def clear_all(self):
         content = BoxLayout(orientation='vertical', spacing=12, padding=16)
-        content.add_widget(Label(
-            text='确定要清空收藏夹中所有句子吗？\n此操作不可撤销。',
-            font_name='ChineseFont',
-            font_size='15sp',
-            color=(0.165, 0.165, 0.165, 1),
-            halign='center',
-            text_size=(300, None),
-        ))
-        btn_layout = BoxLayout(size_hint_y=None, height=44, spacing=12)
-        cancel_btn = Button(
-            text='取消',
-            font_name='ChineseFont',
-            font_size='15sp',
-            background_normal='',
-            background_color=(0.95, 0.95, 0.95, 1),
-            color=(0.533, 0.533, 0.533, 1),
-        )
-        confirm_btn = Button(
-            text='确定清空',
-            font_name='ChineseFont',
-            font_size='15sp',
-            background_normal='',
-            background_color=(0.91, 0.3, 0.24, 1),
-            color=(1, 1, 1, 1),
-            bold=True,
-        )
-        btn_layout.add_widget(cancel_btn)
-        btn_layout.add_widget(confirm_btn)
-        content.add_widget(btn_layout)
-
-        popup = Popup(
-            title='确认清空',
-            content=content,
-            size_hint=(0.8, 0.4),
-            auto_dismiss=False,
-        )
-
-        def do_clear(btn):
-            clear_favorites()
-            popup.dismiss()
-            self._refresh()
-
-        confirm_btn.bind(on_press=do_clear)
-        cancel_btn.bind(on_press=lambda x: popup.dismiss())
+        content.add_widget(Label(text='确定清空所有收藏？', font_name='ChineseFont',
+            font_size='15sp', color=(0.102,0.110,0.118,1), halign='center'))
+        btns = BoxLayout(size_hint_y=None, height=44, spacing=12)
+        cb = Button(text='取消', font_name='ChineseFont', font_size='15sp',
+            background_normal='', background_color=(0.953,0.957,0.953,1),
+            color=(0.408,0.439,0.471,1))
+        ok = Button(text='清空', font_name='ChineseFont', font_size='15sp', bold=True,
+            background_normal='', background_color=(0.878,0.345,0.298,1), color=(1,1,1,1))
+        btns.add_widget(cb)
+        btns.add_widget(ok)
+        content.add_widget(btns)
+        popup = Popup(title='确认', content=content, size_hint=(0.8,0.35), auto_dismiss=False)
+        cb.bind(on_press=lambda x: popup.dismiss())
+        ok.bind(on_press=lambda x: [clear_favorites(), popup.dismiss(), self._refresh()])
         popup.open()
+
+    def _toast(self, msg):
+        popup = Popup(title='', content=Label(text=msg, font_name='ChineseFont',
+            font_size='15sp', color=(0.102,0.110,0.118,1)),
+            size_hint=(0.7,0.2), auto_dismiss=True)
+        popup.open()
+        Clock.schedule_once(lambda dt: popup.dismiss(), 2)
 
     def go_home(self):
         self.manager.current = "home"

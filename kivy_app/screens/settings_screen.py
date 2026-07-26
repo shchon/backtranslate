@@ -1,244 +1,287 @@
-"""
-Settings screen - API configuration and app settings.
-"""
+"""Settings screen — clean modern form."""
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
-from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.spinner import Spinner
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-
 from backtranslate.config import load_config, save_config
-from backtranslate.defaults import (
-    DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_CONTEXT_N,
-    DEFAULT_PROMPT_TEMPLATE,
-)
 
 Builder.load_string("""
 <SettingsScreen>:
     BoxLayout:
         orientation: 'vertical'
         spacing: 0
+        canvas.before:
+            Color:
 
-        # Top bar - Uxcel style
+                rgba: 0.969, 0.973, 0.969, 1
+            Rectangle:
+
+                pos: self.pos
+
+                size: self.size
+
+        # ── Top bar ──
         BoxLayout:
             size_hint_y: None
-            height: 60
+            height: 56
             padding: [12, 0]
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 1
+
+                    rgba: 0.969, 0.973, 0.969, 1
                 Rectangle:
+
                     pos: self.pos
+
                     size: self.size
             Button:
-                text: '‹ 返回'
+                text: '← 返回'
                 size_hint_x: None
-                width: 60
+                width: 64
                 background_normal: ''
-                background_color: 0, 0, 0, 0
-                color: 0.486, 0.361, 1.0, 1
-                font_size: '17sp'
+                background_color: 0,0,0,0
+                color: 0.420, 0.565, 0.502, 1
+                font_name: 'ChineseFont'
+                font_size: '16sp'
                 on_press: root.go_home()
             Label:
                 text: '设置'
-                font_size: '18sp'
+                font_name: 'ChineseFont'
+                font_size: '20sp'
                 bold: True
-                color: 0.102, 0.102, 0.102, 1
+                color: 0.102, 0.110, 0.118, 1
             Widget:
                 size_hint_x: None
-                width: 60
+                width: 88
 
-        # Scrollable settings form
         ScrollView:
             BoxLayout:
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
                 padding: [20, 16]
-                spacing: 16
+                spacing: 14
 
-                # API Base URL
+                # ── API 地址 ──
                 Label:
                     text: 'API 地址'
-                    font_size: '15sp'
+                    font_name: 'ChineseFont'
+                    font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.102, 0.102, 1
+                    color: 0.102, 0.110, 0.118, 1
                     size_hint_y: None
-                    height: 24
+                    height: 22
                     halign: 'left'
                 TextInput:
                     id: base_url_input
-                    hint_text: '例如: https://api.deepseek.com'
-                    font_size: '16sp'
+                    hint_text: '例如 https://api.deepseek.com'
+                    font_name: 'ChineseFont'
+                    font_size: '15sp'
                     size_hint_y: None
-                    height: 52
-                    padding: [16, 14]
+                    height: 48
+                    padding: [16, 12]
                     multiline: False
+                    background_color: 1, 1, 1, 1
+                    foreground_color: 0.102, 0.110, 0.118, 1
                     canvas.before:
                         Color:
-                            rgba: 0.91, 0.91, 0.93, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [12, 12, 12, 12]
 
-                # API Key
+                            rgba: 0.902, 0.910, 0.902, 1
+                        RoundedRectangle:
+
+                            pos: self.pos
+
+                            size: self.size
+
+                            radius: [12]*4
+
+                # ── API Key ──
                 Label:
                     text: 'API Key'
-                    font_size: '15sp'
+                    font_name: 'ChineseFont'
+                    font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.102, 0.102, 1
+                    color: 0.102, 0.110, 0.118, 1
                     size_hint_y: None
-                    height: 24
+                    height: 22
                     halign: 'left'
                 TextInput:
                     id: api_key_input
                     hint_text: '输入你的 API Key'
-                    font_size: '16sp'
+                    font_name: 'ChineseFont'
+                    font_size: '15sp'
                     size_hint_y: None
-                    height: 52
-                    padding: [16, 14]
+                    height: 48
+                    padding: [16, 12]
                     multiline: False
                     password: True
+                    background_color: 1, 1, 1, 1
+                    foreground_color: 0.102, 0.110, 0.118, 1
                     canvas.before:
                         Color:
-                            rgba: 0.91, 0.91, 0.93, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [12, 12, 12, 12]
 
-                # Model
+                            rgba: 0.902, 0.910, 0.902, 1
+                        RoundedRectangle:
+
+                            pos: self.pos
+
+                            size: self.size
+
+                            radius: [12]*4
+
+                # ── 模型 ──
                 Label:
                     text: '模型'
-                    font_size: '15sp'
+                    font_name: 'ChineseFont'
+                    font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.102, 0.102, 1
+                    color: 0.102, 0.110, 0.118, 1
                     size_hint_y: None
-                    height: 24
+                    height: 22
                     halign: 'left'
                 TextInput:
                     id: model_input
-                    hint_text: '例如: deepseek-chat'
-                    font_size: '16sp'
+                    hint_text: '例如 deepseek-chat'
+                    font_name: 'ChineseFont'
+                    font_size: '15sp'
                     size_hint_y: None
-                    height: 52
-                    padding: [16, 14]
+                    height: 48
+                    padding: [16, 12]
                     multiline: False
+                    background_color: 1, 1, 1, 1
+                    foreground_color: 0.102, 0.110, 0.118, 1
                     canvas.before:
                         Color:
-                            rgba: 0.91, 0.91, 0.93, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [12, 12, 12, 12]
 
-                # Context sentences
+                            rgba: 0.902, 0.910, 0.902, 1
+                        RoundedRectangle:
+
+                            pos: self.pos
+
+                            size: self.size
+
+                            radius: [12]*4
+
+                # ── 上下文 ──
                 Label:
                     text: '上下文句数'
-                    font_size: '15sp'
+                    font_name: 'ChineseFont'
+                    font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.102, 0.102, 1
+                    color: 0.102, 0.110, 0.118, 1
                     size_hint_y: None
-                    height: 24
+                    height: 22
                     halign: 'left'
                 BoxLayout:
                     size_hint_y: None
-                    height: 52
+                    height: 48
                     spacing: 12
                     TextInput:
                         id: context_input
                         text: '1'
-                        font_size: '16sp'
+                        font_name: 'ChineseFont'
+                        font_size: '15sp'
                         size_hint_x: None
                         width: 80
-                        padding: [16, 14]
+                        padding: [16, 12]
                         multiline: False
                         input_filter: 'int'
+                        background_color: 1, 1, 1, 1
+                        foreground_color: 0.102, 0.110, 0.118, 1
                         canvas.before:
                             Color:
-                                rgba: 0.91, 0.91, 0.93, 1
-                            RoundedRectangle:
-                                pos: self.pos
-                                size: self.size
-                                radius: [12, 12, 12, 12]
-                    Label:
-                        text: '句（前后各取N句作为上下文）'
-                        font_size: '14sp'
-                        color: 0.557, 0.557, 0.576, 1
 
-                # Prompt template
+                                rgba: 0.902, 0.910, 0.902, 1
+                            RoundedRectangle:
+
+                                pos: self.pos
+
+                                size: self.size
+
+                                radius: [12]*4
+                    Label:
+                        text: '前后各取 N 句作为上下文'
+                        font_name: 'ChineseFont'
+                        font_size: '13sp'
+                        color: 0.616, 0.643, 0.667, 1
+
+                # ── 提示词 ──
                 Label:
                     text: '提示词模板'
-                    font_size: '15sp'
+                    font_name: 'ChineseFont'
+                    font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.102, 0.102, 1
+                    color: 0.102, 0.110, 0.118, 1
                     size_hint_y: None
-                    height: 24
+                    height: 22
                     halign: 'left'
                 TextInput:
                     id: prompt_input
-                    hint_text: 'AI 评分提示词模板...'
+                    hint_text: 'AI 评分提示词模板……'
+                    font_name: 'ChineseFont'
                     font_size: '14sp'
                     size_hint_y: None
-                    height: 200
+                    height: 140
                     padding: [16, 14]
+                    background_color: 1, 1, 1, 1
+                    foreground_color: 0.102, 0.110, 0.118, 1
                     canvas.before:
                         Color:
-                            rgba: 0.91, 0.91, 0.93, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [12, 12, 12, 12]
 
-                # Save button - Uxcel style
+                            rgba: 0.902, 0.910, 0.902, 1
+                        RoundedRectangle:
+
+                            pos: self.pos
+
+                            size: self.size
+
+                            radius: [12]*4
+
+                # ── Save ──
                 Button:
-                    text: '💾 保存设置'
-                    size_hint_y: None
-                    height: 52
-                    background_normal: ''
-                    background_color: 0.486, 0.361, 1.0, 1
-                    color: 1, 1, 1, 1
+                    text: '保存设置'
+                    font_name: 'ChineseFont'
                     font_size: '16sp'
                     bold: True
+                    size_hint_y: None
+                    height: 48
+                    color: 1, 1, 1, 1
+                    background_normal: ''
+                    background_color: 0.420, 0.565, 0.502, 1
                     on_press: root.save_settings()
                     canvas.before:
                         Color:
-                            rgba: 0.486, 0.361, 1.0, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [12, 12, 12, 12]
 
-                # Reset button
+                            rgba: 0.420, 0.565, 0.502, 1
+                        RoundedRectangle:
+
+                            pos: self.pos
+
+                            size: self.size
+
+                            radius: [12]*4
+
+                # ── Reset ──
                 Button:
-                    text: '↺ 恢复默认'
+                    text: '恢复默认'
+                    font_name: 'ChineseFont'
+                    font_size: '15sp'
                     size_hint_y: None
                     height: 48
+                    color: 0.408, 0.439, 0.471, 1
                     background_normal: ''
-                    background_color: 0.95, 0.95, 0.97, 1
-                    color: 0.4, 0.4, 0.4, 1
-                    font_size: '15sp'
+                    background_color: 0.953, 0.957, 0.953, 1
                     on_press: root.reset_defaults()
                     canvas.before:
                         Color:
-                            rgba: 0.95, 0.95, 0.97, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [12, 12, 12, 12]
-                        Color:
-                            rgba: 0.91, 0.91, 0.93, 1
-                        Line:
-                            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 12
-                            width: 0.5
 
-                # Bottom spacing
+                            rgba: 0.953, 0.957, 0.953, 1
+                        RoundedRectangle:
+
+                            pos: self.pos
+
+                            size: self.size
+
+                            radius: [12]*4
+
                 Widget:
                     size_hint_y: None
                     height: 40
@@ -247,64 +290,45 @@ Builder.load_string("""
 
 class SettingsScreen(Screen):
     def on_enter(self):
-        """Load current settings into the form."""
         cfg = load_config()
-        self.ids.base_url_input.text = cfg.get("base_url", DEFAULT_BASE_URL)
+        self.ids.base_url_input.text = cfg.get("base_url", "")
         self.ids.api_key_input.text = cfg.get("api_key", "")
-        self.ids.model_input.text = cfg.get("model", DEFAULT_MODEL)
-        self.ids.context_input.text = str(cfg.get("context_n", DEFAULT_CONTEXT_N))
-        self.ids.prompt_input.text = cfg.get("prompt_template", DEFAULT_PROMPT_TEMPLATE)
+        self.ids.model_input.text = cfg.get("model", "deepseek-chat")
+        self.ids.context_input.text = str(cfg.get("context_n", 1))
+        self.ids.prompt_input.text = cfg.get("prompt_template", "")
 
     def save_settings(self):
-        """Save settings and restart the AI worker."""
+        cfg = load_config()
+        cfg["base_url"] = self.ids.base_url_input.text.strip()
+        cfg["api_key"] = self.ids.api_key_input.text.strip()
+        cfg["model"] = self.ids.model_input.text.strip()
         try:
-            context_n = int(self.ids.context_input.text.strip())
+            cfg["context_n"] = int(self.ids.context_input.text.strip() or "1")
         except ValueError:
-            context_n = DEFAULT_CONTEXT_N
-
-        cfg = {
-            "base_url": self.ids.base_url_input.text.strip(),
-            "api_key": self.ids.api_key_input.text.strip(),
-            "model": self.ids.model_input.text.strip(),
-            "context_n": context_n,
-            "prompt_template": self.ids.prompt_input.text.strip(),
-        }
+            cfg["context_n"] = 1
+        cfg["prompt_template"] = self.ids.prompt_input.text
         save_config(cfg)
-
-        # Restart AI worker with new settings
-        app = self._get_app()
-        if app and app.worker:
-            app.worker.stop()
-            app._start_worker()
-
-        self._show_toast("设置已保存")
+        self._toast("已保存")
 
     def reset_defaults(self):
-        """Reset to default settings."""
-        self.ids.base_url_input.text = DEFAULT_BASE_URL
+        self.ids.base_url_input.text = ""
         self.ids.api_key_input.text = ""
-        self.ids.model_input.text = DEFAULT_MODEL
-        self.ids.context_input.text = str(DEFAULT_CONTEXT_N)
-        self.ids.prompt_input.text = DEFAULT_PROMPT_TEMPLATE
+        self.ids.model_input.text = "deepseek-chat"
+        self.ids.context_input.text = "1"
+        self.ids.prompt_input.text = ""
+        save_config({"base_url": "", "api_key": "", "model": "deepseek-chat",
+                      "context_n": 1, "prompt_template": ""})
+        self._toast("已恢复默认值")
 
-    def _show_toast(self, message):
-        """Show a brief popup notification."""
-        popup = Popup(
-            title='',
-            content=Label(
-                text=message,
-                font_size='16sp',
-                color=(0.2, 0.2, 0.2, 1),
-            ),
-            size_hint=(0.6, 0.25),
-            auto_dismiss=False,
-        )
-        Clock.schedule_once(lambda dt: popup.dismiss(), 1.5)
+    def _toast(self, msg):
+        from kivy.uix.popup import Popup
+        from kivy.uix.label import Label
+        from kivy.clock import Clock
+        popup = Popup(title='', content=Label(text=msg, font_name='ChineseFont',
+            font_size='15sp', color=(0.102,0.110,0.118,1)),
+            size_hint=(0.5,0.15), auto_dismiss=True)
         popup.open()
-
-    def _get_app(self):
-        from kivy.app import App
-        return App.get_running_app()
+        Clock.schedule_once(lambda dt: popup.dismiss(), 2)
 
     def go_home(self):
         self.manager.current = "home"
