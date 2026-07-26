@@ -110,7 +110,7 @@ class FavoritesScreen(Screen):
                 text='暂无收藏句子',
                 font_name='ChineseFont',
                 font_size='16sp',
-                color=(0.6, 0.6, 0.6, 1),
+                color=(0.533, 0.533, 0.533, 1),
                 size_hint_y=None,
                 height=200,
             ))
@@ -124,30 +124,25 @@ class FavoritesScreen(Screen):
         layout.height = len(favorites) * 110
 
     def _build_card(self, idx, fav):
-        """Build a card widget for a favorite item."""
+        """Build a card widget for a favorite item - KakaoBank white card style."""
+        from kivy.graphics import Color, RoundedRectangle
         card = BoxLayout(
             orientation='vertical',
             size_hint_y=None,
             height=100,
-            padding=12,
+            padding=[20, 14],
             spacing=4,
         )
-        # Card background
+        # White card background with 28dp radius
         with card.canvas.before:
-            from kivy.graphics import Color, RoundedRectangle, Line
-            Color(rgba=(0.18, 0.18, 0.22, 1))
-            RoundedRectangle(pos=card.pos, size=card.size, radius=[8, 8, 8, 8])
-            Color(rgba=(0.3, 0.3, 0.4, 1))
-            Line(rounded_rectangle=(card.x, card.y, card.width, card.height, 8))
+            Color(rgba=(1, 1, 1, 1))
+            RoundedRectangle(pos=card.pos, size=card.size, radius=[28, 28, 28, 28])
 
         def update_bg(instance, value):
             instance.canvas.before.clear()
             with instance.canvas.before:
-                from kivy.graphics import Color, RoundedRectangle, Line
-                Color(rgba=(0.18, 0.18, 0.22, 1))
-                RoundedRectangle(pos=instance.pos, size=instance.size, radius=[8, 8, 8, 8])
-                Color(rgba=(0.3, 0.3, 0.4, 1))
-                Line(rounded_rectangle=(instance.x, instance.y, instance.width, instance.height, 8))
+                Color(rgba=(1, 1, 1, 1))
+                RoundedRectangle(pos=instance.pos, size=instance.size, radius=[28, 28, 28, 28])
         card.bind(pos=update_bg, size=update_bg)
 
         # Row: index + chinese + delete button
@@ -155,8 +150,8 @@ class FavoritesScreen(Screen):
         idx_label = Label(
             text=f"#{idx}",
             font_name='ChineseFont',
-            font_size='12sp',
-            color=(0.6, 0.6, 0.6, 1),
+            font_size='13sp',
+            color=(0.533, 0.533, 0.533, 1),
             size_hint_x=None,
             width=32,
         )
@@ -165,8 +160,8 @@ class FavoritesScreen(Screen):
         ch_label = Label(
             text=fav["chinese"],
             font_name='ChineseFont',
-            font_size='15sp',
-            color=(0.9, 0.9, 0.9, 1),
+            font_size='16sp',
+            color=(0.067, 0.067, 0.067, 1),
             halign='left',
             text_size=(self.width - 120, None),
         )
@@ -192,8 +187,8 @@ class FavoritesScreen(Screen):
         en_btn = Button(
             text='查看英文 ▸',
             font_name='ChineseFont',
-            font_size='12sp',
-            color=(0.29, 0.56, 0.85, 1),
+            font_size='13sp',
+            color=(0.318, 0.529, 0.651, 1),
             size_hint_y=None,
             height=26,
             background_normal='',
@@ -203,9 +198,8 @@ class FavoritesScreen(Screen):
         en_label = Label(
             text=fav["english_official"],
             font_name='ChineseFont',
-            font_size='13sp',
-            color=(0.7, 0.7, 0.7, 1),
-            italic=True,
+            font_size='14sp',
+            color=(0.533, 0.533, 0.533, 1),
             size_hint_y=None,
             height=26,
             opacity=0,
@@ -266,11 +260,12 @@ class FavoritesScreen(Screen):
                 text=message,
                 font_name='ChineseFont',
                 font_size='15sp',
-                color=(0.8, 0.8, 0.8, 1),
+                color=(0.165, 0.165, 0.165, 1),
             ),
             size_hint=(0.7, 0.25),
             auto_dismiss=True,
         )
+        popup.background_color = (0.965, 0.965, 0.965, 1)
         popup.open()
         Clock.schedule_once(lambda dt: popup.dismiss(), 2)
 
@@ -280,7 +275,7 @@ class FavoritesScreen(Screen):
             text='确定要清空收藏夹中所有句子吗？\n此操作不可撤销。',
             font_name='ChineseFont',
             font_size='15sp',
-            color=(0.8, 0.8, 0.8, 1),
+            color=(0.165, 0.165, 0.165, 1),
             halign='center',
             text_size=(300, None),
         ))
@@ -290,8 +285,8 @@ class FavoritesScreen(Screen):
             font_name='ChineseFont',
             font_size='15sp',
             background_normal='',
-            background_color=(0.85, 0.85, 0.85, 1),
-            color=(0.7, 0.7, 0.7, 1),
+            background_color=(0.95, 0.95, 0.95, 1),
+            color=(0.533, 0.533, 0.533, 1),
         )
         confirm_btn = Button(
             text='确定清空',

@@ -20,41 +20,41 @@ Builder.load_string("""
         orientation: 'vertical'
         spacing: 0
 
-        # Top bar
+        # Top bar - KakaoBank style
         BoxLayout:
             size_hint_y: None
-            height: 60
-            padding: [12, 0]
+            height: 56
+            padding: [16, 0]
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 1
+                    rgba: 0.965, 0.965, 0.965, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
             Button:
                 text: '‹ 返回'
                 size_hint_x: None
-                width: 60
+                width: 56
                 background_normal: ''
                 background_color: 0, 0, 0, 0
-                color: 0.486, 0.361, 1.0, 1
-                font_size: '17sp'
+                color: 0.067, 0.067, 0.067, 1
+                font_size: '18sp'
                 on_press: root.go_home()
             Label:
                 text: '复盘'
                 font_size: '18sp'
                 bold: True
-                color: 0.102, 0.102, 0.102, 1
+                color: 0.067, 0.067, 0.067, 1
             Widget:
                 size_hint_x: None
-                width: 60
+                width: 56
 
         # Summary
         Label:
             id: summary_label
             text: '暂无数据'
             font_size: '14sp'
-            color: 0.557, 0.557, 0.576, 1
+            color: 0.533, 0.533, 0.533, 1
             size_hint_y: None
             height: 44
             padding: [20, 12]
@@ -129,22 +129,17 @@ class ReviewScreen(Screen):
             card.subtitle_idx = sub["idx"]
             card.subtitle_id = sub["id"]
 
-            # Draw card background
-            from kivy.graphics import Color, RoundedRectangle, Line
+            # Draw card background - KakaoBank white card style
+            from kivy.graphics import Color, RoundedRectangle
             with card.canvas.before:
-                Color(rgba=(0.98, 0.98, 0.98, 1))
-                RoundedRectangle(pos=card.pos, size=card.size, radius=[8, 8, 8, 8])
-                Color(rgba=(0.9, 0.9, 0.9, 1))
-                Line(rounded_rectangle=(card.x, card.y, card.width, card.height, 8))
+                Color(rgba=(1, 1, 1, 1))
+                RoundedRectangle(pos=card.pos, size=card.size, radius=[28, 28, 28, 28])
 
-            # Bind to update background on resize
             def update_bg(instance, value):
                 instance.canvas.before.clear()
                 with instance.canvas.before:
-                    Color(rgba=(0.98, 0.98, 0.98, 1))
-                    RoundedRectangle(pos=instance.pos, size=instance.size, radius=[8, 8, 8, 8])
-                    Color(rgba=(0.9, 0.9, 0.9, 1))
-                    Line(rounded_rectangle=(instance.x, instance.y, instance.width, instance.height, 8))
+                    Color(rgba=(1, 1, 1, 1))
+                    RoundedRectangle(pos=instance.pos, size=instance.size, radius=[28, 28, 28, 28])
             card.bind(pos=update_bg, size=update_bg)
 
             # Header row: idx + chinese + score
@@ -152,7 +147,7 @@ class ReviewScreen(Screen):
             idx_label = Label(
                 text=f"#{sub['idx']}",
                 font_size='13sp',
-                color=(0.4, 0.4, 0.4, 1),
+                color=(0.533, 0.533, 0.533, 1),
                 size_hint_x=None,
                 width=36,
             )
@@ -160,8 +155,8 @@ class ReviewScreen(Screen):
 
             ch_label = Label(
                 text=sub['chinese'],
-                font_size='15sp',
-                color=(0.9, 0.9, 0.9, 1),
+                font_size='16sp',
+                color=(0.067, 0.067, 0.067, 1),
                 halign='left',
                 text_size=(self.width - 200, None),
             )
@@ -173,7 +168,7 @@ class ReviewScreen(Screen):
                 status_label = Label(
                     text='⏳ 等待批改',
                     font_size='12sp',
-                    color=(0.5, 0.5, 0.5, 1),
+                    color=(0.533, 0.533, 0.533, 1),
                     size_hint_x=None,
                     width=80,
                 )
@@ -253,9 +248,8 @@ class ReviewScreen(Screen):
             if user_trans:
                 user_label = Label(
                     text=f'你的翻译: {user_trans}',
-                    font_size='13sp',
-                    color=(0.29, 0.56, 0.85, 1),
-                    italic=True,
+                    font_size='14sp',
+                    color=(0.318, 0.529, 0.651, 1),
                     size_hint_y=None,
                     height=24,
                     text_size=(self.width - 40, None),
@@ -284,8 +278,8 @@ class ReviewScreen(Screen):
             # Expand button
             expand_btn = Button(
                 text='查看详情 ▸',
-                font_size='12sp',
-                color=(0.29, 0.56, 0.85, 1),
+                font_size='13sp',
+                color=(0.318, 0.529, 0.651, 1),
                 size_hint_y=None,
                 height=30,
                 background_normal='',
@@ -311,7 +305,7 @@ class ReviewScreen(Screen):
             layout.add_widget(Label(
                 text='暂无数据',
                 font_size='16sp',
-                color=(0.5, 0.5, 0.5, 1),
+                color=(0.533, 0.533, 0.533, 1),
                 size_hint_y=None,
                 height=200,
             ))
@@ -361,15 +355,15 @@ class ReviewScreen(Screen):
             auto_dismiss=True,
         )
 
-        # Popup background color
-        popup.background_color = (0.12, 0.12, 0.15, 1)
+        # Popup background color - light theme
+        popup.background_color = (0.965, 0.965, 0.965, 1)
 
         # Chinese sentence
         content.add_widget(Label(
             text=sub['chinese'],
             font_size='18sp',
             bold=True,
-            color=(0.9, 0.9, 0.9, 1),
+            color=(0.067, 0.067, 0.067, 1),
             size_hint_y=None,
             height=60,
             text_size=(380, None),
@@ -382,8 +376,7 @@ class ReviewScreen(Screen):
             content.add_widget(Label(
                 text=f'你的翻译: {user_trans}',
                 font_size='14sp',
-                color=(0.29, 0.56, 0.85, 1),
-                italic=True,
+                color=(0.318, 0.529, 0.651, 1),
                 size_hint_y=None,
                 height=30,
             ))
@@ -394,7 +387,7 @@ class ReviewScreen(Screen):
                 text=eval_data["analysis_text"],
                 font_name='ChineseFont',
                 font_size='14sp',
-                color=(0.8, 0.8, 0.8, 1),
+                color=(0.165, 0.165, 0.165, 1),
                 size_hint_y=None,
                 height=80,
                 text_size=(380, None),
@@ -410,7 +403,7 @@ class ReviewScreen(Screen):
         official_btn = Button(
             text='查看官方字幕 ▸',
             font_size='13sp',
-            color=(0.29, 0.56, 0.85, 1),
+            color=(0.318, 0.529, 0.651, 1),
             size_hint_y=None,
             height=36,
             background_normal='',
@@ -420,8 +413,7 @@ class ReviewScreen(Screen):
             text=sub['english_official'],
             font_name='ChineseFont',
             font_size='14sp',
-            color=(0.7, 0.7, 0.7, 1),
-            italic=True,
+            color=(0.533, 0.533, 0.533, 1),
             size_hint_y=None,
             height=30,
             text_size=(380, None),

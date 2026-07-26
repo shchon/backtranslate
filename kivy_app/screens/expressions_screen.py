@@ -94,33 +94,29 @@ class ExpressionsScreen(Screen):
                 orientation='vertical',
                 size_hint_y=None,
                 height=52,
-                padding=12,
+                padding=[16, 12],
                 spacing=4,
             )
             with card.canvas.before:
-                from kivy.graphics import Color, RoundedRectangle, Line
-                Color(rgba=(0.98, 0.98, 0.98, 1))
-                RoundedRectangle(pos=card.pos, size=card.size, radius=[8, 8, 8, 8])
-                Color(rgba=(0.9, 0.9, 0.9, 1))
-                Line(rounded_rectangle=(card.x, card.y, card.width, card.height, 8))
+                from kivy.graphics import Color, RoundedRectangle
+                Color(rgba=(1, 1, 1, 1))
+                RoundedRectangle(pos=card.pos, size=card.size, radius=[28, 28, 28, 28])
 
             def update_bg(instance, value):
                 instance.canvas.before.clear()
                 with instance.canvas.before:
-                    from kivy.graphics import Color, RoundedRectangle, Line
-                    Color(rgba=(0.98, 0.98, 0.98, 1))
-                    RoundedRectangle(pos=instance.pos, size=instance.size, radius=[8, 8, 8, 8])
-                    Color(rgba=(0.9, 0.9, 0.9, 1))
-                    Line(rounded_rectangle=(instance.x, instance.y, instance.width, instance.height, 8))
+                    from kivy.graphics import Color, RoundedRectangle
+                    Color(rgba=(1, 1, 1, 1))
+                    RoundedRectangle(pos=instance.pos, size=instance.size, radius=[28, 28, 28, 28])
             card.bind(pos=update_bg, size=update_bg)
 
             row = BoxLayout(size_hint_y=None, height=32, spacing=8)
 
             phrase_label = Label(
                 text=expr["phrase"],
-                font_size='15sp',
+                font_size='16sp',
                 bold=True,
-                color=(0.1, 0.1, 0.1, 1),
+                color=(0.067, 0.067, 0.067, 1),
                 halign='left',
                 text_size=(self.width - 120, None),
             )
@@ -147,7 +143,7 @@ class ExpressionsScreen(Screen):
             layout.add_widget(Label(
                 text='还没有收藏的表达',
                 font_size='16sp',
-                color=(0.6, 0.6, 0.6, 1),
+                color=(0.533, 0.533, 0.533, 1),
                 size_hint_y=None,
                 height=200,
             ))

@@ -33,7 +33,7 @@ if os.path.exists(_font_path):
         print(f'Using font: {_font_path}')
 
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.utils import platform
@@ -69,26 +69,58 @@ from kivy_app.screens.settings_screen import SettingsScreen
 from kivy_app.worker import EvaluationWorker
 
 
-# ---- Uxcel Go 风格设计 Token ----
-UXCEL_PRIMARY = (0.486, 0.361, 1.0, 1)        # #7C5CFF
-UXCEL_PRIMARY_LIGHT = (0.6, 0.5, 1.0, 0.15)   # 半透明紫
-UXCEL_ACCENT_PINK = (1.0, 0.42, 0.616, 1)     # #FF6B9D
-UXCEL_BG = (1, 1, 1, 1)                       # #FFFFFF
-UXCEL_CARD_BG = (1, 1, 1, 1)                  # #FFFFFF
-UXCEL_CARD_BORDER = (0.91, 0.91, 0.93, 1)     # #E8E8ED
-UXCEL_CARD_ACTIVE = (0.486, 0.361, 1.0, 1)    # #7C5CFF
-UXCEL_TEXT_TITLE = (0, 0, 0, 1)               # #000000
-UXCEL_TEXT_HEADING = (0.102, 0.102, 0.102, 1) # #1A1A1A
-UXCEL_TEXT_SECONDARY = (0.557, 0.557, 0.576, 1) # #8E8E93
-UXCEL_TEXT_MUTED = (0.4, 0.4, 0.4, 1)         # #666666
-UXCEL_TAB_ACTIVE = (0.486, 0.361, 1.0, 1)     # #7C5CFF
-UXCEL_TAB_INACTIVE = (0.78, 0.78, 0.80, 1)    # #C7C7CC
-UXCEL_CORNER_CARD = 16
-UXCEL_CORNER_BUTTON = 12
+# ============================================================
+#  KakaoBank iOS 风格设计 Token
+# ============================================================
+# 背景
+KBANK_BG = (0.965, 0.965, 0.965, 1)          # #F6F6F6  全局背景
+KBANK_BG_WHITE = (1, 1, 1, 1)                 # #FFFFFF  白色卡片/面板
+
+# 功能卡片颜色（4色系统）
+KBANK_CARD_MINT = (0.776, 0.894, 0.827, 1)    # #C6E4D3  薄荷绿 → 学习
+KBANK_CARD_ORANGE = (0.953, 0.490, 0.369, 1)  # #F37D5E  珊瑚橙 → 复习
+KBANK_CARD_BLUE = (0.318, 0.529, 0.651, 1)    # #5187A6  钢蓝 → 表达库
+KBANK_CARD_KHAKI = (0.788, 0.761, 0.682, 1)   # #C9C2AE  卡其 → 收藏
+
+# 卡片内按钮（同色系浅色）
+KBANK_BTN_MINT = (0.839, 0.906, 0.867, 1)     # #D6E7DD
+KBANK_BTN_ORANGE = (0.973, 0.686, 0.561, 1)   # #F8AF8F
+KBANK_BTN_BLUE = (0.569, 0.694, 0.769, 1)     # #91B1C4
+KBANK_BTN_KHAKI = (0.871, 0.851, 0.780, 1)    # #DED9C7
+
+# 文字颜色
+KBANK_TEXT_TITLE = (0.067, 0.067, 0.067, 1)      # #111111  主标题
+KBANK_TEXT_BODY = (0.165, 0.165, 0.165, 1)        # #2A2A2A  正文
+KBANK_TEXT_SECONDARY = (0.533, 0.533, 0.533, 1)   # #888888  辅助说明
+KBANK_TEXT_WHITE = (1, 1, 1, 1)                   # #FFFFFF  深色卡片上的文字
+KBANK_TEXT_MUTED_WHITE = (0.973, 0.906, 0.875, 1) # #F8E7DF  深色卡片上的辅助文字
+
+# Tab 栏
+KBANK_TAB_ACTIVE = (0.067, 0.067, 0.067, 1)     # #111111  选中
+KBANK_TAB_INACTIVE = (0.6, 0.6, 0.6, 1)          # #999999  未选中
+KBANK_TAB_BG = (1, 1, 1, 1)                       # #FFFFFF  Tab 背景
+KBANK_TAB_SEPARATOR = (0.886, 0.914, 0.898, 1)    # #E2E9E5  Tab 顶部分隔线
+
+# 圆角 & 尺寸
+KBANK_CARD_RADIUS = 28       # 卡片圆角
+KBANK_BUTTON_RADIUS = 20     # 按钮圆角
+KBANK_BUTTON_HEIGHT = 48     # 按钮高度
+KBANK_TAB_BAR_HEIGHT = 84    # 底部 Tab 栏总高度
+KBANK_NAV_BAR_HEIGHT = 56    # 顶部导航栏高度
+KBANK_GLOBAL_MARGIN = 16     # 全局左右边距
+KBANK_CARD_PADDING = 24      # 卡片内边距
+KBANK_CARD_GAP = 16          # 卡片间距
+KBANK_SEPARATOR_HEIGHT = 1   # 分隔线高度
+
+# 阴影 (Kivy 无法原生实现完整阴影，用描边+轻微 inset 模拟)
+KBANK_SHADOW_COLOR = (0, 0, 0, 0.08)
 
 
+# ============================================================
+#  BottomTabButton
+# ============================================================
 class BottomTabButton(Button):
-    """Bottom navigation tab button with icon and label."""
+    """底部导航标签按钮 — KakaoBank 风格."""
     def __init__(self, icon="", label="", screen_name="", **kwargs):
         super().__init__(**kwargs)
         self.icon = icon
@@ -100,7 +132,7 @@ class BottomTabButton(Button):
         self.background_normal = ''
         self.background_color = (0, 0, 0, 0)
         self.size_hint_y = None
-        self.height = 60
+        self.height = 84
         self._update_text()
 
     def set_active(self, active):
@@ -108,35 +140,30 @@ class BottomTabButton(Button):
         self._update_text()
 
     def _update_text(self):
-        color = UXCEL_TAB_ACTIVE if self.is_active else UXCEL_TAB_INACTIVE
-        r, g, b, a = color
+        r, g, b, _a = KBANK_TAB_ACTIVE if self.is_active else KBANK_TAB_INACTIVE
         hex_color = f'{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}'
-        self.text = f'[color={hex_color}]{self.icon}[/color]\n[size=10][color={hex_color}]{self.label_text}[/color][/size]'
+        weight = 'bold' if self.is_active else ''
+        self.text = (
+            f'[color={hex_color}][size=20]{self.icon}[/size][/color]\n'
+            f'[size=11][color={hex_color}]{self.label_text}[/color][/size]'
+        )
 
 
+# ============================================================
+#  BottomTabBar
+# ============================================================
 class BottomTabBar(BoxLayout):
-    """Bottom tab bar with 5 tabs matching Uxcel style."""
+    """底部 Tab 栏 — KakaoBank 风格：白色背景，顶部 1pt 分隔线."""
     def __init__(self, screen_manager, **kwargs):
         super().__init__(**kwargs)
         self.sm = screen_manager
         self.orientation = 'horizontal'
         self.size_hint_y = None
-        self.height = 72  # Tab bar height + bottom safe area
+        self.height = 84
         self.padding = [0, 0, 0, 0]
         self.spacing = 0
 
-        # Background
-        with self.canvas.before:
-            Color(rgba=(0.98, 0.98, 0.98, 1))  # Very light gray
-            Rectangle(pos=self.pos, size=self.size)
-
-        # Top border line
-        with self.canvas.before:
-            Color(rgba=(0.91, 0.91, 0.93, 1))  # #E8E8ED
-            Line(width=0.5, points=[self.x, self.y + self.height - 72,
-                                    self.x + self.width, self.y + self.height - 72])
-
-        self.bind(pos=self._update_canvas, size=self._update_canvas)
+        self.bind(pos=self._redraw, size=self._redraw)
 
         self.tabs = []
         tab_items = [
@@ -148,26 +175,25 @@ class BottomTabBar(BoxLayout):
         ]
 
         for icon, label, screen_name in tab_items:
-            tab = BottomTabButton(
-                icon=icon,
-                label=label,
-                screen_name=screen_name,
-            )
+            tab = BottomTabButton(icon=icon, label=label, screen_name=screen_name)
             tab.bind(on_press=self._on_tab_press)
             self.tabs.append(tab)
             self.add_widget(tab)
 
-        # Set home as active by default
         self.set_active("home")
 
-    def _update_canvas(self, *args):
+    def _redraw(self, *args):
         self.canvas.before.clear()
+        # 白色背景
         with self.canvas.before:
-            Color(rgba=(0.98, 0.98, 0.98, 1))
+            Color(rgba=KBANK_TAB_BG)
             Rectangle(pos=self.pos, size=self.size)
-            Color(rgba=(0.91, 0.91, 0.93, 1))
-            Line(width=0.5, points=[self.x, self.y + self.height - 72,
-                                    self.x + self.width, self.y + self.height - 72])
+            # 顶部 1pt 分隔线
+            Color(rgba=KBANK_TAB_SEPARATOR)
+            Line(width=1, points=[
+                self.x, self.y + self.height,
+                self.x + self.width, self.y + self.height,
+            ])
 
     def _on_tab_press(self, tab):
         self.sm.current = tab.screen_name
@@ -178,15 +204,16 @@ class BottomTabBar(BoxLayout):
             tab.set_active(tab.screen_name == screen_name)
 
 
+# ============================================================
+#  MainLayout
+# ============================================================
 class MainLayout(BoxLayout):
-    """Main app layout: ScreenManager + BottomTabBar."""
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.orientation = 'vertical'
         self.spacing = 0
         self.padding = 0
 
-        # Screen manager
         self.sm = ScreenManager()
         self.sm.add_widget(HomeScreen(name="home"))
         self.sm.add_widget(LearnScreen(name="learn"))
@@ -195,19 +222,20 @@ class MainLayout(BoxLayout):
         self.sm.add_widget(ExpressionsScreen(name="expressions"))
         self.sm.add_widget(SettingsScreen(name="settings"))
 
-        # Tab bar
         self.tab_bar = BottomTabBar(screen_manager=self.sm)
 
         self.add_widget(self.sm)
         self.add_widget(self.tab_bar)
 
-        # Track screen changes to update tab bar
         self.sm.bind(current=self._on_screen_change)
 
     def _on_screen_change(self, instance, screen_name):
         self.tab_bar.set_active(screen_name)
 
 
+# ============================================================
+#  App
+# ============================================================
 class BackTranslateApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -216,21 +244,14 @@ class BackTranslateApp(App):
         self.worker = None
 
     def build(self):
-        # Initialize database
         init_db()
 
-        # Set background color
         from kivy.core.window import Window
-        Window.clearcolor = (1, 1, 1, 1)  # White background
+        Window.clearcolor = KBANK_BG  # #F6F6F6
 
-        # Build main layout
         main_layout = MainLayout()
-
-        # Start AI worker
         self._start_worker()
-
         Window.bind(on_keyboard=self._on_key_back)
-
         return main_layout
 
     def _start_worker(self):
@@ -259,10 +280,10 @@ class BackTranslateApp(App):
         except Exception:
             return
 
-        sm = self.root.sm
-        review_screen = sm.get_screen("review")
-        if review_screen and review_screen.session_id:
-            try:
+        try:
+            sm = self.root.sm
+            review_screen = sm.get_screen("review")
+            if review_screen and review_screen.session_id:
                 from backtranslate.database.connection import get_connection
                 conn = get_connection()
                 row = conn.execute(
@@ -273,8 +294,8 @@ class BackTranslateApp(App):
                 conn.close()
                 if row:
                     review_screen.update_evaluation(row[0])
-            except Exception:
-                pass
+        except Exception:
+            pass
 
     def _on_eval_failed(self, eval_id):
         try:
@@ -282,10 +303,10 @@ class BackTranslateApp(App):
         except Exception:
             return
 
-        sm = self.root.sm
-        review_screen = sm.get_screen("review")
-        if review_screen and review_screen.session_id:
-            try:
+        try:
+            sm = self.root.sm
+            review_screen = sm.get_screen("review")
+            if review_screen and review_screen.session_id:
                 from backtranslate.database.connection import get_connection
                 conn = get_connection()
                 row = conn.execute(
@@ -296,8 +317,8 @@ class BackTranslateApp(App):
                 conn.close()
                 if row:
                     review_screen.update_evaluation(row[0])
-            except Exception:
-                pass
+        except Exception:
+            pass
 
     def _on_key_back(self, window, key, scancode, codepoint, modifier):
         if key == 27:
