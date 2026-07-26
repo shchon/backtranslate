@@ -184,6 +184,18 @@ Builder.load_string("""
                     background_color: 1, 1, 1, 1
                     foreground_color: 0, 0, 0, 1
 
+                # ── Test connection ──
+                Button:
+                    text: '🔄 测试连接'
+                    font_name: 'ChineseFont'
+                    font_size: '15sp'
+                    size_hint_y: None
+                    height: 48
+                    color: 0.420, 0.565, 0.502, 1
+                    background_normal: ''
+                    background_color: 0.910, 0.941, 0.925, 1
+                    on_press: root.test_connection()
+
                 # ── Save ──
                 Button:
                     text: '保存设置'
@@ -256,6 +268,68 @@ class SettingsScreen(Screen):
             size_hint=(0.5,0.15), auto_dismiss=True)
         popup.open()
         Clock.schedule_once(lambda dt: popup.dismiss(), 2)
+
+    def test_connection(self):
+        """Test the AI API connection with current settings."""
+        import requests
+        from kivy.clock import Clock
+
+        base_url = self.ids.base_url_input.text.strip()
+        api_key = self.ids.api_key_input.text.strip()
+        model = self.ids.model_input.text.strip()
+
+        if not base_url:
+            self._toast("请先输入 API 地址")
+            return
+        if not api_key:
+            self._toast("请先输入 API Key")
+            return
+        if not model:
+            self._toast("请先输入模型名称")
+            return
+
+        self.save_settings()
+
+        def _do():
+            url = base_url.rstrip("/")
+            if not url.endswith("/chat/completions"):
+                url += "/chat/completions"
+
+            payload = {
+                "model": model,
+                "messages": [{"role": "user", "content": "返回 OK 即可"}],
+                "max_tokens": 10,
+                "temperature": 0.1,
+            }
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            }
+
+            try:
+                resp = requests.post(url, json=payload, headers=headers, timeout=15)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                    Clock.schedule_once(lambda dt: self._toast(
+                        f"✅ 连接成功！模型响应: {content[:50]}"))
+                elif resp.status_code == 401:
+                    Clock.schedule_once(lambda dt: self._toast("❌ 认证失败，请检查 API Key"))
+                elif resp.status_code == 404:
+                    Clock.schedule_once(lambda dt: self._toast("❌ API 地址或模型不存在 (404)"))
+                else:
+                    Clock.schedule_once(lambda dt: self._toast(
+                        f"❌ 错误 {resp.status_code}: {resp.text[:60]}"))
+            except requests.exceptions.ConnectTimeout:
+                Clock.schedule_once(lambda dt: self._toast("❌ 连接超时，请检查 API 地址"))
+            except requests.exceptions.ConnectionError:
+                Clock.schedule_once(lambda dt: self._toast("❌ 无法连接，请检查网络和 API 地址"))
+            except Exception as e:
+                Clock.schedule_once(lambda dt: self._toast(f"❌ {str(e)[:50]}"))
+
+        import threading
+        self._toast("⏳ 正在测试连接……")
+        threading.Thread(target=_do, daemon=True).start()
 
     def go_home(self):
         self.manager.current = "home"
