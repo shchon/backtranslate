@@ -54,7 +54,7 @@ Builder.load_string("""
             Label:
                 text: '你好 👋'
                 font_name: 'ChineseFont'
-                font_size: '18sp'
+                font_size: '28sp'
                 bold: True
                 color: 0.067, 0.067, 0.067, 1
                 halign: 'left'
@@ -62,7 +62,7 @@ Builder.load_string("""
             Label:
                 text: '🔥 连续 ' + root.streak + ' 天'
                 font_name: 'ChineseFont'
-                font_size: '13sp'
+                font_size: '14sp'
                 color: 0.533, 0.533, 0.533, 1
                 size_hint_x: None
                 width: 150

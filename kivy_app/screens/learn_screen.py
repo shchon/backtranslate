@@ -315,10 +315,25 @@ class LearnScreen(Screen):
 
     def _update_ui_state(self):
         """Show/hide import and translation areas."""
-        self.ids.import_area.opacity = 0 if self._in_session else 1
-        self.ids.import_area.disabled = self._in_session
-        self.ids.translation_area.opacity = 1 if self._in_session else 0
-        self.ids.translation_area.disabled = not self._in_session
+        if self._in_session:
+            self.ids.import_area.opacity = 0
+            self.ids.import_area.disabled = True
+            self.ids.import_area.size_hint_y = None
+            self.ids.import_area.height = 0
+
+            self.ids.translation_area.opacity = 1
+            self.ids.translation_area.disabled = False
+            self.ids.translation_area.size_hint_y = 1
+        else:
+            self.ids.import_area.opacity = 1
+            self.ids.import_area.disabled = False
+            self.ids.import_area.size_hint_y = None
+            self.ids.import_area.height = 240
+
+            self.ids.translation_area.opacity = 0
+            self.ids.translation_area.disabled = True
+            self.ids.translation_area.size_hint_y = None
+            self.ids.translation_area.height = 0
 
         if not self._in_session:
             # Show recent history
