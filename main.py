@@ -36,5 +36,5 @@ try:
 except Exception as e:
     error_msg = f"CRASH: {e}\n\n{traceback.format_exc()}"
     _log_error(error_msg)
-    print(error_msg)
+    print(error_msg.encode('utf-8', errors='replace').decode('utf-8', errors='replace'))
     raise

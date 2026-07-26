@@ -59,7 +59,7 @@ Builder.load_string("""
                 font_name: 'ChineseFont'
                 font_size: '20sp'
                 bold: True
-                color: 0.102, 0.110, 0.118, 1
+                color: 0.067, 0.078, 0.086, 1
             Button:
                 text: '复习'
                 size_hint_x: None
@@ -86,7 +86,7 @@ Builder.load_string("""
             text: ''
             font_name: 'ChineseFont'
             font_size: '13sp'
-            color: 0.408, 0.439, 0.471, 1
+            color: 0.302, 0.325, 0.349, 1
             size_hint_y: None
             height: 32
             padding: [20, 8]

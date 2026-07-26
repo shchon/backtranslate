@@ -59,7 +59,7 @@ Builder.load_string("""
                 font_name: 'ChineseFont'
                 font_size: '20sp'
                 bold: True
-                color: 0.102, 0.110, 0.118, 1
+                color: 0.067, 0.078, 0.086, 1
             Widget:
                 size_hint_x: None
                 width: 88
@@ -86,40 +86,34 @@ Builder.load_string("""
                     text: '导入中英字幕文件\\n开始回译训练'
                     font_name: 'ChineseFont'
                     font_size: '15sp'
-                    color: 0.408, 0.439, 0.471, 1
+                    color: 0.302, 0.325, 0.349, 1
                     halign: 'center'
 
-                BoxLayout:
+                Button:
+                    text: '选择字幕文件'
+                    font_name: 'ChineseFont'
+                    font_size: '16sp'
+                    bold: True
+                    color: 1, 1, 1, 1
+                    background_normal: ''
+                    background_color: 0.420, 0.565, 0.502, 1
                     size_hint_y: None
                     height: 48
-                    padding: [40, 0]
-                    Button:
-                        text: '选择字幕文件'
-                        font_name: 'ChineseFont'
-                        font_size: '16sp'
-                        bold: True
-                        color: 1, 1, 1, 1
-                        background_normal: ''
-                        background_color: 0.420, 0.565, 0.502, 1
-                        on_press: root.import_srt()
-                        canvas.before:
-                            Color:
-
-                                rgba: 0.420, 0.565, 0.502, 1
-                            RoundedRectangle:
-
-                                pos: self.pos
-
-                                size: self.size
-
-                                radius: [12]*4
+                    on_press: root.import_srt()
+                    canvas.before:
+                        Color:
+                            rgba: 0.420, 0.565, 0.502, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
 
                 Label:
                     id: recent_label
                     text: ''
                     font_name: 'ChineseFont'
                     font_size: '13sp'
-                    color: 0.616, 0.643, 0.667, 1
+                    color: 0.420, 0.447, 0.475, 1
                     halign: 'center'
                     size_hint_y: None
                     height: 20
@@ -139,7 +133,7 @@ Builder.load_string("""
                         text: '第 ' + str(root.current_idx) + '/' + str(root.total_count) + ' 句'
                         font_name: 'ChineseFont'
                         font_size: '13sp'
-                        color: 0.408, 0.439, 0.471, 1
+                        color: 0.302, 0.325, 0.349, 1
                         size_hint_x: None
                         width: 150
 
@@ -165,7 +159,7 @@ Builder.load_string("""
                         text: ''
                         font_name: 'ChineseFont'
                         font_size: '22sp'
-                        color: 0.102, 0.110, 0.118, 1
+                        color: 0.067, 0.078, 0.086, 1
                         size_hint_y: None
                         height: 160
                         text_size: self.width - 40, None
@@ -176,13 +170,14 @@ Builder.load_string("""
                 TextInput:
                     id: input_field
                     hint_text: '输入英文翻译……'
+                    hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
                     font_size: '16sp'
                     size_hint_y: None
                     height: 52
                     multiline: False
                     background_color: 1, 1, 1, 1
-                    foreground_color: 0.102, 0.110, 0.118, 1
+                    foreground_color: 0.067, 0.078, 0.086, 1
                     padding: [20, 14]
                     on_text_validate: root.submit_translation()
                     canvas.before:
@@ -206,14 +201,14 @@ Builder.load_string("""
                         text: '跳过'
                         font_name: 'ChineseFont'
                         font_size: '16sp'
-                        color: 0.408, 0.439, 0.471, 1
+                        color: 0.302, 0.325, 0.349, 1
                         background_normal: ''
-                        background_color: 0.953, 0.957, 0.953, 1
+                        background_color: 0.890, 0.898, 0.886, 1
                         on_press: root.skip_sentence()
                         canvas.before:
                             Color:
 
-                                rgba: 0.953, 0.957, 0.953, 1
+                                rgba: 0.890, 0.898, 0.886, 1
                             RoundedRectangle:
 
                                 pos: self.pos
@@ -260,7 +255,7 @@ Builder.load_string("""
                         text: '|  连续 ' + root.streak + ' 天'
                         font_name: 'ChineseFont'
                         font_size: '13sp'
-                        color: 0.616, 0.643, 0.667, 1
+                        color: 0.420, 0.447, 0.475, 1
                         size_hint_x: None
                         width: 120
                         halign: 'left'
@@ -269,7 +264,7 @@ Builder.load_string("""
                         text: ''
                         font_name: 'ChineseFont'
                         font_size: '13sp'
-                        color: 0.408, 0.439, 0.471, 1
+                        color: 0.302, 0.325, 0.349, 1
 
                 # End
                 Button:
@@ -280,12 +275,12 @@ Builder.load_string("""
                     font_size: '15sp'
                     color: 0.878, 0.345, 0.298, 1
                     background_normal: ''
-                    background_color: 0.953, 0.957, 0.953, 1
+                    background_color: 0.890, 0.898, 0.886, 1
                     on_press: root.end_session()
                     canvas.before:
                         Color:
 
-                            rgba: 0.953, 0.957, 0.953, 1
+                            rgba: 0.890, 0.898, 0.886, 1
                         RoundedRectangle:
 
                             pos: self.pos
@@ -397,7 +392,7 @@ class LearnScreen(Screen):
             text=f'选择中文 SRT（第1步）',
             font_name='ChineseFont', font_size='15sp',
             size_hint_y=None, height=40,
-            color=(0.102, 0.110, 0.118, 1)))
+            color=(0.067, 0.078, 0.086, 1)))
 
         srt_files = sorted(f for f in os.listdir(folder) if f.lower().endswith('.srt'))
         if not srt_files:
@@ -492,7 +487,7 @@ class LearnScreen(Screen):
 
         content = BoxLayout(orientation='vertical', spacing=10, padding=16)
         prompt_label = Label(text='选择 SRT 目录', font_name='ChineseFont',
-            font_size='15sp', size_hint_y=None, height=36, color=(0.102, 0.110, 0.118, 1))
+            font_size='15sp', size_hint_y=None, height=36, color=(0.067, 0.078, 0.086, 1))
         content.add_widget(prompt_label)
 
         start_path = os.path.expanduser('~')
@@ -698,7 +693,7 @@ class LearnScreen(Screen):
 
         content = BoxLayout(orientation='vertical', spacing=12, padding=16)
         content.add_widget(Label(text=message, font_name='ChineseFont', font_size='15sp',
-            color=(0.102, 0.110, 0.118, 1), halign='center', text_size=(300, None)))
+            color=(0.067, 0.078, 0.086, 1), halign='center', text_size=(300, None)))
         btn = Button(text='确定', font_name='ChineseFont', size_hint_y=None, height=44,
             background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1), font_size='15sp')
         content.add_widget(btn)

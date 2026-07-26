@@ -47,7 +47,7 @@ Builder.load_string("""
                 font_name: 'ChineseFont'
                 font_size: '20sp'
                 bold: True
-                color: 0.102, 0.110, 0.118, 1
+                color: 0.067, 0.078, 0.086, 1
             Widget:
                 size_hint_x: None
                 width: 88
@@ -66,13 +66,14 @@ Builder.load_string("""
                     font_name: 'ChineseFont'
                     font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.110, 0.118, 1
+                    color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
                     height: 22
                     halign: 'left'
                 TextInput:
                     id: base_url_input
                     hint_text: '例如 https://api.deepseek.com'
+                    hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
                     font_size: '15sp'
                     size_hint_y: None
@@ -80,7 +81,7 @@ Builder.load_string("""
                     padding: [16, 12]
                     multiline: False
                     background_color: 1, 1, 1, 1
-                    foreground_color: 0.102, 0.110, 0.118, 1
+                    foreground_color: 0.067, 0.078, 0.086, 1
                     canvas.before:
                         Color:
 
@@ -99,13 +100,14 @@ Builder.load_string("""
                     font_name: 'ChineseFont'
                     font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.110, 0.118, 1
+                    color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
                     height: 22
                     halign: 'left'
                 TextInput:
                     id: api_key_input
                     hint_text: '输入你的 API Key'
+                    hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
                     font_size: '15sp'
                     size_hint_y: None
@@ -114,7 +116,7 @@ Builder.load_string("""
                     multiline: False
                     password: True
                     background_color: 1, 1, 1, 1
-                    foreground_color: 0.102, 0.110, 0.118, 1
+                    foreground_color: 0.067, 0.078, 0.086, 1
                     canvas.before:
                         Color:
 
@@ -133,13 +135,14 @@ Builder.load_string("""
                     font_name: 'ChineseFont'
                     font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.110, 0.118, 1
+                    color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
                     height: 22
                     halign: 'left'
                 TextInput:
                     id: model_input
                     hint_text: '例如 deepseek-chat'
+                    hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
                     font_size: '15sp'
                     size_hint_y: None
@@ -147,7 +150,7 @@ Builder.load_string("""
                     padding: [16, 12]
                     multiline: False
                     background_color: 1, 1, 1, 1
-                    foreground_color: 0.102, 0.110, 0.118, 1
+                    foreground_color: 0.067, 0.078, 0.086, 1
                     canvas.before:
                         Color:
 
@@ -166,7 +169,7 @@ Builder.load_string("""
                     font_name: 'ChineseFont'
                     font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.110, 0.118, 1
+                    color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
                     height: 22
                     halign: 'left'
@@ -185,7 +188,7 @@ Builder.load_string("""
                         multiline: False
                         input_filter: 'int'
                         background_color: 1, 1, 1, 1
-                        foreground_color: 0.102, 0.110, 0.118, 1
+                        foreground_color: 0.067, 0.078, 0.086, 1
                         canvas.before:
                             Color:
 
@@ -201,7 +204,7 @@ Builder.load_string("""
                         text: '前后各取 N 句作为上下文'
                         font_name: 'ChineseFont'
                         font_size: '13sp'
-                        color: 0.616, 0.643, 0.667, 1
+                        color: 0.420, 0.447, 0.475, 1
 
                 # ── 提示词 ──
                 Label:
@@ -209,20 +212,21 @@ Builder.load_string("""
                     font_name: 'ChineseFont'
                     font_size: '14sp'
                     bold: True
-                    color: 0.102, 0.110, 0.118, 1
+                    color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
                     height: 22
                     halign: 'left'
                 TextInput:
                     id: prompt_input
                     hint_text: 'AI 评分提示词模板……'
+                    hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
                     font_size: '14sp'
                     size_hint_y: None
                     height: 140
                     padding: [16, 14]
                     background_color: 1, 1, 1, 1
-                    foreground_color: 0.102, 0.110, 0.118, 1
+                    foreground_color: 0.067, 0.078, 0.086, 1
                     canvas.before:
                         Color:
 
@@ -266,14 +270,14 @@ Builder.load_string("""
                     font_size: '15sp'
                     size_hint_y: None
                     height: 48
-                    color: 0.408, 0.439, 0.471, 1
+                    color: 0.302, 0.325, 0.349, 1
                     background_normal: ''
-                    background_color: 0.953, 0.957, 0.953, 1
+                    background_color: 0.890, 0.898, 0.886, 1
                     on_press: root.reset_defaults()
                     canvas.before:
                         Color:
 
-                            rgba: 0.953, 0.957, 0.953, 1
+                            rgba: 0.890, 0.898, 0.886, 1
                         RoundedRectangle:
 
                             pos: self.pos

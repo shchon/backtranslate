@@ -58,7 +58,7 @@ Builder.load_string("""
                 font_name: 'ChineseFont'
                 font_size: '20sp'
                 bold: True
-                color: 0.102, 0.110, 0.118, 1
+                color: 0.067, 0.078, 0.086, 1
             Widget:
                 size_hint_x: None
                 width: 88
@@ -68,7 +68,7 @@ Builder.load_string("""
             text: ''
             font_name: 'ChineseFont'
             font_size: '13sp'
-            color: 0.408, 0.439, 0.471, 1
+            color: 0.302, 0.325, 0.349, 1
             size_hint_y: None
             height: 36
             padding: [20, 8]
@@ -135,16 +135,16 @@ class ReviewScreen(Screen):
             # Header row
             hdr = BoxLayout(size_hint_y=None, height=30, spacing=8)
             hdr.add_widget(Label(text=f"#{sub['idx']}", font_name='ChineseFont',
-                font_size='12sp', color=(0.616, 0.643, 0.667, 1), size_hint_x=None, width=32))
+                font_size='12sp', color=(0.420, 0.447, 0.475, 1), size_hint_x=None, width=32))
             hdr.add_widget(Label(text=sub['chinese'], font_name='ChineseFont',
-                font_size='16sp', color=(0.102, 0.110, 0.118, 1),
+                font_size='16sp', color=(0.067, 0.078, 0.086, 1),
                 halign='left'))
             hdr.add_widget(Widget(size_hint_x=1))
 
             # Status badge
             if not ev or ev["status"] == "pending":
                 st = Label(text='⏳ 等待', font_name='ChineseFont', font_size='11sp',
-                    color=(0.616, 0.643, 0.667, 1), size_hint_x=None, width=54)
+                    color=(0.420, 0.447, 0.475, 1), size_hint_x=None, width=54)
             elif ev["status"] == "processing":
                 st = Label(text='🔄 批改中', font_name='ChineseFont', font_size='11sp',
                     color=(0.925, 0.596, 0.235, 1), size_hint_x=None, width=54)
@@ -214,7 +214,7 @@ class ReviewScreen(Screen):
         if is_favorite(sid):
             remove_favorite(sid)
             btn.text = '☆'
-            btn.color = (0.616, 0.643, 0.667, 1)
+            btn.color = (0.420, 0.447, 0.475, 1)
         else:
             add_favorite(sid)
             btn.text = '★'

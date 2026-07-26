@@ -1,18 +1,24 @@
-"""Home screen — clean modern card-flow layout."""
+"""Home screen — clean modern card-flow with full-width touch targets."""
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.properties import StringProperty
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.behaviors import ButtonBehavior
 from backtranslate.database.operations import get_all_stats
 
-# Design tokens (sync with main.py)
-PRI = (0.420, 0.565, 0.502, 1)   # #6B9080
-P_L = (0.910, 0.941, 0.925, 1)   # #E8F0EC
-WHITE = (1, 1, 1, 1)
-T1 = (0.102, 0.110, 0.118, 1)    # #1A1C1E
-T2 = (0.408, 0.439, 0.471, 1)    # #687078
-T3 = (0.616, 0.643, 0.667, 1)    # #9DA4AA
-BORDER = (0.902, 0.910, 0.902, 1)  # #E6E8E6
-RAD = 16
+
+class CardRow(ButtonBehavior, BoxLayout):
+    """A tappable card row — the entire card area responds to touch."""
+    pass
+
+
+# Color tokens — consistent with main.py
+PRI     = (0.420, 0.565, 0.502, 1)   # #6B9080  primary
+WHITE   = (1, 1, 1, 1)
+TX1     = (0.067, 0.078, 0.086, 1)   # #111416  text primary
+TX2     = (0.302, 0.325, 0.349, 1)   # #4D5359  text secondary
+TX3     = (0.420, 0.447, 0.475, 1)   # #6B7279  text muted
+SURFACE = (0.890, 0.898, 0.886, 1)    # #E3E5E2
 
 Builder.load_string("""
 <HomeScreen>:
@@ -22,12 +28,9 @@ Builder.load_string("""
         spacing: 0
         canvas.before:
             Color:
-
                 rgba: 0.969, 0.973, 0.969, 1
             Rectangle:
-
                 pos: self.pos
-
                 size: self.size
 
         # ── Top bar ──
@@ -35,28 +38,19 @@ Builder.load_string("""
             size_hint_y: None
             height: 56
             padding: [20, 0]
-            canvas.before:
-                Color:
-
-                    rgba: 0.969, 0.973, 0.969, 1
-                Rectangle:
-
-                    pos: self.pos
-
-                    size: self.size
             Label:
                 text: '你好 👋'
                 font_name: 'ChineseFont'
                 font_size: '24sp'
                 bold: True
-                color: 0.102, 0.110, 0.118, 1
+                color: 0.067, 0.078, 0.086, 1
                 halign: 'left'
             Widget:
             Label:
                 text: '🔥 ' + root.streak + ' 天'
                 font_name: 'ChineseFont'
-                font_size: '13sp'
-                color: 0.408, 0.439, 0.471, 1
+                font_size: '14sp'
+                color: 0.302, 0.325, 0.349, 1
                 size_hint_x: None
                 width: 120
                 halign: 'right'
@@ -80,20 +74,16 @@ Builder.load_string("""
                     spacing: 8
                     canvas.before:
                         Color:
-
                             rgba: 1, 1, 1, 1
                         RoundedRectangle:
-
                             pos: self.pos
-
                             size: self.size
-
-                            radius: [16]*4
+                            radius: [16, 16, 16, 16]
                     Label:
                         text: '今日学习'
                         font_name: 'ChineseFont'
-                        font_size: '14sp'
-                        color: 0.408, 0.439, 0.471, 1
+                        font_size: '15sp'
+                        color: 0.302, 0.325, 0.349, 1
                         size_hint_y: None
                         height: 20
                         halign: 'left'
@@ -108,45 +98,42 @@ Builder.load_string("""
                         halign: 'left'
                     BoxLayout:
                         size_hint_y: None
-                        height: 20
+                        height: 22
                         spacing: 16
                         Label:
                             text: '总计 ' + root.total + ' 句'
                             font_name: 'ChineseFont'
-                            font_size: '13sp'
-                            color: 0.616, 0.643, 0.667, 1
+                            font_size: '14sp'
+                            color: 0.302, 0.325, 0.349, 1
                             size_hint_x: None
                             width: 140
                             halign: 'left'
 
-                # ── Section label ──
+                # ── Section ──
                 Label:
                     text: '学习工具'
                     font_name: 'ChineseFont'
                     font_size: '13sp'
                     bold: True
-                    color: 0.408, 0.439, 0.471, 1
+                    color: 0.302, 0.325, 0.349, 1
                     size_hint_y: None
                     height: 32
                     halign: 'left'
                     padding: [12, 0]
 
-                # ── Card 1 : 学习 ──
-                BoxLayout:
+                # ── Card 1 : 学习 (full-width tappable) ──
+                CardRow:
                     size_hint_y: None
                     height: 72
                     padding: [20, 0]
                     canvas.before:
                         Color:
-
                             rgba: 1, 1, 1, 1
                         RoundedRectangle:
-
                             pos: self.pos
-
                             size: self.size
-
-                            radius: [16]*4
+                            radius: [16, 16, 16, 16]
+                    on_release: root.go_learn()
                     Widget:
                         size_hint_x: None
                         width: 48
@@ -165,44 +152,41 @@ Builder.load_string("""
                             font_name: 'ChineseFont'
                             font_size: '17sp'
                             bold: True
-                            color: 0.102, 0.110, 0.118, 1
+                            color: 0.067, 0.078, 0.086, 1
                             size_hint_y: None
                             height: 24
                             halign: 'left'
                         Label:
                             text: '导入字幕 · 中英回译训练'
                             font_name: 'ChineseFont'
-                            font_size: '12sp'
-                            color: 0.616, 0.643, 0.667, 1
+                            font_size: '13sp'
+                            color: 0.420, 0.447, 0.475, 1
                             size_hint_y: None
                             height: 16
                             halign: 'left'
-                    Button:
-                        text: '›'
-                        font_size: '22sp'
-                        color: 0.616, 0.643, 0.667, 1
+                    Widget:
                         size_hint_x: None
                         width: 36
-                        background_normal: ''
-                        background_color: 0, 0, 0, 0
-                        on_press: root.go_learn()
+                        Label:
+                            text: '›'
+                            font_size: '22sp'
+                            color: 0.420, 0.447, 0.475, 1
+                            size_hint_x: None
+                            width: 36
 
                 # ── Card 2 : 复盘 ──
-                BoxLayout:
+                CardRow:
                     size_hint_y: None
                     height: 72
                     padding: [20, 0]
                     canvas.before:
                         Color:
-
                             rgba: 1, 1, 1, 1
                         RoundedRectangle:
-
                             pos: self.pos
-
                             size: self.size
-
-                            radius: [16]*4
+                            radius: [16, 16, 16, 16]
+                    on_release: root.go_review()
                     Widget:
                         size_hint_x: None
                         width: 48
@@ -221,44 +205,41 @@ Builder.load_string("""
                             font_name: 'ChineseFont'
                             font_size: '17sp'
                             bold: True
-                            color: 0.102, 0.110, 0.118, 1
+                            color: 0.067, 0.078, 0.086, 1
                             size_hint_y: None
                             height: 24
                             halign: 'left'
                         Label:
                             text: '查看 AI 批改结果与评分'
                             font_name: 'ChineseFont'
-                            font_size: '12sp'
-                            color: 0.616, 0.643, 0.667, 1
+                            font_size: '13sp'
+                            color: 0.420, 0.447, 0.475, 1
                             size_hint_y: None
                             height: 16
                             halign: 'left'
-                    Button:
-                        text: '›'
-                        font_size: '22sp'
-                        color: 0.616, 0.643, 0.667, 1
+                    Widget:
                         size_hint_x: None
                         width: 36
-                        background_normal: ''
-                        background_color: 0, 0, 0, 0
-                        on_press: root.go_review()
+                        Label:
+                            text: '›'
+                            font_size: '22sp'
+                            color: 0.420, 0.447, 0.475, 1
+                            size_hint_x: None
+                            width: 36
 
                 # ── Card 3 : 收藏 ──
-                BoxLayout:
+                CardRow:
                     size_hint_y: None
                     height: 72
                     padding: [20, 0]
                     canvas.before:
                         Color:
-
                             rgba: 1, 1, 1, 1
                         RoundedRectangle:
-
                             pos: self.pos
-
                             size: self.size
-
-                            radius: [16]*4
+                            radius: [16, 16, 16, 16]
+                    on_release: root.go_favorites()
                     Widget:
                         size_hint_x: None
                         width: 48
@@ -277,44 +258,41 @@ Builder.load_string("""
                             font_name: 'ChineseFont'
                             font_size: '17sp'
                             bold: True
-                            color: 0.102, 0.110, 0.118, 1
+                            color: 0.067, 0.078, 0.086, 1
                             size_hint_y: None
                             height: 24
                             halign: 'left'
                         Label:
                             text: '管理收藏的句子'
                             font_name: 'ChineseFont'
-                            font_size: '12sp'
-                            color: 0.616, 0.643, 0.667, 1
+                            font_size: '13sp'
+                            color: 0.420, 0.447, 0.475, 1
                             size_hint_y: None
                             height: 16
                             halign: 'left'
-                    Button:
-                        text: '›'
-                        font_size: '22sp'
-                        color: 0.616, 0.643, 0.667, 1
+                    Widget:
                         size_hint_x: None
                         width: 36
-                        background_normal: ''
-                        background_color: 0, 0, 0, 0
-                        on_press: root.go_favorites()
+                        Label:
+                            text: '›'
+                            font_size: '22sp'
+                            color: 0.420, 0.447, 0.475, 1
+                            size_hint_x: None
+                            width: 36
 
                 # ── Card 4 : 表达库 ──
-                BoxLayout:
+                CardRow:
                     size_hint_y: None
                     height: 72
                     padding: [20, 0]
                     canvas.before:
                         Color:
-
                             rgba: 1, 1, 1, 1
                         RoundedRectangle:
-
                             pos: self.pos
-
                             size: self.size
-
-                            radius: [16]*4
+                            radius: [16, 16, 16, 16]
+                    on_release: root.go_expressions()
                     Widget:
                         size_hint_x: None
                         width: 48
@@ -333,44 +311,41 @@ Builder.load_string("""
                             font_name: 'ChineseFont'
                             font_size: '17sp'
                             bold: True
-                            color: 0.102, 0.110, 0.118, 1
+                            color: 0.067, 0.078, 0.086, 1
                             size_hint_y: None
                             height: 24
                             halign: 'left'
                         Label:
                             text: 'AI 推荐的地道英文表达'
                             font_name: 'ChineseFont'
-                            font_size: '12sp'
-                            color: 0.616, 0.643, 0.667, 1
+                            font_size: '13sp'
+                            color: 0.420, 0.447, 0.475, 1
                             size_hint_y: None
                             height: 16
                             halign: 'left'
-                    Button:
-                        text: '›'
-                        font_size: '22sp'
-                        color: 0.616, 0.643, 0.667, 1
+                    Widget:
                         size_hint_x: None
                         width: 36
-                        background_normal: ''
-                        background_color: 0, 0, 0, 0
-                        on_press: root.go_expressions()
+                        Label:
+                            text: '›'
+                            font_size: '22sp'
+                            color: 0.420, 0.447, 0.475, 1
+                            size_hint_x: None
+                            width: 36
 
                 # ── Card 5 : 设置 ──
-                BoxLayout:
+                CardRow:
                     size_hint_y: None
                     height: 60
                     padding: [20, 0]
                     canvas.before:
                         Color:
-
                             rgba: 1, 1, 1, 1
                         RoundedRectangle:
-
                             pos: self.pos
-
                             size: self.size
-
-                            radius: [16]*4
+                            radius: [16, 16, 16, 16]
+                    on_release: root.go_settings()
                     Widget:
                         size_hint_x: None
                         width: 48
@@ -387,22 +362,21 @@ Builder.load_string("""
                         Label:
                             text: '设置'
                             font_name: 'ChineseFont'
-                            font_size: '16sp'
-                            color: 0.102, 0.110, 0.118, 1
+                            font_size: '17sp'
+                            color: 0.067, 0.078, 0.086, 1
                             size_hint_y: None
                             height: 24
                             halign: 'left'
-                    Button:
-                        text: '›'
-                        font_size: '22sp'
-                        color: 0.616, 0.643, 0.667, 1
+                    Widget:
                         size_hint_x: None
                         width: 36
-                        background_normal: ''
-                        background_color: 0, 0, 0, 0
-                        on_press: root.go_settings()
+                        Label:
+                            text: '›'
+                            font_size: '22sp'
+                            color: 0.420, 0.447, 0.475, 1
+                            size_hint_x: None
+                            width: 36
 
-                # ── Bottom spacer ──
                 Widget:
                     size_hint_y: None
                     height: 32
@@ -420,13 +394,13 @@ class HomeScreen(Screen):
         self.today = str(s["today"])
         self.total = str(s["total"])
 
-    def go_learn(self):
+    def go_learn(self, *a):
         self.manager.current = "learn"
-    def go_review(self):
+    def go_review(self, *a):
         self.manager.current = "review"
-    def go_favorites(self):
+    def go_favorites(self, *a):
         self.manager.current = "favorites"
-    def go_expressions(self):
+    def go_expressions(self, *a):
         self.manager.current = "expressions"
-    def go_settings(self):
+    def go_settings(self, *a):
         self.manager.current = "settings"
