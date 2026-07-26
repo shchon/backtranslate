@@ -240,6 +240,7 @@ class ReviewScreen(Screen):
 
         popup = Popup(title=f'#{sub["idx"]} 详情', content=scroll,
                       size_hint=(0.9, 0.85), auto_dismiss=True)
+        popup.background = ""
         popup.background_color = (0.969, 0.973, 0.969, 1)
         popup.title_color = (0.067, 0.078, 0.086, 1)
 
