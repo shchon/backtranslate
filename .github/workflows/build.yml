@@ -29,6 +29,7 @@ jobs:
             pkg-config zlib1g-dev libncurses5-dev \
             libncursesw5-dev libtinfo6 cmake \
             libffi-dev libssl-dev \
+            libz-dev libbz2-dev \
             fonts-wqy-microhei
 
       - name: Cache buildozer (Android SDK/NDK)
@@ -52,6 +53,7 @@ jobs:
 
       - name: Build APK with buildozer
         run: |
+          export LDFLAGS="-lm -lz"
           echo "y" | buildozer --verbose --user android debug 2>&1
 
       - name: Check build result
