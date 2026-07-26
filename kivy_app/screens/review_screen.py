@@ -331,7 +331,9 @@ class ReviewScreen(Screen):
                 parts.append(f"前一句: {s['chinese']}")
             elif s["idx"] > sub["idx"] and s["idx"] <= sub["idx"] + n:
                 parts.append(f"后一句: {s['chinese']}")
-        return ("上下文:\\n" + "\\n".join(parts)) if parts else ""
+        return ("上下文:\
+" + "\
+".join(parts)) if parts else ""
 
     def _get_latest_eval(self, sid):
         tid = self._get_latest_translation_id(sid)

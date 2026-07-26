@@ -506,7 +506,8 @@ class LearnScreen(Screen):
             with open(self._selected_en_path, 'r', encoding='utf-8') as f:
                 en_s = parse_srt(f.read())
         except Exception as e:
-            self._show_popup("文件错误", f"无法读取字幕文件:\\n{e}")
+            self._show_popup("文件错误", f"无法读取字幕文件:\
+{e}")
             return
 
         pairs = pair_by_timecode(ch_s, en_s) or pair_by_index(ch_s, en_s)
@@ -587,8 +588,13 @@ class LearnScreen(Screen):
         self._in_session = False
         self._update_ui_state()
         stats = get_all_stats()
-        msg = (f"学习小结\\n\\n本次完成：{self.completed_count} 句\\n"
-               f"今日累计：{stats['today']} 句\\n连续打卡：{stats['streak']} 天\\n"
+        msg = (f"学习小结\
+\
+本次完成：{self.completed_count} 句\
+"
+               f"今日累计：{stats['today']} 句\
+连续打卡：{stats['streak']} 天\
+"
                f"历史总计：{stats['total']} 句")
         self._show_popup("学习小结", msg)
         self.manager.get_screen("review").load_session(self.session_id, only_translated=True)
@@ -605,7 +611,9 @@ class LearnScreen(Screen):
                 parts.append(f"前一句: {s['chinese']}")
             elif s["idx"] > self.current_idx - 1 and s["idx"] <= self.current_idx - 1 + n:
                 parts.append(f"后一句: {s['chinese']}")
-        return ("上下文:\\n" + "\\n".join(parts)) if parts else ""
+        return ("上下文:\
+" + "\
+".join(parts)) if parts else ""
 
     def _get_subtitle_id(self, idx):
         for s in get_subtitles_for_session(self.session_id):

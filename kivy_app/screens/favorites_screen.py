@@ -199,6 +199,8 @@ class FavoritesScreen(Screen):
         btns.add_widget(ok)
         content.add_widget(btns)
         popup = Popup(title='确认', content=content, size_hint=(0.8,0.35), auto_dismiss=False)
+        popup.background = "atlas://data/images/defaulttheme/button"
+        popup.background_color = (1, 1, 1, 1)
         popup.title_color = (0.067, 0.078, 0.086, 1)
 
         def _ref(inst, _):
@@ -228,6 +230,8 @@ class FavoritesScreen(Screen):
 
         popup = Popup(title='', content=content,
             size_hint=(0.7, None), height=60, auto_dismiss=True)
+        popup.background = "atlas://data/images/defaulttheme/button"
+        popup.background_color = (1, 1, 1, 1)
         popup.title_color = (0.067, 0.078, 0.086, 1)
         popup.open()
         Clock.schedule_once(lambda dt: popup.dismiss(), 2)
