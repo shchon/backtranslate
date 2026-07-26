@@ -16,45 +16,52 @@ Builder.load_string("""
         orientation: 'vertical'
         spacing: 0
 
-        # Top bar
+        # Top bar - Uxcel style
         BoxLayout:
             size_hint_y: None
-            height: 144
+            height: 60
             padding: [12, 0]
             canvas.before:
                 Color:
-                    rgba: 0.29, 0.56, 0.85, 1
+                    rgba: 1, 1, 1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
             Button:
                 text: '‹ 返回'
                 size_hint_x: None
-                width: 72
+                width: 60
                 background_normal: ''
                 background_color: 0, 0, 0, 0
-                color: 1, 1, 1, 1
-                font_size: '19sp'
+                color: 0.486, 0.361, 1.0, 1
+                font_size: '17sp'
                 on_press: root.go_home()
             Label:
                 text: '表达库'
-                font_size: '22sp'
+                font_size: '18sp'
                 bold: True
-                color: 1, 1, 1, 1
+                color: 0.102, 0.102, 0.102, 1
             Widget:
                 size_hint_x: None
-                width: 72
+                width: 60
 
         # Search bar
         TextInput:
             id: search_input
             hint_text: '🔍 搜索表达...'
-            font_size: '18sp'
+            font_size: '16sp'
             size_hint_y: None
-            height: 128
-            padding: [16, 16]
+            height: 52
+            padding: [16, 14]
             multiline: False
             on_text: root._refresh()
+            canvas.before:
+                Color:
+                    rgba: 0.91, 0.91, 0.93, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [12, 12, 12, 12]
 
         # Scrollable list
         ScrollView:
@@ -63,8 +70,8 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                padding: [16, 16]
-                spacing: 16
+                padding: [16, 8]
+                spacing: 12
 """)
 
 

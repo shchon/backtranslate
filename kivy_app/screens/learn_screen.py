@@ -25,218 +25,282 @@ Builder.load_string("""
         orientation: 'vertical'
         spacing: 0
 
-        # Top bar
+        # Top bar - Uxcel style white
         BoxLayout:
             size_hint_y: None
-            height: 144
+            height: 60
             padding: [12, 0]
             canvas.before:
                 Color:
-                    rgba: 0.29, 0.56, 0.85, 1
+                    rgba: 1, 1, 1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
             Button:
-                text: '< 返回'
+                text: '‹ 返回'
                 size_hint_x: None
-                width: 72
+                width: 60
                 background_normal: ''
                 background_color: 0, 0, 0, 0
-                color: 1, 1, 1, 1
+                color: 0.486, 0.361, 1.0, 1
                 font_name: 'ChineseFont'
-                font_size: '19sp'
+                font_size: '17sp'
                 on_press: root.go_home()
             Label:
                 text: '回译训练'
                 font_name: 'ChineseFont'
-                font_size: '22sp'
+                font_size: '18sp'
                 bold: True
-                color: 1, 1, 1, 1
+                color: 0.102, 0.102, 0.102, 1
             Widget:
                 size_hint_x: None
-                width: 72
+                width: 60
 
         # Content area
         BoxLayout:
             orientation: 'vertical'
-            padding: [20, 16]
+            padding: [20, 12]
             spacing: 16
 
             # Import area (shown when no session)
             BoxLayout:
                 id: import_area
                 orientation: 'vertical'
-                spacing: 20
+                spacing: 16
                 size_hint_y: None
-                height: 560
+                height: 240
 
                 Label:
                     text: '点击下方按钮导入中英字幕文件'
                     font_name: 'ChineseFont'
-                    font_size: '19sp'
-                    color: 0.7, 0.7, 0.7, 1
+                    font_size: '15sp'
+                    color: 0.557, 0.557, 0.576, 1
                     halign: 'center'
 
                 Button:
                     text: '导入字幕文件'
                     size_hint_y: None
-                    height: 144
+                    height: 56
                     background_normal: ''
-                    background_color: 0.29, 0.56, 0.85, 1
+                    background_color: 0.486, 0.361, 1.0, 1
                     color: 1, 1, 1, 1
                     font_name: 'ChineseFont'
-                    font_size: '19sp'
+                    font_size: '16sp'
                     bold: True
                     on_press: root.import_srt()
+                    canvas.before:
+                        Color:
+                            rgba: 0.486, 0.361, 1.0, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
 
                 # Recent sessions
                 Label:
                     id: recent_label
                     text: ''
                     font_name: 'ChineseFont'
-                    font_size: '16sp'
-                    color: 0.6, 0.6, 0.6, 1
+                    font_size: '13sp'
+                    color: 0.557, 0.557, 0.576, 1
                     halign: 'center'
                     size_hint_y: None
-                    height: 48
+                    height: 20
 
             # Translation area (shown during session)
             BoxLayout:
                 id: translation_area
                 orientation: 'vertical'
-                spacing: 14
+                spacing: 12
 
                 # Progress info
                 BoxLayout:
                     size_hint_y: None
-                    height: 60
-                    spacing: 10
+                    height: 24
+                    spacing: 8
                     Label:
                         text: '第 ' + str(root.current_idx) + '/' + str(root.total_count) + ' 句'
                         font_name: 'ChineseFont'
-                        font_size: '17sp'
-                        color: 0.8, 0.8, 0.8, 1
+                        font_size: '13sp'
+                        color: 0.557, 0.557, 0.576, 1
                         size_hint_x: None
-                        width: 160
+                        width: 140
                     ProgressBar:
                         id: progress_bar
                         max: root.total_count
                         value: root.completed_count
                         size_hint_x: 1
 
-                # Chinese sentence
-                Label:
-                    id: chinese_label
-                    text: ''
-                    font_name: 'ChineseFont'
-                    font_size: '26sp'
-                    color: 0.9, 0.9, 0.9, 1
+                # Chinese sentence - Uxcel style card
+                BoxLayout:
+                    orientation: 'vertical'
                     size_hint_y: None
-                    height: 480
-                    text_size: self.width, None
-                    halign: 'left'
-                    valign: 'top'
+                    height: 160
+                    padding: [20, 16]
+                    spacing: 8
+                    canvas.before:
+                        Color:
+                            rgba: 0.486, 0.361, 1.0, 0.04
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [16, 16, 16, 16]
+                        Color:
+                            rgba: 0.91, 0.91, 0.93, 1
+                        Line:
+                            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 16
+                            width: 0.5
+                    Label:
+                        id: chinese_label
+                        text: ''
+                        font_name: 'ChineseFont'
+                        font_size: '22sp'
+                        color: 0.102, 0.102, 0.102, 1
+                        size_hint_y: None
+                        height: 120
+                        text_size: self.width, None
+                        halign: 'left'
+                        valign: 'top'
 
-                # Input field
+                # Input field - Uxcel style
                 TextInput:
                     id: input_field
                     hint_text: '输入英文翻译...'
                     font_name: 'ChineseFont'
-                    font_size: '22sp'
+                    font_size: '17sp'
                     size_hint_y: None
-                    height: 144
+                    height: 56
                     multiline: False
-                    background_color: 0.2, 0.2, 0.2, 1
-                    foreground_color: 0.9, 0.9, 0.9, 1
+                    background_color: 0.98, 0.98, 0.98, 1
+                    foreground_color: 0.102, 0.102, 0.102, 1
                     padding: [16, 16]
                     on_text_validate: root.submit_translation()
+                    canvas.before:
+                        Color:
+                            rgba: 0.91, 0.91, 0.93, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
 
                 # Action buttons
                 BoxLayout:
                     size_hint_y: None
-                    height: 136
-                    spacing: 16
+                    height: 52
+                    spacing: 12
                     Button:
                         text: '跳过'
                         font_name: 'ChineseFont'
-                        font_size: '18sp'
+                        font_size: '15sp'
                         background_normal: ''
-                        background_color: 0.85, 0.85, 0.85, 1
-                        color: 0.3, 0.3, 0.3, 1
+                        background_color: 0.95, 0.95, 0.97, 1
+                        color: 0.4, 0.4, 0.4, 1
                         on_press: root.skip_sentence()
+                        canvas.before:
+                            Color:
+                                rgba: 0.95, 0.95, 0.97, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [12, 12, 12, 12]
+                            Color:
+                                rgba: 0.91, 0.91, 0.93, 1
+                            Line:
+                                rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 12
+                                width: 0.5
                     Button:
                         text: '提交'
                         font_name: 'ChineseFont'
-                        font_size: '18sp'
+                        font_size: '15sp'
                         bold: True
                         background_normal: ''
-                        background_color: 0.29, 0.56, 0.85, 1
+                        background_color: 0.486, 0.361, 1.0, 1
                         color: 1, 1, 1, 1
                         on_press: root.submit_translation()
+                        canvas.before:
+                            Color:
+                                rgba: 0.486, 0.361, 1.0, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [12, 12, 12, 12]
 
-                # Stats bar
+                # Stats bar - Uxcel style
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: None
-                    height: 240
-                    padding: [16, 16]
-                    spacing: 10
+                    height: 100
+                    padding: [16, 12]
+                    spacing: 6
                     canvas.before:
                         Color:
-                            rgba: 0.15, 0.15, 0.2, 1
+                            rgba: 0.98, 0.98, 0.98, 1
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
                             radius: [12, 12, 12, 12]
                         Color:
-                            rgba: 0.3, 0.3, 0.4, 1
+                            rgba: 0.91, 0.91, 0.93, 1
                         Line:
                             rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 12
+                            width: 0.5
 
                     BoxLayout:
                         size_hint_y: None
-                        height: 84
-                        spacing: 10
+                        height: 28
+                        spacing: 8
                         Label:
                             text: '连续 ' + root.streak + ' 天'
                             font_name: 'ChineseFont'
-                            font_size: '18sp'
+                            font_size: '14sp'
                             bold: True
                             color: 0.9, 0.5, 0.13, 1
                         Label:
                             text: '今日 ' + root.today + ' 句'
                             font_name: 'ChineseFont'
-                            font_size: '18sp'
+                            font_size: '14sp'
                             bold: True
-                            color: 0.5, 0.8, 1.0, 1
+                            color: 0.486, 0.361, 1.0, 1
                         Label:
                             text: '总计 ' + root.total + ' 句'
                             font_name: 'ChineseFont'
-                            font_size: '18sp'
+                            font_size: '14sp'
                             bold: True
-                            color: 0.3, 1.0, 0.5, 1
+                            color: 0.4, 0.4, 0.4, 1
 
                     Label:
                         id: encourage_label
                         text: ''
                         font_name: 'ChineseFont'
-                        font_size: '16sp'
+                        font_size: '13sp'
                         color: 0.8, 0.5, 0.9, 1
                         italic: True
                         size_hint_y: None
-                        height: 60
+                        height: 22
 
                 # End session button
                 Button:
                     text: '结束学习'
                     size_hint_y: None
-                    height: 128
+                    height: 48
                     background_normal: ''
-                    background_color: 0.91, 0.3, 0.24, 1
-                    color: 1, 1, 1, 1
+                    background_color: 0.95, 0.95, 0.97, 1
+                    color: 0.91, 0.3, 0.24, 1
                     font_name: 'ChineseFont'
-                    font_size: '18sp'
+                    font_size: '15sp'
                     on_press: root.end_session()
+                    canvas.before:
+                        Color:
+                            rgba: 0.95, 0.95, 0.97, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
+                        Color:
+                            rgba: 0.91, 0.91, 0.93, 1
+                        Line:
+                            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 12
+                            width: 0.5
 """)
 
 

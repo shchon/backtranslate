@@ -24,34 +24,34 @@ Builder.load_string("""
         orientation: 'vertical'
         spacing: 0
 
-        # Top bar
+        # Top bar - Uxcel style
         BoxLayout:
             size_hint_y: None
-            height: 120
+            height: 60
             padding: [12, 0]
             canvas.before:
                 Color:
-                    rgba: 0.29, 0.56, 0.85, 1
+                    rgba: 1, 1, 1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
             Button:
                 text: '‹ 返回'
                 size_hint_x: None
-                width: 72
+                width: 60
                 background_normal: ''
                 background_color: 0, 0, 0, 0
-                color: 1, 1, 1, 1
-                font_size: '19sp'
+                color: 0.486, 0.361, 1.0, 1
+                font_size: '17sp'
                 on_press: root.go_home()
             Label:
                 text: '设置'
-                font_size: '22sp'
+                font_size: '18sp'
                 bold: True
-                color: 1, 1, 1, 1
+                color: 0.102, 0.102, 0.102, 1
             Widget:
                 size_hint_x: None
-                width: 72
+                width: 60
 
         # Scrollable settings form
         ScrollView:
@@ -59,135 +59,189 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                padding: [20, 20]
-                spacing: 20
+                padding: [20, 16]
+                spacing: 16
 
                 # API Base URL
                 Label:
                     text: 'API 地址'
-                    font_size: '17sp'
+                    font_size: '15sp'
                     bold: True
-                    color: 0.3, 0.3, 0.3, 1
+                    color: 0.102, 0.102, 0.102, 1
                     size_hint_y: None
-                    height: 60
+                    height: 24
                     halign: 'left'
                 TextInput:
                     id: base_url_input
                     hint_text: '例如: https://api.deepseek.com'
-                    font_size: '18sp'
+                    font_size: '16sp'
                     size_hint_y: None
-                    height: 104
+                    height: 52
                     padding: [16, 14]
                     multiline: False
+                    canvas.before:
+                        Color:
+                            rgba: 0.91, 0.91, 0.93, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
 
                 # API Key
                 Label:
                     text: 'API Key'
-                    font_size: '17sp'
+                    font_size: '15sp'
                     bold: True
-                    color: 0.3, 0.3, 0.3, 1
+                    color: 0.102, 0.102, 0.102, 1
                     size_hint_y: None
-                    height: 60
+                    height: 24
                     halign: 'left'
                 TextInput:
                     id: api_key_input
                     hint_text: '输入你的 API Key'
-                    font_size: '18sp'
+                    font_size: '16sp'
                     size_hint_y: None
-                    height: 104
+                    height: 52
                     padding: [16, 14]
                     multiline: False
                     password: True
+                    canvas.before:
+                        Color:
+                            rgba: 0.91, 0.91, 0.93, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
 
                 # Model
                 Label:
                     text: '模型'
-                    font_size: '17sp'
+                    font_size: '15sp'
                     bold: True
-                    color: 0.3, 0.3, 0.3, 1
+                    color: 0.102, 0.102, 0.102, 1
                     size_hint_y: None
-                    height: 60
+                    height: 24
                     halign: 'left'
                 TextInput:
                     id: model_input
                     hint_text: '例如: deepseek-chat'
-                    font_size: '18sp'
+                    font_size: '16sp'
                     size_hint_y: None
-                    height: 104
+                    height: 52
                     padding: [16, 14]
                     multiline: False
+                    canvas.before:
+                        Color:
+                            rgba: 0.91, 0.91, 0.93, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
 
                 # Context sentences
                 Label:
                     text: '上下文句数'
-                    font_size: '17sp'
+                    font_size: '15sp'
                     bold: True
-                    color: 0.3, 0.3, 0.3, 1
+                    color: 0.102, 0.102, 0.102, 1
                     size_hint_y: None
-                    height: 60
+                    height: 24
                     halign: 'left'
                 BoxLayout:
                     size_hint_y: None
-                    height: 104
-                    spacing: 16
+                    height: 52
+                    spacing: 12
                     TextInput:
                         id: context_input
                         text: '1'
-                        font_size: '18sp'
+                        font_size: '16sp'
                         size_hint_x: None
-                        width: 100
+                        width: 80
                         padding: [16, 14]
                         multiline: False
                         input_filter: 'int'
+                        canvas.before:
+                            Color:
+                                rgba: 0.91, 0.91, 0.93, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [12, 12, 12, 12]
                     Label:
                         text: '句（前后各取N句作为上下文）'
-                        font_size: '16sp'
-                        color: 0.5, 0.5, 0.5, 1
+                        font_size: '14sp'
+                        color: 0.557, 0.557, 0.576, 1
 
                 # Prompt template
                 Label:
                     text: '提示词模板'
-                    font_size: '17sp'
+                    font_size: '15sp'
                     bold: True
-                    color: 0.3, 0.3, 0.3, 1
+                    color: 0.102, 0.102, 0.102, 1
                     size_hint_y: None
-                    height: 60
+                    height: 24
                     halign: 'left'
                 TextInput:
                     id: prompt_input
                     hint_text: 'AI 评分提示词模板...'
-                    font_size: '16sp'
+                    font_size: '14sp'
                     size_hint_y: None
-                    height: 600
+                    height: 200
                     padding: [16, 14]
+                    canvas.before:
+                        Color:
+                            rgba: 0.91, 0.91, 0.93, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
 
-                # Save button
+                # Save button - Uxcel style
                 Button:
                     text: '💾 保存设置'
                     size_hint_y: None
-                    height: 112
+                    height: 52
                     background_normal: ''
-                    background_color: 0.29, 0.56, 0.85, 1
+                    background_color: 0.486, 0.361, 1.0, 1
                     color: 1, 1, 1, 1
-                    font_size: '19sp'
+                    font_size: '16sp'
                     bold: True
                     on_press: root.save_settings()
+                    canvas.before:
+                        Color:
+                            rgba: 0.486, 0.361, 1.0, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
 
                 # Reset button
                 Button:
                     text: '↺ 恢复默认'
                     size_hint_y: None
-                    height: 104
+                    height: 48
                     background_normal: ''
-                    background_color: 0.85, 0.85, 0.85, 1
-                    color: 0.3, 0.3, 0.3, 1
-                    font_size: '18sp'
+                    background_color: 0.95, 0.95, 0.97, 1
+                    color: 0.4, 0.4, 0.4, 1
+                    font_size: '15sp'
                     on_press: root.reset_defaults()
+                    canvas.before:
+                        Color:
+                            rgba: 0.95, 0.95, 0.97, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [12, 12, 12, 12]
+                        Color:
+                            rgba: 0.91, 0.91, 0.93, 1
+                        Line:
+                            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 12
+                            width: 0.5
 
                 # Bottom spacing
                 Widget:
                     size_hint_y: None
-                    height: 96
+                    height: 40
 """)
 
 
