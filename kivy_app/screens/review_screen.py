@@ -163,7 +163,7 @@ class ReviewScreen(Screen):
             fbtn = Button(text='★' if is_fav else '☆', font_size='22sp',
                 size_hint_x=None, width=40,
                 background_normal='', background_color=(0,0,0,0),
-                color=(0.925,0.596,0.235,1) if is_fav else (0.616,0.643,0.667,1))
+                color=(0.925,0.596,0.235,1) if is_fav else (0.420,0.447,0.475,1))
             fbtn.subtitle_id = sub['id']
             fbtn.bind(on_press=self._on_fav_toggle)
             hdr.add_widget(fbtn)
@@ -207,7 +207,7 @@ class ReviewScreen(Screen):
 
         if not layout.children:
             layout.add_widget(Label(text='暂无数据', font_name='ChineseFont',
-                font_size='15sp', color=(0.408,0.439,0.471,1), size_hint_y=None, height=200))
+                font_size='15sp', color=(0.302,0.325,0.349,1), size_hint_y=None, height=200))
 
     def _on_fav_toggle(self, btn):
         sid = btn.subtitle_id
@@ -230,18 +230,30 @@ class ReviewScreen(Screen):
 
         sub = btn.sub
         ev = btn.eval_data
+        from kivy.graphics import Color, RoundedRectangle
         content = BoxLayout(orientation='vertical', spacing=10, padding=16)
+        with content.canvas.before:
+            Color(rgba=(1, 1, 1, 1))
+            RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
         scroll = ScrollView(size_hint=(1, 1))
         scroll.add_widget(content)
 
         popup = Popup(title=f'#{sub["idx"]} 详情', content=scroll,
                       size_hint=(0.9, 0.85), auto_dismiss=True)
-        popup.background_color = (0.969, 0.973, 0.969, 1)
-        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.background = ''
+        popup.background_color = (0, 0, 0, 0)
+        popup.separator_color = (0, 0, 0, 0)
         popup.title_color = (0.067, 0.078, 0.086, 1)
 
+        def _ref(inst, _):
+            inst.canvas.before.clear()
+            with inst.canvas.before:
+                Color(rgba=(1, 1, 1, 1))
+                RoundedRectangle(pos=inst.pos, size=inst.size, radius=[16]*4)
+        content.bind(pos=_ref, size=_ref)
+
         content.add_widget(Label(text=sub['chinese'], font_name='ChineseFont',
-            font_size='18sp', bold=True, color=(0.102,0.110,0.118,1),
+            font_size='18sp', bold=True, color=(0.067,0.078,0.086,1),
             size_hint_y=None, height=50, text_size=(320,None), halign='left'))
 
         ut = get_latest_translation(sub["id"])
@@ -252,7 +264,7 @@ class ReviewScreen(Screen):
 
         if ev and ev["status"] == "done" and ev.get("analysis_text"):
             al = Label(text=ev["analysis_text"], font_name='ChineseFont',
-                font_size='14sp', color=(0.102,0.110,0.118,1),
+                font_size='14sp', color=(0.067,0.078,0.086,1),
                 size_hint_y=None, height=80, text_size=(320,None), halign='left')
             al.bind(texture_size=lambda inst, val: setattr(inst, 'height', max(60,val[1])))
             content.add_widget(al)
@@ -262,7 +274,7 @@ class ReviewScreen(Screen):
             color=(0.420,0.565,0.502,1), size_hint_y=None, height=32,
             background_normal='', background_color=(0,0,0,0))
         ol = Label(text=sub['english_official'], font_name='ChineseFont',
-            font_size='14sp', color=(0.408,0.439,0.471,1),
+            font_size='14sp', color=(0.302,0.325,0.349,1),
             size_hint_y=None, height=26, opacity=0, disabled=True,
             text_size=(320,None))
         def toggle(o):
@@ -276,7 +288,7 @@ class ReviewScreen(Screen):
         # Redo
         ri = TextInput(hint_text='重新翻译……', font_name='ChineseFont',
             font_size='15sp', size_hint_y=None, height=40, multiline=False,
-            background_color=(0.953,0.957,0.953,1), foreground_color=(0.102,0.110,0.118,1),
+            background_color=(0.890,0.898,0.886,1), foreground_color=(0.067,0.078,0.086,1),
             padding=[14,10])
         rb = Button(text='提交重新翻译', font_name='ChineseFont', font_size='15sp', bold=True,
             size_hint_y=None, height=44,
@@ -305,8 +317,8 @@ class ReviewScreen(Screen):
 
         cb = Button(text='关闭', font_name='ChineseFont', font_size='15sp',
             size_hint_y=None, height=44,
-            background_normal='', background_color=(0.953,0.957,0.953,1),
-            color=(0.408,0.439,0.471,1))
+            background_normal='', background_color=(0.890,0.898,0.886,1),
+            color=(0.302,0.325,0.349,1))
         cb.bind(on_press=lambda x: popup.dismiss())
         content.add_widget(cb)
         popup.open()

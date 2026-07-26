@@ -332,6 +332,9 @@ class LearnScreen(Screen):
         from kivy.uix.scrollview import ScrollView
 
         content = BoxLayout(orientation='vertical', spacing=12, padding=16)
+        with content.canvas.before:
+            Color(rgba=(1, 1, 1, 1))
+            RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
         content.add_widget(Label(text='选择中文 SRT（第1步）',
             font_name='ChineseFont', font_size='15sp', size_hint_y=None, height=40,
             color=(0.067, 0.078, 0.086, 1)))
@@ -341,8 +344,9 @@ class LearnScreen(Screen):
             content.add_widget(Label(text='该目录无 SRT 文件', font_name='ChineseFont',
                 size_hint_y=None, height=40, color=(0.878, 0.345, 0.298, 1)))
             popup = Popup(title='导入字幕', content=content, size_hint=(0.85, 0.5), auto_dismiss=False)
-            popup.background_color = (0.969, 0.973, 0.969, 1)
-            popup.separator_color = (0.890, 0.898, 0.886, 1)
+            popup.background = ''
+            popup.background_color = (0, 0, 0, 0)
+            popup.separator_color = (0, 0, 0, 0)
             popup.title_color = (0.067, 0.078, 0.086, 1)
             btn = Button(text='关闭', font_name='ChineseFont', size_hint_y=None, height=44,
                 background_normal='', background_color=(0.95,0.95,0.95,1), color=(0.4,0.4,0.4,1))
@@ -388,6 +392,9 @@ class LearnScreen(Screen):
         from kivy.uix.scrollview import ScrollView
 
         content = BoxLayout(orientation='vertical', spacing=12, padding=16)
+        with content.canvas.before:
+            Color(rgba=(1, 1, 1, 1))
+            RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
         content.add_widget(Label(text='选择英文 SRT（第2步）',
             font_name='ChineseFont', font_size='15sp', size_hint_y=None, height=40,
             color=(0.067,0.078,0.086,1)))
@@ -436,6 +443,9 @@ class LearnScreen(Screen):
         from kivy.uix.textinput import TextInput
 
         content = BoxLayout(orientation='vertical', spacing=10, padding=16)
+        with content.canvas.before:
+            Color(rgba=(1, 1, 1, 1))
+            RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
         content.add_widget(Label(text='选择 SRT 目录', font_name='ChineseFont',
             font_size='15sp', size_hint_y=None, height=36, color=(0.067, 0.078, 0.086, 1)))
 
@@ -614,16 +624,29 @@ class LearnScreen(Screen):
         from kivy.uix.label import Label
         from kivy.uix.button import Button
         from kivy.uix.boxlayout import BoxLayout
+        from kivy.graphics import Color, RoundedRectangle
         content = BoxLayout(orientation='vertical', spacing=12, padding=16)
+        with content.canvas.before:
+            Color(rgba=(1, 1, 1, 1))
+            RoundedRectangle(pos=content.pos, size=content.size, radius=[16, 16, 16, 16])
         content.add_widget(Label(text=message, font_name='ChineseFont', font_size='15sp',
             color=(0.067, 0.078, 0.086, 1), halign='center', text_size=(300, None)))
         btn = Button(text='确定', font_name='ChineseFont', size_hint_y=None, height=44,
             background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1), font_size='15sp')
         content.add_widget(btn)
         popup = Popup(title=title, content=content, size_hint=(0.8, 0.5), auto_dismiss=False)
-        popup.background_color = (0.969, 0.973, 0.969, 1)
-        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.background = ''
+        popup.background_color = (0, 0, 0, 0)
+        popup.separator_color = (0, 0, 0, 0)
         popup.title_color = (0.067, 0.078, 0.086, 1)
+
+        def _ref(inst, _):
+            inst.canvas.before.clear()
+            with inst.canvas.before:
+                Color(rgba=(1, 1, 1, 1))
+                RoundedRectangle(pos=inst.pos, size=inst.size, radius=[16, 16, 16, 16])
+        content.bind(pos=_ref, size=_ref)
+
         btn.bind(on_press=lambda x: popup.dismiss())
         popup.open()
 

@@ -262,15 +262,32 @@ class SettingsScreen(Screen):
     def _toast(self, msg):
         from kivy.uix.popup import Popup
         from kivy.uix.label import Label
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.graphics import Color, RoundedRectangle
         from kivy.clock import Clock
-        popup = Popup(title='', content=Label(text=msg, font_name='ChineseFont',
-            font_size='15sp', color=(0.067, 0.078, 0.086, 1)),
-            size_hint=(0.5,0.15), auto_dismiss=True)
-        popup.background_color = (0.969, 0.973, 0.969, 1)
-        popup.separator_color = (0.890, 0.898, 0.886, 1)
+
+        content = BoxLayout(padding=[20, 14])
+        with content.canvas.before:
+            Color(rgba=(1, 1, 1, 1))
+            RoundedRectangle(pos=content.pos, size=content.size, radius=[16, 16, 16, 16])
+        content.add_widget(Label(text=msg, font_name='ChineseFont',
+            font_size='15sp', color=(0.067, 0.078, 0.086, 1)))
+
+        popup = Popup(title='', content=content,
+            size_hint=(0.7, None), height=60, auto_dismiss=True)
+        popup.background = ''
+        popup.background_color = (0, 0, 0, 0)
+        popup.separator_color = (0, 0, 0, 0)
         popup.title_color = (0.067, 0.078, 0.086, 1)
         popup.open()
         Clock.schedule_once(lambda dt: popup.dismiss(), 2)
+
+        def _refresh_bg(inst, _):
+            inst.canvas.before.clear()
+            with inst.canvas.before:
+                Color(rgba=(1, 1, 1, 1))
+                RoundedRectangle(pos=inst.pos, size=inst.size, radius=[16, 16, 16, 16])
+        content.bind(pos=_refresh_bg, size=_refresh_bg)
 
     def test_connection(self):
         """Test the AI API connection with current settings."""

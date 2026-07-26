@@ -182,9 +182,13 @@ class FavoritesScreen(Screen):
         self.manager.current = "learn"
 
     def clear_all(self):
+        from kivy.graphics import Color, RoundedRectangle
         content = BoxLayout(orientation='vertical', spacing=12, padding=16)
+        with content.canvas.before:
+            Color(rgba=(1, 1, 1, 1))
+            RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
         content.add_widget(Label(text='确定清空所有收藏？', font_name='ChineseFont',
-            font_size='15sp', color=(0.102,0.110,0.118,1), halign='center'))
+            font_size='15sp', color=(0.067, 0.078, 0.086, 1), halign='center'))
         btns = BoxLayout(size_hint_y=None, height=44, spacing=12)
         cb = Button(text='取消', font_name='ChineseFont', font_size='15sp',
             background_normal='', background_color=(0.953,0.957,0.953,1),
@@ -195,22 +199,51 @@ class FavoritesScreen(Screen):
         btns.add_widget(ok)
         content.add_widget(btns)
         popup = Popup(title='确认', content=content, size_hint=(0.8,0.35), auto_dismiss=False)
-        popup.background_color = (0.969, 0.973, 0.969, 1)
-        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.background = ''
+        popup.background_color = (0, 0, 0, 0)
+        popup.separator_color = (0, 0, 0, 0)
         popup.title_color = (0.067, 0.078, 0.086, 1)
+
+        def _ref(inst, _):
+            inst.canvas.before.clear()
+            with inst.canvas.before:
+                Color(rgba=(1, 1, 1, 1))
+                RoundedRectangle(pos=inst.pos, size=inst.size, radius=[16]*4)
+        content.bind(pos=_ref, size=_ref)
+
         cb.bind(on_press=lambda x: popup.dismiss())
         ok.bind(on_press=lambda x: [clear_favorites(), popup.dismiss(), self._refresh()])
         popup.open()
 
     def _toast(self, msg):
-        popup = Popup(title='', content=Label(text=msg, font_name='ChineseFont',
-            font_size='15sp', color=(0.067, 0.078, 0.086, 1)),
-            size_hint=(0.7,0.2), auto_dismiss=True)
-        popup.background_color = (0.969, 0.973, 0.969, 1)
-        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        from kivy.uix.popup import Popup
+        from kivy.uix.label import Label
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.graphics import Color, RoundedRectangle
+        from kivy.clock import Clock
+
+        content = BoxLayout(padding=[20, 14])
+        with content.canvas.before:
+            Color(rgba=(1, 1, 1, 1))
+            RoundedRectangle(pos=content.pos, size=content.size, radius=[16, 16, 16, 16])
+        content.add_widget(Label(text=msg, font_name='ChineseFont',
+            font_size='15sp', color=(0.067, 0.078, 0.086, 1)))
+
+        popup = Popup(title='', content=content,
+            size_hint=(0.7, None), height=60, auto_dismiss=True)
+        popup.background = ''
+        popup.background_color = (0, 0, 0, 0)
+        popup.separator_color = (0, 0, 0, 0)
         popup.title_color = (0.067, 0.078, 0.086, 1)
         popup.open()
         Clock.schedule_once(lambda dt: popup.dismiss(), 2)
+
+        def _ref(inst, _):
+            inst.canvas.before.clear()
+            with inst.canvas.before:
+                Color(rgba=(1, 1, 1, 1))
+                RoundedRectangle(pos=inst.pos, size=inst.size, radius=[16, 16, 16, 16])
+        content.bind(pos=_ref, size=_ref)
 
     def go_home(self):
         self.manager.current = "home"
