@@ -75,7 +75,7 @@ Builder.load_string("""
                     height: 40
 
                 Label:
-                    text: '点击下方按钮导入中英字幕文件 \n开始回译训练'
+                    text: '点击下方按钮导入中英字幕文件 \\n开始回译训练'
                     font_name: 'ChineseFont'
                     font_size: '16sp'
                     color: 0.533, 0.533, 0.533, 1
