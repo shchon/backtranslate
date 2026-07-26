@@ -315,24 +315,60 @@ class LearnScreen(Screen):
         from kivy.uix.boxlayout import BoxLayout
         from kivy.uix.button import Button
         from kivy.uix.label import Label
+        from kivy.uix.textinput import TextInput
+        from kivy.utils import platform
 
-        content = BoxLayout(orientation='vertical', spacing=8, padding=16)
+        content = BoxLayout(orientation='vertical', spacing=10, padding=16)
 
         prompt_label = Label(
             text='请选择 SRT 文件所在目录',
             font_name='ChineseFont',
-            font_size='15sp',
+            font_size='17sp',
             size_hint_y=None,
-            height=30,
+            height=36,
             color=(0.8, 0.8, 0.8, 1),
         )
         content.add_widget(prompt_label)
 
+        # On Android, start from external storage; on desktop, use home dir
+        if platform == 'android':
+            try:
+                from android.storage import primary_external_storage_path
+                start_path = primary_external_storage_path()
+            except Exception:
+                start_path = '/sdcard/'
+            if not start_path or not os.path.isdir(start_path):
+                start_path = '/sdcard/'
+        else:
+            start_path = os.path.expanduser('~')
+
+        # Path input for quick navigation
+        path_input = TextInput(
+            text=start_path,
+            font_name='ChineseFont',
+            font_size='15sp',
+            size_hint_y=None,
+            height=44,
+            multiline=False,
+            hint_text='输入路径后回车跳转',
+        )
+        content.add_widget(path_input)
+
         filechooser = FileChooserListView(
             filters=['*.srt'],
-            path=os.path.expanduser('~'),
+            path=start_path,
         )
         content.add_widget(filechooser)
+
+        # Navigate to path when user presses Enter
+        def on_path_submit(instance):
+            p = instance.text.strip()
+            if os.path.isdir(p):
+                filechooser.path = p
+            elif os.path.isdir(os.path.dirname(p)):
+                filechooser.path = os.path.dirname(p)
+
+        path_input.bind(on_text_validate=on_path_submit)
 
         btn_layout = BoxLayout(size_hint_y=None, height=44, spacing=12)
         cancel_btn = Button(
