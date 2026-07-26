@@ -72,13 +72,7 @@ Builder.load_string("""
                     height: 150
                     padding: [20, 18]
                     spacing: 8
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [16, 16, 16, 16]
+
                     Label:
                         text: '今日学习'
                         font_name: 'ChineseFont'
@@ -126,13 +120,7 @@ Builder.load_string("""
                     size_hint_y: None
                     height: 72
                     padding: [20, 0]
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [16, 16, 16, 16]
+
                     on_release: root.go_learn()
                     Widget:
                         size_hint_x: None
@@ -179,13 +167,7 @@ Builder.load_string("""
                     size_hint_y: None
                     height: 72
                     padding: [20, 0]
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [16, 16, 16, 16]
+
                     on_release: root.go_review()
                     Widget:
                         size_hint_x: None
@@ -232,13 +214,7 @@ Builder.load_string("""
                     size_hint_y: None
                     height: 72
                     padding: [20, 0]
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [16, 16, 16, 16]
+
                     on_release: root.go_favorites()
                     Widget:
                         size_hint_x: None
@@ -285,13 +261,7 @@ Builder.load_string("""
                     size_hint_y: None
                     height: 72
                     padding: [20, 0]
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [16, 16, 16, 16]
+
                     on_release: root.go_expressions()
                     Widget:
                         size_hint_x: None
@@ -338,13 +308,7 @@ Builder.load_string("""
                     size_hint_y: None
                     height: 60
                     padding: [20, 0]
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [16, 16, 16, 16]
+
                     on_release: root.go_settings()
                     Widget:
                         size_hint_x: None

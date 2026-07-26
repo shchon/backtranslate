@@ -81,18 +81,7 @@ Builder.load_string("""
                     padding: [16, 12]
                     multiline: False
                     background_color: 1, 1, 1, 1
-                    foreground_color: 0.067, 0.078, 0.086, 1
-                    canvas.before:
-                        Color:
-
-                            rgba: 0.902, 0.910, 0.902, 1
-                        RoundedRectangle:
-
-                            pos: self.pos
-
-                            size: self.size
-
-                            radius: [12]*4
+                    foreground_color: 0, 0, 0, 1
 
                 # ── API Key ──
                 Label:
@@ -116,18 +105,7 @@ Builder.load_string("""
                     multiline: False
                     password: True
                     background_color: 1, 1, 1, 1
-                    foreground_color: 0.067, 0.078, 0.086, 1
-                    canvas.before:
-                        Color:
-
-                            rgba: 0.902, 0.910, 0.902, 1
-                        RoundedRectangle:
-
-                            pos: self.pos
-
-                            size: self.size
-
-                            radius: [12]*4
+                    foreground_color: 0, 0, 0, 1
 
                 # ── 模型 ──
                 Label:
@@ -150,18 +128,7 @@ Builder.load_string("""
                     padding: [16, 12]
                     multiline: False
                     background_color: 1, 1, 1, 1
-                    foreground_color: 0.067, 0.078, 0.086, 1
-                    canvas.before:
-                        Color:
-
-                            rgba: 0.902, 0.910, 0.902, 1
-                        RoundedRectangle:
-
-                            pos: self.pos
-
-                            size: self.size
-
-                            radius: [12]*4
+                    foreground_color: 0, 0, 0, 1
 
                 # ── 上下文 ──
                 Label:
@@ -188,18 +155,7 @@ Builder.load_string("""
                         multiline: False
                         input_filter: 'int'
                         background_color: 1, 1, 1, 1
-                        foreground_color: 0.067, 0.078, 0.086, 1
-                        canvas.before:
-                            Color:
-
-                                rgba: 0.902, 0.910, 0.902, 1
-                            RoundedRectangle:
-
-                                pos: self.pos
-
-                                size: self.size
-
-                                radius: [12]*4
+                        foreground_color: 0, 0, 0, 1
                     Label:
                         text: '前后各取 N 句作为上下文'
                         font_name: 'ChineseFont'
@@ -226,18 +182,7 @@ Builder.load_string("""
                     height: 140
                     padding: [16, 14]
                     background_color: 1, 1, 1, 1
-                    foreground_color: 0.067, 0.078, 0.086, 1
-                    canvas.before:
-                        Color:
-
-                            rgba: 0.902, 0.910, 0.902, 1
-                        RoundedRectangle:
-
-                            pos: self.pos
-
-                            size: self.size
-
-                            radius: [12]*4
+                    foreground_color: 0, 0, 0, 1
 
                 # ── Save ──
                 Button:
@@ -251,17 +196,6 @@ Builder.load_string("""
                     background_normal: ''
                     background_color: 0.420, 0.565, 0.502, 1
                     on_press: root.save_settings()
-                    canvas.before:
-                        Color:
-
-                            rgba: 0.420, 0.565, 0.502, 1
-                        RoundedRectangle:
-
-                            pos: self.pos
-
-                            size: self.size
-
-                            radius: [12]*4
 
                 # ── Reset ──
                 Button:
@@ -274,17 +208,6 @@ Builder.load_string("""
                     background_normal: ''
                     background_color: 0.890, 0.898, 0.886, 1
                     on_press: root.reset_defaults()
-                    canvas.before:
-                        Color:
-
-                            rgba: 0.890, 0.898, 0.886, 1
-                        RoundedRectangle:
-
-                            pos: self.pos
-
-                            size: self.size
-
-                            radius: [12]*4
 
                 Widget:
                     size_hint_y: None

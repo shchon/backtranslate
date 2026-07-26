@@ -69,19 +69,8 @@ Builder.load_string("""
             padding: [16, 12]
             multiline: False
             background_color: 1, 1, 1, 1
-            foreground_color: 0.067, 0.078, 0.086, 1
+            foreground_color: 0, 0, 0, 1
             on_text: root._refresh()
-            canvas.before:
-                Color:
-
-                    rgba: 0.902, 0.910, 0.902, 1
-                RoundedRectangle:
-
-                    pos: self.pos
-
-                    size: self.size
-
-                    radius: [12]*4
 
         ScrollView:
             BoxLayout:
