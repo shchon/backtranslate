@@ -341,6 +341,9 @@ class LearnScreen(Screen):
             content.add_widget(Label(text='该目录无 SRT 文件', font_name='ChineseFont',
                 size_hint_y=None, height=40, color=(0.878, 0.345, 0.298, 1)))
             popup = Popup(title='导入字幕', content=content, size_hint=(0.85, 0.5), auto_dismiss=False)
+            popup.background_color = (0.969, 0.973, 0.969, 1)
+            popup.separator_color = (0.890, 0.898, 0.886, 1)
+            popup.title_color = (0.067, 0.078, 0.086, 1)
             btn = Button(text='关闭', font_name='ChineseFont', size_hint_y=None, height=44,
                 background_normal='', background_color=(0.95,0.95,0.95,1), color=(0.4,0.4,0.4,1))
             btn.bind(on_press=lambda x: popup.dismiss())
@@ -363,6 +366,9 @@ class LearnScreen(Screen):
         content.add_widget(scroll)
 
         popup = Popup(title='选择中文 SRT', content=content, size_hint=(0.9, 0.8), auto_dismiss=False)
+        popup.background_color = (0.969, 0.973, 0.969, 1)
+        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.title_color = (0.067, 0.078, 0.086, 1)
         popup.open()
         self._srt_popup = popup
         self._srt_folder = folder
@@ -405,6 +411,9 @@ class LearnScreen(Screen):
             background_normal='', background_color=(0.95,0.95,0.95,1), color=(0.4,0.4,0.4,1))
         content.add_widget(cancel)
         popup = Popup(title='选择英文 SRT', content=content, size_hint=(0.9, 0.8), auto_dismiss=False)
+        popup.background_color = (0.969, 0.973, 0.969, 1)
+        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.title_color = (0.067, 0.078, 0.086, 1)
         cancel.bind(on_press=lambda x: popup.dismiss())
         popup.open()
         self._en_srt_popup = popup
@@ -447,6 +456,9 @@ class LearnScreen(Screen):
         content.add_widget(btns)
 
         popup = Popup(title='导入字幕', content=content, size_hint=(0.9, 0.8), auto_dismiss=False)
+        popup.background_color = (0.969, 0.973, 0.969, 1)
+        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.title_color = (0.067, 0.078, 0.086, 1)
         self._selected_ch_path = None
         self._selected_en_path = None
         self._select_step = 1
@@ -609,6 +621,9 @@ class LearnScreen(Screen):
             background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1), font_size='15sp')
         content.add_widget(btn)
         popup = Popup(title=title, content=content, size_hint=(0.8, 0.5), auto_dismiss=False)
+        popup.background_color = (0.969, 0.973, 0.969, 1)
+        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.title_color = (0.067, 0.078, 0.086, 1)
         btn.bind(on_press=lambda x: popup.dismiss())
         popup.open()
 

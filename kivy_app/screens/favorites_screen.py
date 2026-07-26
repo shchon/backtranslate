@@ -195,14 +195,20 @@ class FavoritesScreen(Screen):
         btns.add_widget(ok)
         content.add_widget(btns)
         popup = Popup(title='确认', content=content, size_hint=(0.8,0.35), auto_dismiss=False)
+        popup.background_color = (0.969, 0.973, 0.969, 1)
+        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.title_color = (0.067, 0.078, 0.086, 1)
         cb.bind(on_press=lambda x: popup.dismiss())
         ok.bind(on_press=lambda x: [clear_favorites(), popup.dismiss(), self._refresh()])
         popup.open()
 
     def _toast(self, msg):
         popup = Popup(title='', content=Label(text=msg, font_name='ChineseFont',
-            font_size='15sp', color=(0.102,0.110,0.118,1)),
+            font_size='15sp', color=(0.067, 0.078, 0.086, 1)),
             size_hint=(0.7,0.2), auto_dismiss=True)
+        popup.background_color = (0.969, 0.973, 0.969, 1)
+        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.title_color = (0.067, 0.078, 0.086, 1)
         popup.open()
         Clock.schedule_once(lambda dt: popup.dismiss(), 2)
 

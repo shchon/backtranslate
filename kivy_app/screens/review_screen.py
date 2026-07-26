@@ -237,6 +237,8 @@ class ReviewScreen(Screen):
         popup = Popup(title=f'#{sub["idx"]} 详情', content=scroll,
                       size_hint=(0.9, 0.85), auto_dismiss=True)
         popup.background_color = (0.969, 0.973, 0.969, 1)
+        popup.separator_color = (0.890, 0.898, 0.886, 1)
+        popup.title_color = (0.067, 0.078, 0.086, 1)
 
         content.add_widget(Label(text=sub['chinese'], font_name='ChineseFont',
             font_size='18sp', bold=True, color=(0.102,0.110,0.118,1),
