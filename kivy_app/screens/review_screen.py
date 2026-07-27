@@ -286,7 +286,7 @@ class ReviewScreen(Screen):
 
         # Redo
         ri = TextInput(hint_text='重新翻译……', font_name='ChineseFont',
-            font_size='15sp', size_hint_y=None, height=40, multiline=False,
+            font_size='13sp', size_hint_y=None, height=40, multiline=False,
             background_color=(0.890,0.898,0.886,1), foreground_color=(0.067,0.078,0.086,1),
             padding=[14,10])
         rb = Button(text='提交重新翻译', font_name='ChineseFont', font_size='15sp', bold=True,

@@ -63,7 +63,7 @@ Builder.load_string("""
             hint_text: '🔍 搜索表达……'
             hint_text_color: 0.420, 0.447, 0.475, 1
             font_name: 'ChineseFont'
-            font_size: '15sp'
+            font_size: '13sp'
             size_hint_y: None
             height: 44
             padding: [16, 12]

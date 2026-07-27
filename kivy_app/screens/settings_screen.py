@@ -75,7 +75,7 @@ Builder.load_string("""
                     hint_text: '例如 https://api.deepseek.com'
                     hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
-                    font_size: '15sp'
+                    font_size: '13sp'
                     size_hint_y: None
                     height: 48
                     padding: [16, 12]
@@ -122,7 +122,7 @@ Builder.load_string("""
                     hint_text: '例如 deepseek-chat'
                     hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
-                    font_size: '15sp'
+                    font_size: '13sp'
                     size_hint_y: None
                     height: 48
                     padding: [16, 12]
@@ -148,7 +148,7 @@ Builder.load_string("""
                         id: context_input
                         text: '1'
                         font_name: 'ChineseFont'
-                        font_size: '15sp'
+                        font_size: '13sp'
                         size_hint_x: None
                         width: 80
                         padding: [16, 12]
@@ -177,7 +177,7 @@ Builder.load_string("""
                     hint_text: 'AI 评分提示词模板……'
                     hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
-                    font_size: '14sp'
+                    font_size: '12sp'
                     size_hint_y: None
                     height: 140
                     padding: [16, 14]

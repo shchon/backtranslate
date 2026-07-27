@@ -155,7 +155,7 @@ Builder.load_string("""
                 hint_text: '输入英文翻译……'
                 hint_text_color: 0.420, 0.447, 0.475, 1
                 font_name: 'ChineseFont'
-                font_size: '16sp'
+                font_size: '14sp'
                 size_hint_y: None
                 height: 52
                 multiline: False
@@ -445,7 +445,7 @@ class LearnScreen(Screen):
         content.add_widget(Label(text='选择 SRT 目录',
             font_size='15sp', size_hint_y=None, height=36, color=(0.067, 0.078, 0.086, 1)))
 
-        pi = TextInput(text=os.path.expanduser('~'), font_size='14sp',
+        pi = TextInput(text=os.path.expanduser('~'), font_size='12sp',
             size_hint_y=None, height=44, multiline=False, hint_text='输入路径',
             background_color=(1, 1, 1, 1), foreground_color=(0, 0, 0, 1),
             hint_text_color=(0.420, 0.447, 0.475, 1))
