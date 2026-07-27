@@ -16,18 +16,6 @@ from backtranslate.srt.parser import parse_srt
 from backtranslate.srt.pairing import pair_by_index, pair_by_timecode
 
 Builder.load_string("""
-# ── FileChooser light-theme overrides ──
-<FileChooserListView>:
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-
-<FileChooserListEntry>:
-    color: 0, 0, 0, 1
-
 <LearnScreen>:
     BoxLayout:
         orientation: 'vertical'
