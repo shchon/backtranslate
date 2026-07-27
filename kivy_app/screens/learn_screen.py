@@ -442,9 +442,6 @@ class LearnScreen(Screen):
         from kivy.uix.textinput import TextInput
 
         content = BoxLayout(orientation='vertical', spacing=10, padding=16)
-        with content.canvas.before:
-            Color(rgba=(1, 1, 1, 1))
-            RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
         content.add_widget(Label(text='选择 SRT 目录',
             font_size='15sp', size_hint_y=None, height=36, color=(0.067, 0.078, 0.086, 1)))
 
@@ -469,9 +466,9 @@ class LearnScreen(Screen):
 
         popup = Popup(title='导入字幕', content=content, size_hint=(0.9, 0.8), auto_dismiss=False)
         popup.background = ""
-        popup.background_color = (0.969, 0.973, 0.969, 1)
-        popup.separator_color = (0.890, 0.898, 0.886, 1)
-        popup.title_color = (0.067, 0.078, 0.086, 1)
+        popup.background_color = (0.18, 0.18, 0.22, 1)
+        popup.separator_color = (0.3, 0.3, 0.4, 1)
+        popup.title_color = (0.9, 0.9, 0.9, 1)
         self._selected_ch_path = None
         self._selected_en_path = None
         self._select_step = 1
