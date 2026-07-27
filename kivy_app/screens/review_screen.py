@@ -51,12 +51,12 @@ Builder.load_string("""
                 background_color: 0,0,0,0
                 color: 0.420, 0.565, 0.502, 1
                 font_name: 'ChineseFont'
-                font_size: '13sp'
+                font_size: '10sp'
                 on_press: root.go_home()
             Label:
                 text: '复盘'
                 font_name: 'ChineseFont'
-                font_size: '17sp'
+                font_size: '14sp'
                 bold: True
                 color: 0.067, 0.078, 0.086, 1
             Widget:
@@ -67,7 +67,7 @@ Builder.load_string("""
             id: summary_label
             text: ''
             font_name: 'ChineseFont'
-            font_size: '10sp'
+            font_size: '7sp'
             color: 0.302, 0.325, 0.349, 1
             size_hint_y: None
             height: 36
@@ -135,32 +135,32 @@ class ReviewScreen(Screen):
             # Header row
             hdr = BoxLayout(size_hint_y=None, height=30, spacing=8)
             hdr.add_widget(Label(text=f"#{sub['idx']}", font_name='ChineseFont',
-                font_size='9sp', color=(0.420, 0.447, 0.475, 1), size_hint_x=None, width=32))
+                font_size='6sp', color=(0.420, 0.447, 0.475, 1), size_hint_x=None, width=32))
             hdr.add_widget(Label(text=sub['chinese'], font_name='ChineseFont',
-                font_size='13sp', color=(0.067, 0.078, 0.086, 1),
+                font_size='10sp', color=(0.067, 0.078, 0.086, 1),
                 halign='left'))
             hdr.add_widget(Widget(size_hint_x=1))
 
             # Status badge
             if not ev or ev["status"] == "pending":
-                st = Label(text='⏳ 等待', font_name='ChineseFont', font_size='8sp',
+                st = Label(text='⏳ 等待', font_name='ChineseFont', font_size='6sp',
                     color=(0.420, 0.447, 0.475, 1), size_hint_x=None, width=54)
             elif ev["status"] == "processing":
-                st = Label(text='🔄 批改中', font_name='ChineseFont', font_size='8sp',
+                st = Label(text='🔄 批改中', font_name='ChineseFont', font_size='6sp',
                     color=(0.925, 0.596, 0.235, 1), size_hint_x=None, width=54)
             elif ev["status"] == "failed":
-                st = Label(text='❌ 失败', font_name='ChineseFont', font_size='8sp',
+                st = Label(text='❌ 失败', font_name='ChineseFont', font_size='6sp',
                     color=(0.878, 0.345, 0.298, 1), size_hint_x=None, width=54)
             else:
                 a = (ev["meaning_score"]+ev["grammar_score"]+ev["naturalness_score"]+ev["subtitle_style_score"])/4
                 c = (0.357,0.620,0.490,1) if a>=80 else (0.925,0.596,0.235,1) if a>=60 else (0.878,0.345,0.298,1)
-                st = Label(text=f'{a:.0f}', font_name='ChineseFont', font_size='11sp', bold=True,
+                st = Label(text=f'{a:.0f}', font_name='ChineseFont', font_size='8sp', bold=True,
                     color=c, size_hint_x=None, width=44)
             hdr.add_widget(st)
 
             # Fav star
             is_fav = is_favorite(sub['id'])
-            fbtn = Button(text='★' if is_fav else '☆', font_size='19sp',
+            fbtn = Button(text='★' if is_fav else '☆', font_size='16sp',
                 size_hint_x=None, width=40,
                 background_normal='', background_color=(0,0,0,0),
                 color=(0.925,0.596,0.235,1) if is_fav else (0.420,0.447,0.475,1))
@@ -173,7 +173,7 @@ class ReviewScreen(Screen):
             ut = get_latest_translation(sub["id"])
             if ut:
                 card.add_widget(Label(text=f'你的翻译: {ut}', font_name='ChineseFont',
-                    font_size='11sp', color=(0.376,0.533,0.820,1),
+                    font_size='8sp', color=(0.376,0.533,0.820,1),
                     size_hint_y=None, height=22, halign='left'))
 
             # Scores
@@ -184,12 +184,12 @@ class ReviewScreen(Screen):
                     s = ev[k]
                     c = (0.357,0.620,0.490,1) if s>=80 else (0.925,0.596,0.235,1) if s>=60 else (0.878,0.345,0.298,1)
                     sr.add_widget(Label(text=f'{n} {s}', font_name='ChineseFont',
-                        font_size='8sp', color=c, size_hint_x=None, width=64))
+                        font_size='6sp', color=c, size_hint_x=None, width=64))
                 sr.add_widget(Widget())
                 card.add_widget(sr)
 
             # Expand
-            xbtn = Button(text='查看详情 ›', font_size='10sp',
+            xbtn = Button(text='查看详情 ›', font_size='7sp',
                 color=(0.420, 0.565, 0.502, 1),
                 size_hint_y=None, height=28,
                 background_normal='', background_color=(0,0,0,0))
@@ -207,7 +207,7 @@ class ReviewScreen(Screen):
 
         if not layout.children:
             layout.add_widget(Label(text='暂无数据', font_name='ChineseFont',
-                font_size='12sp', color=(0.302,0.325,0.349,1), size_hint_y=None, height=200))
+                font_size='9sp', color=(0.302,0.325,0.349,1), size_hint_y=None, height=200))
 
     def _on_fav_toggle(self, btn):
         sid = btn.subtitle_id
@@ -252,28 +252,28 @@ class ReviewScreen(Screen):
         content.bind(pos=_ref, size=_ref)
 
         content.add_widget(Label(text=sub['chinese'], font_name='ChineseFont',
-            font_size='15sp', bold=True, color=(0.067,0.078,0.086,1),
+            font_size='12sp', bold=True, color=(0.067,0.078,0.086,1),
             size_hint_y=None, height=50, text_size=(320,None), halign='left'))
 
         ut = get_latest_translation(sub["id"])
         if ut:
             content.add_widget(Label(text=f'你的翻译: {ut}', font_name='ChineseFont',
-                font_size='11sp', color=(0.376,0.533,0.820,1),
+                font_size='8sp', color=(0.376,0.533,0.820,1),
                 size_hint_y=None, height=26))
 
         if ev and ev["status"] == "done" and ev.get("analysis_text"):
             al = Label(text=ev["analysis_text"], font_name='ChineseFont',
-                font_size='11sp', color=(0.067,0.078,0.086,1),
+                font_size='8sp', color=(0.067,0.078,0.086,1),
                 size_hint_y=None, height=80, text_size=(320,None), halign='left')
             al.bind(texture_size=lambda inst, val: setattr(inst, 'height', max(60,val[1])))
             content.add_widget(al)
 
         # Official
-        obtn = Button(text='查看官方字幕 ▸', font_size='10sp',
+        obtn = Button(text='查看官方字幕 ▸', font_size='7sp',
             color=(0.420,0.565,0.502,1), size_hint_y=None, height=32,
             background_normal='', background_color=(0,0,0,0))
         ol = Label(text=sub['english_official'], font_name='ChineseFont',
-            font_size='11sp', color=(0.302,0.325,0.349,1),
+            font_size='8sp', color=(0.302,0.325,0.349,1),
             size_hint_y=None, height=26, opacity=0, disabled=True,
             text_size=(320,None))
         def toggle(o):
@@ -286,10 +286,10 @@ class ReviewScreen(Screen):
 
         # Redo
         ri = TextInput(hint_text='重新翻译……', font_name='ChineseFont',
-            font_size='10sp', size_hint_y=None, height=40, multiline=False,
+            font_size='7sp', size_hint_y=None, height=40, multiline=False,
             background_color=(0.890,0.898,0.886,1), foreground_color=(0.067,0.078,0.086,1),
             padding=[14,10])
-        rb = Button(text='提交重新翻译', font_name='ChineseFont', font_size='12sp', bold=True,
+        rb = Button(text='提交重新翻译', font_name='ChineseFont', font_size='9sp', bold=True,
             size_hint_y=None, height=44,
             background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1))
         def redo(b):
@@ -314,7 +314,7 @@ class ReviewScreen(Screen):
         content.add_widget(ri)
         content.add_widget(rb)
 
-        cb = Button(text='关闭', font_name='ChineseFont', font_size='12sp',
+        cb = Button(text='关闭', font_name='ChineseFont', font_size='9sp',
             size_hint_y=None, height=44,
             background_normal='', background_color=(0.890,0.898,0.886,1),
             color=(0.302,0.325,0.349,1))

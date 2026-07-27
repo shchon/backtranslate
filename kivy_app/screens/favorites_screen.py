@@ -52,12 +52,12 @@ Builder.load_string("""
                 background_color: 0,0,0,0
                 color: 0.420, 0.565, 0.502, 1
                 font_name: 'ChineseFont'
-                font_size: '13sp'
+                font_size: '10sp'
                 on_press: root.go_home()
             Label:
                 text: '收藏夹'
                 font_name: 'ChineseFont'
-                font_size: '17sp'
+                font_size: '14sp'
                 bold: True
                 color: 0.067, 0.078, 0.086, 1
             Button:
@@ -68,7 +68,7 @@ Builder.load_string("""
                 background_color: 0,0,0,0
                 color: 0.420, 0.565, 0.502, 1
                 font_name: 'ChineseFont'
-                font_size: '12sp'
+                font_size: '9sp'
                 on_press: root.start_review()
             Button:
                 text: '清空'
@@ -78,14 +78,14 @@ Builder.load_string("""
                 background_color: 0,0,0,0
                 color: 0.878, 0.345, 0.298, 1
                 font_name: 'ChineseFont'
-                font_size: '12sp'
+                font_size: '9sp'
                 on_press: root.clear_all()
 
         Label:
             id: count_label
             text: ''
             font_name: 'ChineseFont'
-            font_size: '10sp'
+            font_size: '7sp'
             color: 0.302, 0.325, 0.349, 1
             size_hint_y: None
             height: 32
@@ -114,7 +114,7 @@ class FavoritesScreen(Screen):
 
         if not favs:
             layout.add_widget(Label(text='暂无收藏句子', font_name='ChineseFont',
-                font_size='12sp', color=(0.408,0.439,0.471,1), size_hint_y=None, height=200))
+                font_size='9sp', color=(0.408,0.439,0.471,1), size_hint_y=None, height=200))
             return
 
         for i, f in enumerate(favs):
@@ -133,10 +133,10 @@ class FavoritesScreen(Screen):
 
             row = BoxLayout(size_hint_y=None, height=36, spacing=8)
             row.add_widget(Label(text=f"#{i+1}", font_name='ChineseFont',
-                font_size='9sp', color=(0.616,0.643,0.667,1), size_hint_x=None, width=32))
+                font_size='6sp', color=(0.616,0.643,0.667,1), size_hint_x=None, width=32))
             row.add_widget(Label(text=f["chinese"], font_name='ChineseFont',
-                font_size='13sp', color=(0.102,0.110,0.118,1), halign='left'))
-            db = Button(text='×', font_size='17sp', color=(0.878,0.345,0.298,1),
+                font_size='10sp', color=(0.102,0.110,0.118,1), halign='left'))
+            db = Button(text='×', font_size='14sp', color=(0.878,0.345,0.298,1),
                 size_hint_x=None, width=36, background_normal='', background_color=(0,0,0,0))
             db.fav_id = f["id"]
             db.bind(on_press=self._delete)
@@ -144,11 +144,11 @@ class FavoritesScreen(Screen):
             card.add_widget(row)
 
             # English toggle
-            eb = Button(text='查看英文 ▸', font_name='ChineseFont', font_size='10sp',
+            eb = Button(text='查看英文 ▸', font_name='ChineseFont', font_size='7sp',
                 color=(0.420,0.565,0.502,1), size_hint_y=None, height=24,
                 background_normal='', background_color=(0,0,0,0), halign='left')
             el = Label(text=f["english_official"], font_name='ChineseFont',
-                font_size='11sp', color=(0.408,0.439,0.471,1),
+                font_size='8sp', color=(0.408,0.439,0.471,1),
                 size_hint_y=None, height=22, opacity=0, disabled=True,
                 text_size=(self.width-40,None))
             def toggle_en(b, l=el):
@@ -188,12 +188,12 @@ class FavoritesScreen(Screen):
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
         content.add_widget(Label(text='确定清空所有收藏？', font_name='ChineseFont',
-            font_size='12sp', color=(0.067, 0.078, 0.086, 1), halign='center'))
+            font_size='9sp', color=(0.067, 0.078, 0.086, 1), halign='center'))
         btns = BoxLayout(size_hint_y=None, height=44, spacing=12)
-        cb = Button(text='取消', font_name='ChineseFont', font_size='12sp',
+        cb = Button(text='取消', font_name='ChineseFont', font_size='9sp',
             background_normal='', background_color=(0.953,0.957,0.953,1),
             color=(0.408,0.439,0.471,1))
-        ok = Button(text='清空', font_name='ChineseFont', font_size='12sp', bold=True,
+        ok = Button(text='清空', font_name='ChineseFont', font_size='9sp', bold=True,
             background_normal='', background_color=(0.878,0.345,0.298,1), color=(1,1,1,1))
         btns.add_widget(cb)
         btns.add_widget(ok)
@@ -226,7 +226,7 @@ class FavoritesScreen(Screen):
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16, 16, 16, 16])
         content.add_widget(Label(text=msg, font_name='ChineseFont',
-            font_size='12sp', color=(0.067, 0.078, 0.086, 1)))
+            font_size='9sp', color=(0.067, 0.078, 0.086, 1)))
 
         popup = Popup(title='', content=content,
             size_hint=(0.7, None), height=60, auto_dismiss=True)
