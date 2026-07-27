@@ -25,6 +25,9 @@ Builder.load_string("""
             pos: self.pos
             size: self.size
 
+<FileChooserListEntry>:
+    color: 0, 0, 0, 1
+
 <LearnScreen>:
     BoxLayout:
         orientation: 'vertical'
