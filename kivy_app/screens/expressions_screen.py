@@ -45,12 +45,12 @@ Builder.load_string("""
                 background_color: 0,0,0,0
                 color: 0.420, 0.565, 0.502, 1
                 font_name: 'ChineseFont'
-                font_size: '7sp'
+                font_size: '9sp'
                 on_press: root.go_home()
             Label:
                 text: '表达库'
                 font_name: 'ChineseFont'
-                font_size: '11sp'
+                font_size: '13sp'
                 bold: True
                 color: 0.067, 0.078, 0.086, 1
             Widget:
@@ -63,7 +63,7 @@ Builder.load_string("""
             hint_text: '🔍 搜索表达……'
             hint_text_color: 0.420, 0.447, 0.475, 1
             font_name: 'ChineseFont'
-            font_size: '6sp'
+            font_size: '8sp'
             size_hint_y: None
             height: 44
             padding: [16, 12]
@@ -111,8 +111,8 @@ class ExpressionsScreen(Screen):
 
             row = BoxLayout(size_hint_y=None, height=32, spacing=8)
             row.add_widget(Label(text=expr["phrase"], font_name='ChineseFont',
-                font_size='7sp', bold=True, color=(0.102,0.110,0.118,1), halign='left'))
-            db = Button(text='删除', font_name='ChineseFont', font_size='6sp',
+                font_size='9sp', bold=True, color=(0.102,0.110,0.118,1), halign='left'))
+            db = Button(text='删除', font_name='ChineseFont', font_size='8sp',
                 color=(0.878,0.345,0.298,1), size_hint_x=None, width=48,
                 background_normal='', background_color=(0,0,0,0))
             db.expr_id = expr["id"]
@@ -123,7 +123,7 @@ class ExpressionsScreen(Screen):
 
         if not layout.children:
             layout.add_widget(Label(text='还没有收藏的表达', font_name='ChineseFont',
-                font_size='6sp', color=(0.408,0.439,0.471,1), size_hint_y=None, height=200))
+                font_size='8sp', color=(0.408,0.439,0.471,1), size_hint_y=None, height=200))
 
     def _delete(self, btn):
         delete_expression(btn.expr_id)

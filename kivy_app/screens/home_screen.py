@@ -25,7 +25,7 @@ Builder.load_string("""
             Label:
                 text: '你好 👋'
                 font_name: 'ChineseFont'
-                font_size: '15sp'
+                font_size: '17sp'
                 bold: True
                 color: 0.067, 0.078, 0.086, 1
                 halign: 'left'
@@ -33,7 +33,7 @@ Builder.load_string("""
             Label:
                 text: '🔥 ' + root.streak + ' 天'
                 font_name: 'ChineseFont'
-                font_size: '6sp'
+                font_size: '8sp'
                 color: 0.302, 0.325, 0.349, 1
                 size_hint_x: None
                 width: 120
@@ -66,7 +66,7 @@ Builder.load_string("""
                     Label:
                         text: '今日学习'
                         font_name: 'ChineseFont'
-                        font_size: '6sp'
+                        font_size: '8sp'
                         color: 0.302, 0.325, 0.349, 1
                         size_hint_y: None
                         height: 22
@@ -74,7 +74,7 @@ Builder.load_string("""
                     Label:
                         text: root.today + ' 句'
                         font_name: 'ChineseFont'
-                        font_size: '27sp'
+                        font_size: '29sp'
                         bold: True
                         color: 0.420, 0.565, 0.502, 1
                         size_hint_y: None
@@ -83,7 +83,7 @@ Builder.load_string("""
                     Label:
                         text: '总计 ' + root.total + ' 句'
                         font_name: 'ChineseFont'
-                        font_size: '6sp'
+                        font_size: '8sp'
                         color: 0.302, 0.325, 0.349, 1
                         size_hint_y: None
                         height: 20
@@ -93,7 +93,7 @@ Builder.load_string("""
                 Label:
                     text: '学习工具'
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     bold: True
                     color: 0.302, 0.325, 0.349, 1
                     size_hint_y: None
@@ -109,7 +109,7 @@ Builder.load_string("""
                     background_color: 1, 1, 1, 1
                     color: 0.067, 0.078, 0.086, 1
                     font_name: 'ChineseFont'
-                    font_size: '8sp'
+                    font_size: '10sp'
                     bold: True
                     halign: 'left'
                     valign: 'middle'
@@ -131,7 +131,7 @@ Builder.load_string("""
                     background_color: 1, 1, 1, 1
                     color: 0.067, 0.078, 0.086, 1
                     font_name: 'ChineseFont'
-                    font_size: '8sp'
+                    font_size: '10sp'
                     bold: True
                     halign: 'left'
                     valign: 'middle'
@@ -153,7 +153,7 @@ Builder.load_string("""
                     background_color: 1, 1, 1, 1
                     color: 0.067, 0.078, 0.086, 1
                     font_name: 'ChineseFont'
-                    font_size: '8sp'
+                    font_size: '10sp'
                     bold: True
                     halign: 'left'
                     valign: 'middle'
@@ -175,7 +175,7 @@ Builder.load_string("""
                     background_color: 1, 1, 1, 1
                     color: 0.067, 0.078, 0.086, 1
                     font_name: 'ChineseFont'
-                    font_size: '8sp'
+                    font_size: '10sp'
                     bold: True
                     halign: 'left'
                     valign: 'middle'
@@ -197,7 +197,7 @@ Builder.load_string("""
                     background_color: 1, 1, 1, 1
                     color: 0.067, 0.078, 0.086, 1
                     font_name: 'ChineseFont'
-                    font_size: '7sp'
+                    font_size: '9sp'
                     halign: 'left'
                     valign: 'middle'
                     text: '⚙️  设置'

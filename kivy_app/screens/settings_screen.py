@@ -40,12 +40,12 @@ Builder.load_string("""
                 background_color: 0,0,0,0
                 color: 0.420, 0.565, 0.502, 1
                 font_name: 'ChineseFont'
-                font_size: '7sp'
+                font_size: '9sp'
                 on_press: root.go_home()
             Label:
                 text: '设置'
                 font_name: 'ChineseFont'
-                font_size: '11sp'
+                font_size: '13sp'
                 bold: True
                 color: 0.067, 0.078, 0.086, 1
             Widget:
@@ -64,7 +64,7 @@ Builder.load_string("""
                 Label:
                     text: 'API 地址'
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     bold: True
                     color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
@@ -75,7 +75,7 @@ Builder.load_string("""
                     hint_text: '例如 https://api.deepseek.com'
                     hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     size_hint_y: None
                     height: 48
                     padding: [16, 12]
@@ -87,7 +87,7 @@ Builder.load_string("""
                 Label:
                     text: 'API Key'
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     bold: True
                     color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
@@ -98,7 +98,7 @@ Builder.load_string("""
                     hint_text: '输入你的 API Key'
                     hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     size_hint_y: None
                     height: 48
                     padding: [16, 12]
@@ -111,7 +111,7 @@ Builder.load_string("""
                 Label:
                     text: '模型'
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     bold: True
                     color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
@@ -122,7 +122,7 @@ Builder.load_string("""
                     hint_text: '例如 deepseek-chat'
                     hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     size_hint_y: None
                     height: 48
                     padding: [16, 12]
@@ -134,7 +134,7 @@ Builder.load_string("""
                 Label:
                     text: '上下文句数'
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     bold: True
                     color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
@@ -148,7 +148,7 @@ Builder.load_string("""
                         id: context_input
                         text: '1'
                         font_name: 'ChineseFont'
-                        font_size: '6sp'
+                        font_size: '8sp'
                         size_hint_x: None
                         width: 80
                         padding: [16, 12]
@@ -159,14 +159,14 @@ Builder.load_string("""
                     Label:
                         text: '前后各取 N 句作为上下文'
                         font_name: 'ChineseFont'
-                        font_size: '6sp'
+                        font_size: '8sp'
                         color: 0.420, 0.447, 0.475, 1
 
                 # ── 提示词 ──
                 Label:
                     text: '提示词模板'
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     bold: True
                     color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
@@ -177,7 +177,7 @@ Builder.load_string("""
                     hint_text: 'AI 评分提示词模板……'
                     hint_text_color: 0.420, 0.447, 0.475, 1
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     size_hint_y: None
                     height: 140
                     padding: [16, 14]
@@ -188,7 +188,7 @@ Builder.load_string("""
                 Button:
                     text: '🔄 测试连接'
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     size_hint_y: None
                     height: 48
                     color: 0.420, 0.565, 0.502, 1
@@ -200,7 +200,7 @@ Builder.load_string("""
                 Button:
                     text: '保存设置'
                     font_name: 'ChineseFont'
-                    font_size: '7sp'
+                    font_size: '9sp'
                     bold: True
                     size_hint_y: None
                     height: 48
@@ -213,7 +213,7 @@ Builder.load_string("""
                 Button:
                     text: '恢复默认'
                     font_name: 'ChineseFont'
-                    font_size: '6sp'
+                    font_size: '8sp'
                     size_hint_y: None
                     height: 48
                     color: 0.302, 0.325, 0.349, 1
@@ -271,7 +271,7 @@ class SettingsScreen(Screen):
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16, 16, 16, 16])
         content.add_widget(Label(text=msg, font_name='ChineseFont',
-            font_size='6sp', color=(0.067, 0.078, 0.086, 1)))
+            font_size='8sp', color=(0.067, 0.078, 0.086, 1)))
 
         popup = Popup(title='', content=content,
             size_hint=(0.7, None), height=60, auto_dismiss=True)
