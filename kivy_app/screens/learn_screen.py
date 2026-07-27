@@ -10,8 +10,7 @@ from backtranslate.database.connection import init_db
 from backtranslate.database.operations import (
     create_session, create_subtitles_batch, create_translation,
     create_evaluation, update_session_completed, clear_session_data,
-    get_subtitles_for_session, record_sentence_completed, get_all_stats,
-)
+    get_subtitles_for_session, record_sentence_completed, get_all_stats)
 from backtranslate.config import load_config, save_config
 from backtranslate.srt.parser import parse_srt
 from backtranslate.srt.pairing import pair_by_index, pair_by_timecode
@@ -345,19 +344,18 @@ class LearnScreen(Screen):
         with content.canvas.before:
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
-        content.add_widget(Label(text='选择中文 SRT（第1步）',
-            font_name='ChineseFont', font_size='15sp', size_hint_y=None, height=40,
+        content.add_widget(Label(text='选择中文 SRT（第1步）', font_size='15sp', size_hint_y=None, height=40,
             color=(0.067, 0.078, 0.086, 1)))
 
         files = sorted(f for f in os.listdir(folder) if f.lower().endswith('.srt'))
         if not files:
-            content.add_widget(Label(text='该目录无 SRT 文件', font_name='ChineseFont',
+            content.add_widget(Label(text='该目录无 SRT 文件',
                 size_hint_y=None, height=40, color=(0.878, 0.345, 0.298, 1)))
             popup = Popup(title='导入字幕', content=content, size_hint=(0.85, 0.5), auto_dismiss=False)
             popup.background = ""
             popup.background_color = (0.969, 0.973, 0.969, 1)
             popup.title_color = (0.067, 0.078, 0.086, 1)
-            btn = Button(text='关闭', font_name='ChineseFont', size_hint_y=None, height=44,
+            btn = Button(text='关闭', size_hint_y=None, height=44,
                 background_normal='', background_color=(0.95,0.95,0.95,1), color=(0.4,0.4,0.4,1))
             btn.bind(on_press=lambda x: popup.dismiss())
             content.add_widget(btn)
@@ -368,7 +366,7 @@ class LearnScreen(Screen):
         lst = BoxLayout(orientation='vertical', size_hint_y=None, spacing=8)
         lst.bind(minimum_height=lst.setter('height'))
         for s in files:
-            btn = Button(text=s, font_name='ChineseFont', font_size='15sp',
+            btn = Button(text=s, font_size='15sp',
                 size_hint_y=None, height=48,
                 background_normal='', background_color=(0.890,0.898,0.886,1),
                 color=(0.067,0.078,0.086,1), halign='left', padding=(16,0))
@@ -405,8 +403,7 @@ class LearnScreen(Screen):
         with content.canvas.before:
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
-        content.add_widget(Label(text='选择英文 SRT（第2步）',
-            font_name='ChineseFont', font_size='15sp', size_hint_y=None, height=40,
+        content.add_widget(Label(text='选择英文 SRT（第2步）', font_size='15sp', size_hint_y=None, height=40,
             color=(0.067,0.078,0.086,1)))
 
         files = sorted(f for f in os.listdir(self._srt_folder) if f.lower().endswith('.srt'))
@@ -414,7 +411,7 @@ class LearnScreen(Screen):
         lst = BoxLayout(orientation='vertical', size_hint_y=None, spacing=8)
         lst.bind(minimum_height=lst.setter('height'))
         for s in files:
-            btn = Button(text=s, font_name='ChineseFont', font_size='15sp',
+            btn = Button(text=s, font_size='15sp',
                 size_hint_y=None, height=48,
                 background_normal='', background_color=(0.890,0.898,0.886,1),
                 color=(0.067,0.078,0.086,1), halign='left', padding=(16,0))
@@ -424,7 +421,7 @@ class LearnScreen(Screen):
         scroll.add_widget(lst)
         content.add_widget(scroll)
 
-        cancel = Button(text='取消', font_name='ChineseFont', size_hint_y=None, height=44,
+        cancel = Button(text='取消', size_hint_y=None, height=44,
             background_normal='', background_color=(0.95,0.95,0.95,1), color=(0.4,0.4,0.4,1))
         content.add_widget(cancel)
         popup = Popup(title='选择英文 SRT', content=content, size_hint=(0.9, 0.8), auto_dismiss=False)
@@ -457,10 +454,10 @@ class LearnScreen(Screen):
         with content.canvas.before:
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
-        content.add_widget(Label(text='选择 SRT 目录', font_name='ChineseFont',
+        content.add_widget(Label(text='选择 SRT 目录',
             font_size='15sp', size_hint_y=None, height=36, color=(0.067, 0.078, 0.086, 1)))
 
-        pi = TextInput(text=os.path.expanduser('~'), font_name='ChineseFont', font_size='14sp',
+        pi = TextInput(text=os.path.expanduser('~'), font_size='14sp',
             size_hint_y=None, height=44, multiline=False, hint_text='输入路径',
             background_color=(1, 1, 1, 1), foreground_color=(0, 0, 0, 1),
             hint_text_color=(0.420, 0.447, 0.475, 1))
@@ -471,9 +468,9 @@ class LearnScreen(Screen):
         content.add_widget(fc)
 
         btns = BoxLayout(size_hint_y=None, height=44, spacing=12)
-        cancel = Button(text='取消', font_name='ChineseFont', font_size='15sp',
+        cancel = Button(text='取消', font_size='15sp',
             background_normal='', background_color=(0.95,0.95,0.95,1), color=(0.4,0.4,0.4,1))
-        select = Button(text='选择中文 SRT', font_name='ChineseFont', font_size='15sp', bold=True,
+        select = Button(text='选择中文 SRT', font_size='15sp', bold=True,
             background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1))
         btns.add_widget(cancel)
         btns.add_widget(select)
@@ -652,9 +649,9 @@ class LearnScreen(Screen):
         with content.canvas.before:
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16, 16, 16, 16])
-        content.add_widget(Label(text=message, font_name='ChineseFont', font_size='15sp',
+        content.add_widget(Label(text=message, font_size='15sp',
             color=(0.067, 0.078, 0.086, 1), halign='center', text_size=(300, None)))
-        btn = Button(text='确定', font_name='ChineseFont', size_hint_y=None, height=44,
+        btn = Button(text='确定', size_hint_y=None, height=44,
             background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1), font_size='15sp')
         content.add_widget(btn)
         popup = Popup(title=title, content=content, size_hint=(0.8, 0.5), auto_dismiss=False)
