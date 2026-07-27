@@ -46,12 +46,12 @@ Builder.load_string("""
                 background_color: 0,0,0,0
                 color: 0.420, 0.565, 0.502, 1
                 font_name: 'ChineseFont'
-                font_size: '10sp'
+                font_size: '7sp'
                 on_press: root.go_home()
             Label:
                 text: '回译学习'
                 font_name: 'ChineseFont'
-                font_size: '14sp'
+                font_size: '11sp'
                 bold: True
                 color: 0.067, 0.078, 0.086, 1
             Widget:
@@ -74,14 +74,14 @@ Builder.load_string("""
             Label:
                 text: '导入中英字幕文件\\n开始回译训练'
                 font_name: 'ChineseFont'
-                font_size: '9sp'
+                font_size: '6sp'
                 color: 0.302, 0.325, 0.349, 1
                 halign: 'center'
 
             Button:
                 text: '选择字幕文件'
                 font_name: 'ChineseFont'
-                font_size: '10sp'
+                font_size: '7sp'
                 bold: True
                 color: 1, 1, 1, 1
                 background_normal: ''
@@ -101,7 +101,7 @@ Builder.load_string("""
                 id: recent_label
                 text: ''
                 font_name: 'ChineseFont'
-                font_size: '7sp'
+                font_size: '6sp'
                 color: 0.420, 0.447, 0.475, 1
                 halign: 'center'
                 size_hint_y: None
@@ -119,7 +119,7 @@ Builder.load_string("""
                 id: progress_label
                 text: '第 ' + str(root.current_idx) + '/' + str(root.total_count) + ' 句'
                 font_name: 'ChineseFont'
-                font_size: '7sp'
+                font_size: '6sp'
                 color: 0.302, 0.325, 0.349, 1
                 size_hint_y: None
                 height: 28
@@ -141,7 +141,7 @@ Builder.load_string("""
                     id: chinese_label
                     text: ''
                     font_name: 'ChineseFont'
-                    font_size: '16sp'
+                    font_size: '13sp'
                     color: 0.067, 0.078, 0.086, 1
                     size_hint_y: None
                     height: 160
@@ -155,7 +155,7 @@ Builder.load_string("""
                 hint_text: '输入英文翻译……'
                 hint_text_color: 0.420, 0.447, 0.475, 1
                 font_name: 'ChineseFont'
-                font_size: '8sp'
+                font_size: '6sp'
                 size_hint_y: None
                 height: 52
                 multiline: False
@@ -172,7 +172,7 @@ Builder.load_string("""
                 Button:
                     text: '跳过'
                     font_name: 'ChineseFont'
-                    font_size: '10sp'
+                    font_size: '7sp'
                     color: 0.302, 0.325, 0.349, 1
                     background_normal: ''
                     background_color: 0.890, 0.898, 0.886, 1
@@ -187,7 +187,7 @@ Builder.load_string("""
                 Button:
                     text: '提交'
                     font_name: 'ChineseFont'
-                    font_size: '10sp'
+                    font_size: '7sp'
                     bold: True
                     color: 1, 1, 1, 1
                     background_normal: ''
@@ -209,7 +209,7 @@ Builder.load_string("""
                 Label:
                     text: '今日 ' + root.today + ' 句'
                     font_name: 'ChineseFont'
-                    font_size: '7sp'
+                    font_size: '6sp'
                     bold: True
                     color: 0.420, 0.565, 0.502, 1
                     size_hint_x: None
@@ -218,7 +218,7 @@ Builder.load_string("""
                 Label:
                     text: '|  连续 ' + root.streak + ' 天'
                     font_name: 'ChineseFont'
-                    font_size: '7sp'
+                    font_size: '6sp'
                     color: 0.420, 0.447, 0.475, 1
                     size_hint_x: None
                     width: 120
@@ -227,7 +227,7 @@ Builder.load_string("""
                     id: encourage_label
                     text: ''
                     font_name: 'ChineseFont'
-                    font_size: '7sp'
+                    font_size: '6sp'
                     color: 0.302, 0.325, 0.349, 1
 
             # End
@@ -236,7 +236,7 @@ Builder.load_string("""
                 size_hint_y: None
                 height: 48
                 font_name: 'ChineseFont'
-                font_size: '9sp'
+                font_size: '6sp'
                 color: 0.878, 0.345, 0.298, 1
                 background_normal: ''
                 background_color: 0.890, 0.898, 0.886, 1
@@ -335,7 +335,7 @@ class LearnScreen(Screen):
         with content.canvas.before:
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
-        content.add_widget(Label(text='选择中文 SRT（第1步）', font_size='9sp', size_hint_y=None, height=40,
+        content.add_widget(Label(text='选择中文 SRT（第1步）', font_size='6sp', size_hint_y=None, height=40,
             color=(0.067, 0.078, 0.086, 1)))
 
         files = sorted(f for f in os.listdir(folder) if f.lower().endswith('.srt'))
@@ -357,7 +357,7 @@ class LearnScreen(Screen):
         lst = BoxLayout(orientation='vertical', size_hint_y=None, spacing=8)
         lst.bind(minimum_height=lst.setter('height'))
         for s in files:
-            btn = Button(text=s, font_size='9sp',
+            btn = Button(text=s, font_size='6sp',
                 size_hint_y=None, height=48,
                 background_normal='', background_color=(0.890,0.898,0.886,1),
                 color=(0.067,0.078,0.086,1), halign='left', padding=(16,0))
@@ -394,7 +394,7 @@ class LearnScreen(Screen):
         with content.canvas.before:
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16]*4)
-        content.add_widget(Label(text='选择英文 SRT（第2步）', font_size='9sp', size_hint_y=None, height=40,
+        content.add_widget(Label(text='选择英文 SRT（第2步）', font_size='6sp', size_hint_y=None, height=40,
             color=(0.067,0.078,0.086,1)))
 
         files = sorted(f for f in os.listdir(self._srt_folder) if f.lower().endswith('.srt'))
@@ -402,7 +402,7 @@ class LearnScreen(Screen):
         lst = BoxLayout(orientation='vertical', size_hint_y=None, spacing=8)
         lst.bind(minimum_height=lst.setter('height'))
         for s in files:
-            btn = Button(text=s, font_size='9sp',
+            btn = Button(text=s, font_size='6sp',
                 size_hint_y=None, height=48,
                 background_normal='', background_color=(0.890,0.898,0.886,1),
                 color=(0.067,0.078,0.086,1), halign='left', padding=(16,0))
@@ -443,7 +443,7 @@ class LearnScreen(Screen):
 
         content = BoxLayout(orientation='vertical', spacing=10, padding=16)
         content.add_widget(Label(text='选择 SRT 目录',
-            font_size='9sp', size_hint_y=None, height=36, color=(0.067, 0.078, 0.086, 1)))
+            font_size='6sp', size_hint_y=None, height=36, color=(0.067, 0.078, 0.086, 1)))
 
         pi = TextInput(text=os.path.expanduser('~'), font_size='6sp',
             size_hint_y=None, height=44, multiline=False, hint_text='输入路径',
@@ -456,9 +456,9 @@ class LearnScreen(Screen):
         content.add_widget(fc)
 
         btns = BoxLayout(size_hint_y=None, height=44, spacing=12)
-        cancel = Button(text='取消', font_size='9sp',
+        cancel = Button(text='取消', font_size='6sp',
             background_normal='', background_color=(0.95,0.95,0.95,1), color=(0.4,0.4,0.4,1))
-        select = Button(text='选择中文 SRT', font_size='9sp', bold=True,
+        select = Button(text='选择中文 SRT', font_size='6sp', bold=True,
             background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1))
         btns.add_widget(cancel)
         btns.add_widget(select)
@@ -637,10 +637,10 @@ class LearnScreen(Screen):
         with content.canvas.before:
             Color(rgba=(1, 1, 1, 1))
             RoundedRectangle(pos=content.pos, size=content.size, radius=[16, 16, 16, 16])
-        content.add_widget(Label(text=message, font_size='9sp',
+        content.add_widget(Label(text=message, font_size='6sp',
             color=(0.067, 0.078, 0.086, 1), halign='center', text_size=(300, None)))
         btn = Button(text='确定', size_hint_y=None, height=44,
-            background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1), font_size='9sp')
+            background_normal='', background_color=(0.420,0.565,0.502,1), color=(1,1,1,1), font_size='6sp')
         content.add_widget(btn)
         popup = Popup(title=title, content=content, size_hint=(0.8, 0.5), auto_dismiss=False)
         popup.background = ""
