@@ -464,7 +464,7 @@ class LearnScreen(Screen):
         content.add_widget(pi)
 
         fc = FileChooserListView(filters=[lambda f, n: n.lower().endswith('.srt')], path=os.path.expanduser('~'),
-            color=(0.067, 0.078, 0.086, 1))
+            font_name='Roboto')
         content.add_widget(fc)
 
         btns = BoxLayout(size_hint_y=None, height=44, spacing=12)
